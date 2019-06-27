@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { NgModule} from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -21,9 +20,6 @@ import { ShareComponent } from './share/share.component';
   bootstrap: [AppComponent]
 })
 
-export class AppModule implements OnInit {
-  router: Router;
-  ngOnInit() {
-    this.router.navigate(['/new']);
-  }
+export class AppModule {
+  
 }

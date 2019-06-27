@@ -5,8 +5,8 @@ import { NewSprintComponent } from './new-sprint/new-sprint.component';
 
 const routes: Routes = [
   { path: 'new', component: NewSprintComponent },
-  //{ path: '', component: },
-  //{ path: '', component: },
+  //{ path: 'join', component: },
+  //{ path: 'session', component: },
 ]
 
 @NgModule({
