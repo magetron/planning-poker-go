@@ -21,6 +21,8 @@ func mapRoutes() {
 		return goweb.Respond.With(c, 200, []byte("Welcome to Planning Poker backend"))
 	})
 
+	goweb.MapController(&SprintsController{})
+
 }
 
 func main() {
@@ -48,7 +50,6 @@ func main() {
 
 	log.Println("Server routes : ")
 	log.Printf("%s", goweb.DefaultHttpHandler())
-
 	go func() {
 		for _ = range channel {
 			log.Print("Stop Signal Detected. Stopping ...")
