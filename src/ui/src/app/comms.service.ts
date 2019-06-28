@@ -14,9 +14,11 @@ export class CommsService {
   //TODO: add type!
   createSprint(name: string): any {
     console.log(name);
-    if (name !== "") {
 
-      const result = this.httpClient.post(environment.gateway + '/sprints', name );
+    let jsonObject = { Name: name }
+
+    if (name !== "") {
+      const result = this.httpClient.post(environment.gateway + '/sprints', jsonObject );
       return result;
     } else if (!environment.production) {
       console.log("Empty sprint name rejected");

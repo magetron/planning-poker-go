@@ -23,10 +23,15 @@ export class NewSprintComponent implements OnInit {
   createSprint(): void {
       //POST sprint.name to /new
       this.commsService.createSprint(this.name).subscribe(result => {
+        
+        if (result.statusCodes !== 200) {
+          
+        } else {
         this.sprint.id = result;
         this.sprint.name = this.name;
 
         console.log(this.sprint.id);
+        }
       });
 
     //See responce, show responce
