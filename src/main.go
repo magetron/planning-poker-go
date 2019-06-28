@@ -23,6 +23,12 @@ func mapRoutes() {
 
 	goweb.MapController(&SprintsController{})
 	goweb.MapController("sprints/{id}/rounds", &RoundsController{})
+	goweb.MapStatic("/index", "static-ui")
+	goweb.MapStaticFile("/main-es2015.js", "static-ui/main-es2015.js")
+	goweb.MapStaticFile("/polyfills-es2015.js", "static-ui/polyfills-es2015.js")
+	goweb.MapStaticFile("/runtime-es2015.js", "static-ui/runtime-es2015.js")
+	goweb.MapStaticFile("/styles-es2015.js", "static-ui/styles-es2015.js")
+	goweb.MapStaticFile("/vendor-es2015.js", "static-ui/vendor-es2015.js")
 }
 
 func main() {
