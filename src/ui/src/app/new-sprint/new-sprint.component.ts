@@ -22,16 +22,23 @@ export class NewSprintComponent implements OnInit {
 
   createSprint(): void {
       //POST sprint.name to /new
-      this.commsService.createSprint(this.name).subscribe(result => {
-        this.sprint.id = result;
-        this.sprint.name = this.name;
+    try {
+      this.commsService.createSprint(this.name).subscribe(
+        result => {
+          this.sprint.id = result;
+          this.sprint.name = this.name;
 
-        console.log(this.sprint.id);
-      });
+          console.log(this.sprint.id);
 
-    //See responce, show responce
-    //maybe make this async and in a separate function?
-    //this.sprint.id = result.;
+          //TODO: Pass the Sprint object to shareComponent
+        },
+        error => {
+          console.log("Creating a sprint failed /r/n" + error);
+        }
+      );
+    } catch {
+
+    }
+
   }
-
 }

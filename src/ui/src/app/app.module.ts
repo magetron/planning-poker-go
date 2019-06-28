@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { NewSprintComponent } from './new-sprint/new-sprint.component';
 import { ShareComponent } from './share/share.component';
+import { CommsService } from './comms.service';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,7 @@ import { ShareComponent } from './share/share.component';
     HttpClientModule,
     FormsModule
   ],
-  providers: [],
+  providers: [ CommsService ],
   bootstrap: [ AppComponent ]
 })
 
