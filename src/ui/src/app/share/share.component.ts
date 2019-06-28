@@ -5,6 +5,7 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './share.component.html',
   styleUrls: ['./share.component.css']
 })
+
 export class ShareComponent implements OnInit {
 
   constructor() { }
