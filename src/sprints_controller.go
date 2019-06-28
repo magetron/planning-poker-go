@@ -34,6 +34,7 @@ func (sc *SprintsController) Create(ctx context.Context) error {
 	newid, _ := sid.Generate()
 	sprint.Id = newid
 	sprint.Name = dataMap["Name"].(string)
+	sprint.Rounds = make([]*Round, 0)
 
 	sc.Sprints = append(sc.Sprints, sprint)
 
@@ -65,7 +66,7 @@ func (sc *SprintsController) DeleteMany(ctx context.Context) error {
 	return goweb.Respond.WithOK(ctx)
 }
 
-func (sc *SprintsController) Delet(id string, ctx context.Context) error {
+func (sc *SprintsController) Delete(id string, ctx context.Context) error {
 	newList := make([]*Sprint, 0)
 	for _, sprint := range sc.Sprints {
 		if sprint.Id != id {

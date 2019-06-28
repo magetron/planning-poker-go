@@ -1,6 +1,7 @@
 package main
 
 type Sprint struct {
-	Id   string
-	Name string
+	Id     string
+	Name   string
+	Rounds []*Round
 }

@@ -22,7 +22,7 @@ func mapRoutes() {
 	})
 
 	goweb.MapController(&SprintsController{})
-
+	goweb.MapController("sprints/{id}/rounds", &RoundsController{})
 }
 
 func main() {
