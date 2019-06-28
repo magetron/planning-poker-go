@@ -6,4 +6,4 @@
 
 <button (click)="createSprint()" >Create the sprint</button>
 
-<div *ngIf="sprint.id !== null" ><app-share></app-share></div>
+<div *ngIf="sprint.id !== null" ><app-share [share] = "sprint" ></app-share></div>
