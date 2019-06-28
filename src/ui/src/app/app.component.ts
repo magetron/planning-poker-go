@@ -9,14 +9,12 @@ import { Router } from '@angular/router';
 
 export class AppComponent implements OnInit {
   title = 'Planning Poker';
-  
+
   constructor (private router: Router) {
   }
-
 
   ngOnInit() {
     this.router.navigate(['new']);
   }
 
-  
 }
