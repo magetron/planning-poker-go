@@ -10,8 +10,6 @@ import { Router } from '@angular/router';
 export class AppComponent implements OnInit {
   title = 'Planning Poker';
   
-  //router: Router;
-  
   constructor (private router: Router) {
   }
 

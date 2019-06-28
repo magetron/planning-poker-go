@@ -2,6 +2,9 @@
 
 <h2>Create a new session.</h2>
 
-<p>Enter sprint name [sprint] </p>
+<p>Enter sprint name <input [(ngModel)]="name" placeholder="C00l Sprint Name"/> </p>
 
-<div *ngIf="" ><!--<shared-component></shared-component>--></div>
+<button (click)="createSprint()" >Create the sprint</button>
+<!--
+<div *ngIf="sprint.id != null" ><app-share></app-share></div>
+-->

@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 import { Sprint } from '../sprint';
+import { CommsService } from '../comms.service';
 
 @Component({
   selector: 'app-new-sprint',
@@ -10,11 +11,27 @@ import { Sprint } from '../sprint';
 
 export class NewSprintComponent implements OnInit {
 
-  @Input() sprintName: Sprint;
+  sprint: Sprint;
+  @Input() name: string = '';
 
-  constructor() { }
+  constructor(private commsService: CommsService) { }
 
   ngOnInit() {
+    this.sprint = Sprint.constructor();
+  }
+
+  createSprint(): void {
+      //POST sprint.name to /new
+      this.commsService.createSprint(this.name).subscribe(result => {
+        this.sprint.id = result;
+        this.sprint.name = this.name;
+
+        console.log(this.sprint.id);
+      });
+
+    //See responce, show responce
+    //maybe make this async and in a separate function?
+    //this.sprint.id = result.;
   }
 
 }
