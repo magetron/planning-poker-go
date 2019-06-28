@@ -5,5 +5,8 @@
 <p>Enter sprint name <input [(ngModel)]="name" placeholder="C00l Sprint Name"/> </p>
 
 <button (click)="createSprint()" >Create the sprint</button>
-
-<div *ngIf="sprint.id !== null" ><app-share [share] = "sprint" ></app-share></div>
+<!-- {{sprint | json}} -->
+<div *ngIf="sprint?.id" >
+  <app-share [share] = "sprint" >
+  </app-share>
+</div>
