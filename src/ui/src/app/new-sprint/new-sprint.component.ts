@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { Sprint } from '../sprint';
 import { CommsService } from '../comms.service';
@@ -12,12 +12,15 @@ import { CommsService } from '../comms.service';
 export class NewSprintComponent implements OnInit {
 
   sprint: Sprint;
-  @Input() name: string = '';
+  name: string = '';
 
   constructor(private commsService: CommsService) { }
 
   ngOnInit() {
-    this.sprint = Sprint.constructor();
+    this.sprint = {
+      id: null,
+      name: ''
+    }
   }
 
   createSprint(): void {
