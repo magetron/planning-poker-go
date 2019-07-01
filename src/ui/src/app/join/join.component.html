@@ -4,4 +4,4 @@
 
 <p>Enter your name <input [(ngModel)]="user.name" placeholder="Dave? John?"> </p>
 
-<button *ngIf="user.name !== ''">Join session Now</button>
+<button [disabled]="!(user?.name)" (click)="registerUser(user?.name)">Join session Now</button>

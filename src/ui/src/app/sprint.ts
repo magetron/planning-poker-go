@@ -1,4 +1,4 @@
-export class Sprint {
+export interface Sprint {
     id: string;
     name: string;
 }

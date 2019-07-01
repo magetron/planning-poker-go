@@ -1,6 +1,5 @@
 import { Component, OnInit, Input} from '@angular/core';
 import { Sprint } from '../sprint'
-import {environment} from '../../environments/environment'
 
 @Component({
   selector: 'app-share',
@@ -10,10 +9,12 @@ import {environment} from '../../environments/environment'
 export class ShareComponent implements OnInit {
 
   @Input() share : Sprint;
+  baseUrl: string = '';
 
   constructor() { }
 
   ngOnInit() {
+    this.baseUrl = location.origin;
   }
 
 }

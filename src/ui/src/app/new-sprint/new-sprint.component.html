@@ -6,7 +6,7 @@
     <p>Enter sprint name <input [(ngModel)]="name" placeholder="C00L Sprint Name"/> </p>
   </div>
 
-  <button (click)="createSprint()" > > Create Session and Get Link</button>
+  <button [disabled]="!name" (click)="createSprint()" > > Create Session and Get Link</button>
 
   <!-- {{sprint | json}} -->
   <div *ngIf="sprint?.id" >
