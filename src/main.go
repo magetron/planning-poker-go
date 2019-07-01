@@ -18,11 +18,11 @@ const (
 
 func mapRoutes() {
 	goweb.Map("/", func(c context.Context) error {
-		return goweb.Respond.With(c, 200, []byte("Welcome to Planning Poker backend"))
+		return goweb.Respond.With(c, 200, []byte("Welcome to Planning Poker backend."))
 	})
 
 	goweb.MapController(&SprintsController{})
-	goweb.MapController("sprints/{id}/rounds", &RoundsController{})
+	goweb.MapController("sprints/[sprintId]/rounds", &RoundsController{})
 	goweb.MapStatic("/index", "static-ui")
 	goweb.MapStaticFile("/main-es2015.js", "static-ui/main-es2015.js")
 	goweb.MapStaticFile("/polyfills-es2015.js", "static-ui/polyfills-es2015.js")
