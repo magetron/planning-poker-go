@@ -1,17 +1,32 @@
-<div id = "container">
-
-  <div id = "box">
-    <h1>Welcome to Barclays Planning Poker</h1>
-    <h2>Create a new session.</h2>
-    <p>Enter sprint name <input [(ngModel)]="name" placeholder="C00L Sprint Name"/> </p>
-  </div>
-
-  <button (click)="createSprint()" > > Create Session and Get Link</button>
+<div class=container>
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        Welcome to Planning Poker
+      </mat-card-title>
+      <mat-card-subtitle>
+        Create a new session
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-form-field appearance="outline">
+        <mat-label>Sprint Name</mat-label>
+        <input matInput placeholder="Name" [(ngModel)]="name">
+        <mat-icon matSuffix>info</mat-icon>
+        <mat-hint>Name of the sprint</mat-hint>
+      </mat-form-field>
+    </mat-card-content>
+    <mat-card-actions>
+      <button (click)="createSprint()" mat-flat-button color="accent">
+        <mat-icon>add</mat-icon> Sprint
+      </button>
+    </mat-card-actions>
+  </mat-card>
 
   <!-- {{sprint | json}} -->
-  <div *ngIf="sprint?.id" >
-    <app-share [share] = "sprint" >
+  <div *ngIf="sprint?.id">
+    <app-share [share]="sprint">
     </app-share>
   </div>
 
-</div>
+  </div>
