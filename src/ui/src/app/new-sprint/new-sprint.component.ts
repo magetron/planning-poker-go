@@ -25,7 +25,7 @@ export class NewSprintComponent implements OnInit {
     try {
       this.commsService.createSprint(this.name).subscribe(
         result => {
-          this.sprint.id = result;
+          //this.sprint.id = result; //FIXME
           this.sprint.name = this.name;
 
           console.log(this.sprint.id);

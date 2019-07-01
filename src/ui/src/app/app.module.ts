@@ -8,12 +8,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { NewSprintComponent } from './new-sprint/new-sprint.component';
 import { ShareComponent } from './share/share.component';
 import { CommsService } from './comms.service';
+import { JoinComponent } from './join/join.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NewSprintComponent,
-    ShareComponent
+    ShareComponent,
+    JoinComponent
   ],
   imports: [
     BrowserModule,

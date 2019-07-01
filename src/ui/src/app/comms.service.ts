@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http'; 
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs'; 
 
 import { environment } from '../environments/environment';
 
@@ -15,8 +16,7 @@ export class CommsService {
 
   constructor(private httpClient: HttpClient) {}
 
-  //TODO: add type!
-  createSprint(name: string): any {
+  createSprint(name: string): Observable<Object> {
     let jsonObject = { Name: name };
 
     if (name !== "") {
@@ -26,6 +26,7 @@ export class CommsService {
       return result;
     } else if (!environment.production) {
       console.log("Empty sprint name rejected");
+      //TODO: do we need to return null here?
     }
   }
 }
