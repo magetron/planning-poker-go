@@ -1,6 +1,15 @@
-<div>
-  <h2> A session has been created for {{share.name}}.</h2>
-  <p> Send this link to people you want to join this Planning Poker session: </p>
-  <a href = "/join/{{share.id}}"><p> {{environment.gateway}}/join/{{share.id}} </p></a>
-  <!-- relative link -->
-</div>
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>
+      A session has been created for {{share.name}}.
+    </mat-card-title>
+    <mat-card-subtitle>
+      Send this link to people you want to join this Planning Poker session:
+    </mat-card-subtitle>
+  </mat-card-header>
+  <a href="/join/{{share.id}}"> http://localhost:8080/join/{{share.id}} </a>
+  <mat-card-content>
+  </mat-card-content>
+  <mat-card-actions>
+  </mat-card-actions>
+</mat-card>
