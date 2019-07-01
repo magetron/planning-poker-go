@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/stretchr/goweb"
 	"github.com/stretchr/goweb/context"
@@ -30,13 +31,13 @@ func (rc *RoundsController) Create(ctx context.Context) error {
 		return goweb.API.RespondWithError(ctx, http.StatusInternalServerError, dataErr.Error())
 	}
 
-	if !ctx.PathParams().Has("id") {
+	if !ctx.PathParams().Has("sprintId") {
 		return goweb.API.RespondWithError(ctx, http.StatusInternalServerError, "No ID Specified in URL.")
 	}
 
-	urlId := ctx.PathValue("id")
+	urlId := ctx.PathValue("sprintId")
 
-	log.Printf("Added to sprintID %s", urlId)
+	log.Printf("New Round Added to sprintID %s", urlId)
 
 	dataMap := data.(map[string]interface{})
 
@@ -65,22 +66,35 @@ func (rc *RoundsController) Create(ctx context.Context) error {
 
 func (rc *RoundsController) ReadMany(ctx context.Context) error {
 
+	urlId := ctx.PathValue("sprintId")
+
 	if rc.AllRounds == nil {
-		rc.AllRounds = make([]*Rounds, 0)
+		return goweb.API.RespondWithData(ctx, make([]*Round, 0))
 	}
 
-	return goweb.API.RespondWithData(ctx, rc.AllRounds)
+	for _, rs := range rc.AllRounds {
+		if rs.SprintId == urlId {
+			return goweb.API.RespondWithData(ctx, rs.Rounds)
+		}
+	}
+
+	return goweb.API.RespondWithData(ctx, make([]*Round, 0))
 
 }
 
-func (rc *RoundsController) Read(id int, ctx context.Context) error {
+func (rc *RoundsController) Read(id string, ctx context.Context) error {
 
-	urlId := ctx.PathValue("id")
+	urlId := ctx.PathValue("sprintId")
+	roundId, convErr := strconv.Atoi(id)
+
+	if convErr != nil {
+		return goweb.API.RespondWithError(ctx, http.StatusInternalServerError, convErr.Error())
+	}
 
 	for _, rs := range rc.AllRounds {
 		if rs.SprintId == urlId {
 			for _, r := range rs.Rounds {
-				if r.Id == id {
+				if r.Id == roundId {
 					return goweb.API.RespondWithData(ctx, r)
 				}
 			}
