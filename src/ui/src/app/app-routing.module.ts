@@ -9,6 +9,7 @@ const routes: Routes = [
   { path: 'join/:sprint_id', component: JoinComponent }, //TODO: use the right parameter
   //{ path: 'session', component: },
   { path: '',   redirectTo: '/new', pathMatch: 'full' },
+  { path: 'index', redirectTo: '/new' },
   //{ path: '*', component: PageNotFound } //TODO
 ]
 
