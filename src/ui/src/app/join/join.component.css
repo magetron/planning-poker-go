@@ -1,0 +1,15 @@
+.container
+{
+  width: 90%;
+  margin:20px auto;
+}
+
+mat-card {
+  margin: auto;
+  max-width: 25em;
+  align-content: center;
+}
+
+mat-form-field {
+  width: 100%;
+}

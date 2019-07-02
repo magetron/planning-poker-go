@@ -1,10 +1,10 @@
-<mat-card>
+<mat-card class="background-secondary">
   <mat-card-header>
-    <mat-card-title>
+    <mat-card-title class="text-primary">
       A session has been created for {{share.name}}.
     </mat-card-title>
     <mat-card-subtitle>
-      Send this link to people you want to join this Planning Poker session:
+      Invite others to join your Planning Poker session:
     </mat-card-subtitle>
   </mat-card-header>
   <a [routerLink]="['/join', share.id]"><p> {{baseUrl}}/join/{{share.id}} </p></a>  <mat-card-content>
