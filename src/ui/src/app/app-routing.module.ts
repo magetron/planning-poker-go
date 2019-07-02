@@ -7,8 +7,10 @@ import { JoinComponent } from './join/join.component';
 const routes: Routes = [
   { path: 'new', component: NewSprintComponent },
   { path: 'join/:sprint_id', component: JoinComponent }, //TODO: use the right parameter
+  //{ path: 'sprints/:sprint_id', component: PokerComponent },
   //{ path: 'session', component: },
   { path: '',   redirectTo: '/new', pathMatch: 'full' },
+  { path: 'index', redirectTo: '/new' },
   //{ path: '*', component: PageNotFound } //TODO
 ]
 

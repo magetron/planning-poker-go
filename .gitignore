@@ -2,3 +2,9 @@
 *.code-workspace
 static-ui/
 .directory
+
+#running go build would create this
+src/src
+
+#VS code
+.vscode

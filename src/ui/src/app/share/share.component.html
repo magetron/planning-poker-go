@@ -7,8 +7,7 @@
       Send this link to people you want to join this Planning Poker session:
     </mat-card-subtitle>
   </mat-card-header>
-  <a href="/join/{{share.id}}"> http://localhost:8080/join/{{share.id}} </a>
-  <mat-card-content>
+  <a [routerLink]="['/join', share.id]"><p> {{baseUrl}}/join/{{share.id}} </p></a>  <mat-card-content>
   </mat-card-content>
   <mat-card-actions>
   </mat-card-actions>

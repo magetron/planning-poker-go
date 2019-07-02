@@ -2,6 +2,6 @@
 
 /bin/rm -rf static-ui
 cd ui
-ng build
+ng build ui #TODO turn --prod on
 mv ./dist/ui ../static-ui
 

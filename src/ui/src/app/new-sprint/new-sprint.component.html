@@ -23,6 +23,8 @@
     </mat-card-actions>
   </mat-card>
 
+  <button [disabled]="!name" (click)="createSprint()" > > Create Session and Get Link</button>
+
   <!-- {{sprint | json}} -->
   <div *ngIf="sprint?.id">
     <app-share [share]="sprint">

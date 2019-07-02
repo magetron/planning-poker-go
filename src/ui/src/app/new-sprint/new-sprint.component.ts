@@ -18,30 +18,20 @@ export class NewSprintComponent implements OnInit {
 
   ngOnInit() {
     this.sprint = {
-      id: null,
+      id: '',
       name: ''
     }
   }
 
   createSprint(): void {
       //POST sprint.name to /new
-    try {
-      this.commsService.createSprint(this.name).subscribe(
-        result => {
-          //this.sprint.id = result; //FIXME
-          this.sprint.name = this.name;
-
-          console.log(this.sprint.id);
-
-          //TODO: Pass the Sprint object to shareComponent
-        },
-        error => {
-          console.log("Creating a sprint failed /r/n" + error);
-        }
-      );
-    } catch {
-
-    }
-
+      if (this.name){
+        this.commsService.createSprint(this.name).subscribe( response => {
+          if (response) {
+            this.sprint.id = response.d;
+            this.sprint.name = this.name;
+          }
+        });
+      }
   }
 }

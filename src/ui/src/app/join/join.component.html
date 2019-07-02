@@ -1,7 +1,7 @@
 <h1>Welcome to Barclays planning poker</h1>
 
-<h2> You are about to join {{sprint.name}}.</h2>
+<h2> You are about to join {{sprint?.name}}.</h2>
 
-<p>Enter your name <input [(ngModel)]="user.name" placeholder="Dave? John?"> </p>
+<p>Enter your name <input [(ngModel)]="username" placeholder="SuperCoder13"> </p>
 
-<button *ngIf="user.name !== ''">Join session Now</button>
+<button [disabled]="!(username)" (click)="registerUser(username)">Join session Now</button>
