@@ -17,18 +17,26 @@ const (
 )
 
 func mapRoutes() {
-	goweb.Map("/", func(c context.Context) error {
-		return goweb.Respond.With(c, 200, []byte("Welcome to Planning Poker backend."))
+
+	goweb.MapBefore(func(c context.Context) error {
+		c.HttpResponseWriter().Header().Set("Access-Control-Allow-Origin", "*")
+		return nil
+	})
+
+	goweb.Map("GET", "/", func(c context.Context) error {
+		return goweb.Respond.WithRedirect(c, "/index", "")
 	})
 
 	goweb.MapController(&SprintsController{})
 	goweb.MapController("sprints/[sprintId]/rounds", &RoundsController{})
 	goweb.MapStatic("/index", "static-ui")
-	goweb.MapStaticFile("/main-es2015.js", "static-ui/main-es2015.js")
-	goweb.MapStaticFile("/polyfills-es2015.js", "static-ui/polyfills-es2015.js")
-	goweb.MapStaticFile("/runtime-es2015.js", "static-ui/runtime-es2015.js")
-	goweb.MapStaticFile("/styles-es2015.js", "static-ui/styles-es2015.js")
-	goweb.MapStaticFile("/vendor-es2015.js", "static-ui/vendor-es2015.js")
+	/*
+		goweb.MapStaticFile("/main-es2015.js", "static-ui/main-es2015.js")
+		goweb.MapStaticFile("/polyfills-es2015.js", "static-ui/polyfills-es2015.js")
+		goweb.MapStaticFile("/runtime-es2015.js", "static-ui/runtime-es2015.js")
+		goweb.MapStaticFile("/styles-es2015.js", "static-ui/styles-es2015.js")
+		goweb.MapStaticFile("/vendor-es2015.js", "static-ui/vendor-es2015.js")
+	*/
 }
 
 func main() {
