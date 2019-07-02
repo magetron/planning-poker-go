@@ -5,3 +5,6 @@ static-ui/
 
 #running go build would create this
 src/src
+
+#VS code
+.vscode

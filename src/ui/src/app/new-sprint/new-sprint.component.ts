@@ -29,6 +29,7 @@ export class NewSprintComponent implements OnInit {
         this.commsService.createSprint(this.name).subscribe( response => {
           if (response) {
             this.sprint.id = response.d;
+            this.sprint.name = this.name;
           }
         });
       }

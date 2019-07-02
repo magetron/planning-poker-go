@@ -31,8 +31,8 @@ export class CommsService {
 
     if (name !== "") {
       console.log("Creating sprint " + jsonObject.Name);
-      const result = this.httpClient.post<any>(
-        this.baseUrl + '/sprints', jsonObject, HTTPOPTIONS);
+      const result = this.httpClient.post<Response>(
+        this.baseUrl + '/sprints', JSON.stringify(jsonObject), HTTPOPTIONS);
       return result;
     } else if (!environment.production) {
       console.log("Empty sprint name rejected");
