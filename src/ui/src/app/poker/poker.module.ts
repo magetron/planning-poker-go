@@ -1,30 +1,34 @@
 import { NgModule } from '@angular/core';
-import { Brows
-  erModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
+import { BrowserModule } from '@angular/platform-browser';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatCardModule } from '@angular/material';
 
 //import page 3 components here
-import { PokerCardComponentComponent } from './poker-card-component/mp-card-component.component';
+import { PokerCardComponent } from './poker-card/poker-card.component';
 
 @NgModule({
   //imports for mega data within other modules
   imports: [
+    CommonModule,
     BrowserModule,
     FlexLayoutModule,
+    MatCardModule
   ],
 
   //service
   providers:[],
 
   declarations: [
-    PokerCardComponentComponent,
+    PokerCardComponent,
   ],
 
   exports: [
-    PokerCardComponentComponent,
+    CommonModule,
+    PokerCardComponent,
   ],
 
   bootstrap: []
 })
 
-export class MainpageModule { }
+export class PokerModule { }

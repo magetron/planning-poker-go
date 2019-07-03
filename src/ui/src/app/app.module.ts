@@ -34,7 +34,6 @@ import { TopBarComponent } from './top-bar/top-bar.component';
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
-
     PokerModule
   ],
   providers: [ CommsService ],

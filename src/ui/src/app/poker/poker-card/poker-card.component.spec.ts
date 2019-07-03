@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MpCardComponentComponent } from './mp-card-component.component';
+import { PokerCardComponent} from './Poker-card.component';
 
-describe('MpCardComponentComponent', () => {
-  let component: MpCardComponentComponent;
-  let fixture: ComponentFixture<MpCardComponentComponent>;
+describe('PokerCardComponent', () => {
+  let component: PokerCardComponent;
+  let fixture: ComponentFixture<PokerCardComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MpCardComponentComponent ]
+      declarations: [ PokerCardComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MpCardComponentComponent);
+    fixture = TestBed.createComponent(PokerCardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
