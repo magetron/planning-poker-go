@@ -105,3 +105,21 @@ func (us *UsersService) Read(id string, ctx context.Context) error {
 
 	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 }
+
+func (us *UsersService) Vote(id string, value int, ctx context.Context) error {
+	urlId := ctx.PathValue("sprintId")
+
+	for _, users := range us.AllUsers {
+		if users.SprintId == urlId {
+			for _, user := range users.Users {
+				if user.Id == id {
+					user.Vote = value
+					log.Printf("User %s voted %s in the current round of Sprint %s", user.Id, value, urlId)
+					return goweb.Respond.WithOK(ctx)
+				}
+			}
+		}
+	}
+
+	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
+}
