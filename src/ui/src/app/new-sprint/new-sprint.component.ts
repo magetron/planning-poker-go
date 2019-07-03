@@ -20,8 +20,8 @@ export class NewSprintComponent implements OnInit {
 
   ngOnInit() {
     this.sprint = {
-      id: '123',
-      name: '123'
+      id: '',
+      name: ''
     }
   }
 

@@ -13,6 +13,7 @@ import { JoinComponent } from './join/join.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule, MatInputModule, MatButtonModule, MatCardModule, MatToolbarModule, MatIconModule } from '@angular/material';
 import { TopBarComponent } from './top-bar/top-bar.component';
+import { FlexLayoutModule } from '@angular/flex-layout'
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { TopBarComponent } from './top-bar/top-bar.component';
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
-    PokerModule
+    PokerModule,
+    FlexLayoutModule
   ],
   providers: [ CommsService ],
   bootstrap: [ AppComponent ]

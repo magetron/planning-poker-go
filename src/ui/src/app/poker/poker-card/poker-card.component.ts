@@ -21,4 +21,8 @@ export class PokerCardComponent implements OnInit {
     return point;
   }
 
+  vote(point){
+    
+  }
+
 }
