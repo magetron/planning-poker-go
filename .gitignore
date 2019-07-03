@@ -8,3 +8,6 @@ src/src
 
 #VS code
 .vscode
+
+#IDEA
+.idea
