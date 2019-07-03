@@ -7,7 +7,6 @@ import { CommsService } from '../services/comms.service';
 import { InternalService } from '../services/internal.service';
 import { Sprint } from '../models/sprint';
 import { User } from '../models/user';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-join',
