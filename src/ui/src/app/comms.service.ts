@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs'; 
 
 import { environment } from '../environments/environment';
+import * as globals from './services/globals.service';
 
 const HTTPOPTIONS = {
   headers: new HttpHeaders({'Content-Type': 'application/json' })
@@ -22,17 +23,13 @@ export class CommsService {
 
   constructor(private httpClient: HttpClient) {}
 
-  ngOnInit() {
-    this.baseUrl = location.origin;
-  }
-
   createSprint(name: string): Observable<Response> {
     let jsonObject = { Name: name };
 
     if (name !== "") {
       console.log("Creating sprint " + jsonObject.Name);
       const result = this.httpClient.post<Response>(
-        this.baseUrl + '/sprints', JSON.stringify(jsonObject), HTTPOPTIONS);
+        globals.apiUrl + '/sprints', JSON.stringify(jsonObject), HTTPOPTIONS);
       return result;
     } else if (!environment.production) {
       console.log("Empty sprint name rejected");
@@ -41,8 +38,8 @@ export class CommsService {
   }
 
   getSprintDetails(id: string): Observable<Response> {
-    const result = this.httpClient.get<any>(
-      this.baseUrl + '/sprints/' + id);
+    const result = this.httpClient.get<Response>(
+      globals.apiUrl + '/sprints/' + id, HTTPOPTIONS);
     return result; 
   }
 }

@@ -1,6 +1,5 @@
 import { Component, OnInit, Input} from '@angular/core';
 import { Sprint } from '../sprint';
-import { environment } from '../../environments/environment';
 
 
 @Component({
