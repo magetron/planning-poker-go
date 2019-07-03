@@ -32,7 +32,7 @@ func (rc *RoundsController) Create(ctx context.Context) error {
 	}
 
 	if !ctx.PathParams().Has("sprintId") {
-		return goweb.API.RespondWithError(ctx, http.StatusInternalServerError, "No ID Specified in URL.")
+		return goweb.API.RespondWithError(ctx, http.StatusInternalServerError, "No sprintID Specified in URL.")
 	}
 
 	urlId := ctx.PathValue("sprintId")

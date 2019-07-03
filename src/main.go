@@ -21,7 +21,7 @@ var DEV = true
 func mapRoutes() {
 
 	if DEV {
-		goweb.MapBefore(func(c context.Context) error {
+		_, _ = goweb.MapBefore(func(c context.Context) error {
 			c.HttpResponseWriter().Header().Set("Access-Control-Allow-Origin", "*")
 			c.HttpResponseWriter().Header().Set("Access-Control-Allow-Credentials", "true")
 			c.HttpResponseWriter().Header().Set("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT")
@@ -30,20 +30,21 @@ func mapRoutes() {
 		})
 	}
 
-	goweb.Map("GET", "/", func(c context.Context) error {
+	_, _ = goweb.Map("GET", "/", func(c context.Context) error {
 		return goweb.Respond.WithRedirect(c, "/index", "")
 	})
 
-	goweb.MapController(&SprintsController{})
-	goweb.MapController("sprints/[sprintId]/rounds", &RoundsController{})
+	_ = goweb.MapController(&SprintsController{})
+	_ = goweb.MapController("sprints/[sprintId]/rounds", &RoundsController{})
+	_ = goweb.MapController("sprints/[sprintId]/users", &UsersService{})
 
 	if !DEV {
-		goweb.MapStatic("/index", "static-ui")
-		goweb.MapStaticFile("/main-es2015.js", "static-ui/main-es2015.js")
-		goweb.MapStaticFile("/polyfills-es2015.js", "static-ui/polyfills-es2015.js")
-		goweb.MapStaticFile("/runtime-es2015.js", "static-ui/runtime-es2015.js")
-		goweb.MapStaticFile("/styles-es2015.js", "static-ui/styles-es2015.js")
-		goweb.MapStaticFile("/vendor-es2015.js", "static-ui/vendor-es2015.js")
+		_, _ = goweb.MapStatic("/index", "static-ui")
+		_, _ = goweb.MapStaticFile("/main-es2015.js", "static-ui/main-es2015.js")
+		_, _ = goweb.MapStaticFile("/polyfills-es2015.js", "static-ui/polyfills-es2015.js")
+		_, _ = goweb.MapStaticFile("/runtime-es2015.js", "static-ui/runtime-es2015.js")
+		_, _ = goweb.MapStaticFile("/styles-es2015.js", "static-ui/styles-es2015.js")
+		_, _ = goweb.MapStaticFile("/vendor-es2015.js", "static-ui/vendor-es2015.js")
 	}
 }
 
