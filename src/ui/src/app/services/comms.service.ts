@@ -47,13 +47,11 @@ export class CommsService {
 
   joinSprint(user: User, sprint: Sprint) {
     let jsonObject = {
-      user_id: user.id,
-      user_name: user.name,
-      //TODO: ask Patric about format
+      Name: user.name,
     }
 
     const result = this.httpClient.post<Response>(
-      globals.apiUrl + '/sprints/' + sprint.id, jsonObject, HTTPOPTIONS);
+      globals.apiUrl + '/sprints/' + sprint.id + "/users", jsonObject, HTTPOPTIONS);
     return result;
   }
 }
