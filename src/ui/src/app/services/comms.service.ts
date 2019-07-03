@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs'; 
 
-import { environment } from '../../environments/environment';
 import * as globals from './globals.service';
-import { User } from '../models/user';
 import { Sprint } from '../models/sprint';
 
 const HTTPOPTIONS = {
@@ -31,9 +29,9 @@ export class CommsService {
     if (name !== "") {
       console.log("Creating sprint " + jsonObject.Name);
       const result = this.httpClient.post<Response>(
-        globals.apiUrl + '/sprints', jsonObject, HTTPOPTIONS);
+        `${globals.apiUrl}/sprints`, jsonObject, HTTPOPTIONS);
       return result;
-    } else if (!environment.production) {
+    } else {
       console.log("Empty sprint name rejected");
       //TODO: do we need to return null here?
     }
@@ -41,17 +39,17 @@ export class CommsService {
 
   getSprintDetails(id: string): Observable<Response> {
     const result = this.httpClient.get<Response>(
-      globals.apiUrl + '/sprints/' + id, HTTPOPTIONS);
+      `${globals.apiUrl}/sprints/${id}`, HTTPOPTIONS);
     return result; 
   }
 
-  joinSprint(user: User, sprint: Sprint) {
+  joinSprint(username: string, sprint: Sprint) {
     let jsonObject = {
-      Name: user.name,
+      Name: username,
     }
 
     const result = this.httpClient.post<Response>(
-      globals.apiUrl + '/sprints/' + sprint.id + "/users", jsonObject, HTTPOPTIONS);
+      `${globals.apiUrl}/sprints/${sprint.id}/users`, jsonObject, HTTPOPTIONS);
     return result;
   }
 }
