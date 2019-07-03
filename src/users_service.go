@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"net/http"
-	"strconv"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/goweb"
@@ -84,7 +83,7 @@ func (us *UsersService) ReadMany(ctx context.Context) error {
 func (us *UsersService) Read(id string, ctx context.Context) error {
 
 	urlId := ctx.PathValue("sprintId")
-	
+
 	for _, users := range us.AllUsers {
 		if users.SprintId == urlId {
 			for _, user := range users.Users {
