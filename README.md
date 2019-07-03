@@ -24,7 +24,7 @@ curl http://localhost:8080/sprints/[sprintId]/users
 ```
 
 ## Rounds
-```
+```bash
 curl -d '{"Name":"Task 1"}' -H 'Content-Type: application/json' http://localhost:8080/sprints/[sprintId]]/rounds
 curl http://localhost:8080/sprints/[sprintId]/rounds
 ```
