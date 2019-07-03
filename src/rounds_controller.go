@@ -111,3 +111,26 @@ func (rc *RoundsController) Read(id string, ctx context.Context) error {
 
 	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 }
+
+func (rc *RoundsController) DeleteMany(ctx context.Context) error {
+	urlId := ctx.PathValue("sprintId")
+
+	if rc.AllRounds != nil {
+		for _, rs := range rc.AllRounds {
+			if rs.SprintId == urlId {
+				rs.Rounds = make([]*Round, 0)
+			}
+		}
+	}
+
+	if DEV {
+		log.Printf("IMPORTANT : Deleted All Rounds in Sprint %s", urlId)
+	}
+
+	return goweb.Respond.WithOK(ctx)
+
+}
+
+func (rc *RoundsController) Delete(id string, ctx context.Context) error {
+
+}
