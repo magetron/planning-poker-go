@@ -5,8 +5,9 @@ import (
 )
 
 type User struct {
-	Id	 string
+	Id   string
 	Name string
+	Vote int
 }
 
 

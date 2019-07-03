@@ -41,6 +41,7 @@ func (us *UsersService) Create(ctx context.Context) error {
 	user := new(User)
 	user.Id = uuid.New().String()
 	user.Name = dataMap["Name"].(string)
+	user.Vote = -1
 
 	foundId := false
 	for _, users := range us.AllUsers {
