@@ -130,7 +130,3 @@ func (rc *RoundsController) DeleteMany(ctx context.Context) error {
 	return goweb.Respond.WithOK(ctx)
 
 }
-
-func (rc *RoundsController) Delete(id string, ctx context.Context) error {
-
-}
