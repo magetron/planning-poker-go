@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Sprint } from '../../models/sprint';
+import { Sprint } from '../models/sprint';
 import { CommsService } from '../services/comms.service';
 import { InternalService } from '../services/internal.service';
 

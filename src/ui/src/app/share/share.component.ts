@@ -1,6 +1,6 @@
 import { Component, OnInit, Input} from '@angular/core';
 
-import { Sprint } from '../../models/sprint';
+import { Sprint } from '../models/sprint';
 import { baseUrl } from '../services/globals.service';
 
 @Component({
