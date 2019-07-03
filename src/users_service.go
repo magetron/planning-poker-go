@@ -125,6 +125,21 @@ func (us *UsersService) DeleteMany(ctx context.Context) error {
 }
 
 func (us *UsersService) Delete(id string, ctx context.Context) error {
+	urlId := ctx.PathValue("sprintId")
+
+	for _, users := range us.AllUsers {
+		if users.SprintId == urlId {
+			newList := make([]*User, 0)
+			for _, user := range users.Users {
+				if user.Id != id {
+					newList = append(newList, user)
+				}
+			}
+			users.Users = newList
+		}
+	}
+
+	log.Printf("Deleted User %s in Sprint %s", id, urlId)
 
 	return goweb.Respond.WithOK(ctx)
 }
