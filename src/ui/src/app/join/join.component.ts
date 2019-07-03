@@ -7,7 +7,7 @@ import { CommsService } from '../services/comms.service';
 import { InternalService } from '../services/internal.service';
 import { Sprint } from '../models/sprint';
 import { User } from '../models/user';
-import { environment } from 'src/environments/environment.prod';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-join',
@@ -65,9 +65,7 @@ export class JoinComponent implements OnInit {
         if (res.s = 200) {
           this.user.id = res.d['Id']
         } else {
-          if (!environment.production) {
-            console.log("Connection error");
-          }
+          console.log("Connection error");
         }
       }
     )
