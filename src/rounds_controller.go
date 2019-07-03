@@ -79,7 +79,7 @@ func (rc *RoundsController) ReadMany(ctx context.Context) error {
 	}
 
 	if DEV {
-		log.Print("Accessed all Rounds Information in Sprint %s", urlId)
+		log.Printf("Accessed all Rounds Information in Sprint %s", urlId)
 	}
 
 	return goweb.API.RespondWithData(ctx, make([]*Round, 0))
@@ -106,7 +106,7 @@ func (rc *RoundsController) Read(id string, ctx context.Context) error {
 	}
 
 	if DEV {
-		log.Print("Accessed Round %d Information of Sprint %s", roundId, urlId)
+		log.Printf("Accessed Round %d Information of Sprint %s", roundId, urlId)
 	}
 
 	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
