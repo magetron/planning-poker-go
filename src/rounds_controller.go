@@ -37,8 +37,6 @@ func (rc *RoundsController) Create(ctx context.Context) error {
 
 	urlId := ctx.PathValue("sprintId")
 
-	log.Printf("New Round Added to sprintID %s", urlId)
-
 	dataMap := data.(map[string]interface{})
 
 	round := new(Round)
@@ -61,6 +59,8 @@ func (rc *RoundsController) Create(ctx context.Context) error {
 		rc.AllRounds = append(rc.AllRounds, rounds)
 	}
 
+	log.Printf("New Round %s Added to sprintID %s", round.Id, urlId)
+
 	return goweb.API.RespondWithData(ctx, round)
 }
 
@@ -76,6 +76,10 @@ func (rc *RoundsController) ReadMany(ctx context.Context) error {
 		if rs.SprintId == urlId {
 			return goweb.API.RespondWithData(ctx, rs.Rounds)
 		}
+	}
+
+	if DEV {
+		log.Print("Accessed all Rounds Information in Sprint %s", urlId)
 	}
 
 	return goweb.API.RespondWithData(ctx, make([]*Round, 0))
@@ -99,6 +103,10 @@ func (rc *RoundsController) Read(id string, ctx context.Context) error {
 				}
 			}
 		}
+	}
+
+	if DEV {
+		log.Print("Accessed Round %d Information of Sprint %s", roundId, urlId)
 	}
 
 	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
