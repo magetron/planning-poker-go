@@ -36,6 +36,7 @@ func mapRoutes() {
 
 	_ = goweb.MapController(&SprintsController{})
 	_ = goweb.MapController("sprints/[sprintId]/rounds", &RoundsController{})
+	_ = goweb.MapController("sprints/[sprintId]/users", &UsersService{})
 
 	if !DEV {
 		_, _ = goweb.MapStatic("/index", "static-ui")
