@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs'; 
 
-import { environment } from '../environments/environment';
-import * as globals from './services/globals.service';
+import { environment } from '../../environments/environment';
+import * as globals from './globals.service';
 
 const HTTPOPTIONS = {
   headers: new HttpHeaders({'Content-Type': 'application/json' })
@@ -29,7 +29,7 @@ export class CommsService {
     if (name !== "") {
       console.log("Creating sprint " + jsonObject.Name);
       const result = this.httpClient.post<Response>(
-        globals.apiUrl + '/sprints', JSON.stringify(jsonObject), HTTPOPTIONS);
+        globals.apiUrl + '/sprints', jsonObject, HTTPOPTIONS);
       return result;
     } else if (!environment.production) {
       console.log("Empty sprint name rejected");

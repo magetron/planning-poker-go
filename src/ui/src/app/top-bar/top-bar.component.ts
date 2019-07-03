@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
-import { InternalService } from '../internal.service'; 
-import { User } from '../user';
-import { Sprint } from '../sprint';
+import { InternalService } from '../services/internal.service'; 
+import { User } from '../../models/user';
+import { Sprint } from '../../models/sprint';
 
 @Component({
   selector: 'app-top-bar',

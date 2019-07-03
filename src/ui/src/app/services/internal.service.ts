@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-import { User} from './user';
-import { Sprint } from './sprint';
+import { User} from '../../models/user';
+import { Sprint } from '../../models/sprint';
 
 @Injectable({
   providedIn: 'root'
