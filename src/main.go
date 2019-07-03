@@ -20,7 +20,9 @@ func mapRoutes() {
 
 	goweb.MapBefore(func(c context.Context) error {
 		c.HttpResponseWriter().Header().Set("Access-Control-Allow-Origin", "*")
-		c.HttpResponseWriter().Header().Set("Access-Control-Allow-Headers", "*")
+		c.HttpResponseWriter().Header().Set("Access-Control-Allow-Credentials", "true")
+		c.HttpResponseWriter().Header().Set("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT")
+		c.HttpResponseWriter().Header().Set("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers")
 		return nil
 	})
 
