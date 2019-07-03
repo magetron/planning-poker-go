@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Sprint } from '../sprint';
-import { CommsService } from '../comms.service';
+import { Sprint } from '../models/sprint';
+import { CommsService } from '../services/comms.service';
+import { InternalService } from '../services/internal.service';
+
 
 @Component({
   selector: 'app-new-sprint',
@@ -14,7 +16,7 @@ export class NewSprintComponent implements OnInit {
   sprint: Sprint;
   name: string = '';
 
-  constructor(private commsService: CommsService) { }
+  constructor(private commsService: CommsService, private intern: InternalService) { }
 
   ngOnInit() {
     this.sprint = {
@@ -30,6 +32,7 @@ export class NewSprintComponent implements OnInit {
           if (response) {
             this.sprint.id = response.d;
             this.sprint.name = this.name;
+            this.intern.updateSprint(this.sprint);
           }
         });
       }

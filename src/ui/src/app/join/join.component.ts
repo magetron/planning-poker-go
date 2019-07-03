@@ -3,9 +3,10 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { CommsService } from '../comms.service';
-import { Sprint } from '../sprint';
-import { User } from '../user';
+import { CommsService } from '../services/comms.service';
+import { InternalService } from '../services/internal.service';
+import { Sprint } from '../../models/sprint';
+import { User } from '../../models/user';
 
 @Component({
   selector: 'app-join',
@@ -23,7 +24,8 @@ export class JoinComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private service: CommsService,
+    private comms: CommsService,
+    private internal: InternalService,
   ) { }
 
   ngOnInit() {
@@ -31,7 +33,7 @@ export class JoinComponent implements OnInit {
     this.sprint.id = this.route.snapshot.paramMap.get('sprint_id');
     //TODO: get sprint title from backend
     //if you get a sprint title, set the sprint
-    this.service.getSprintDetails(this.sprint.id)
+    this.comms.getSprintDetails(this.sprint.id)
     .pipe (
       catchError(err => {
         console.log('Connection error', err);
@@ -52,8 +54,9 @@ export class JoinComponent implements OnInit {
 
   registerUser(username: string): void {
     this.user.name = username;
+
     console.log("Waiting for backend to implement user management");
-    //this.service
+    this.internal.updateUser(this.user);
   }
 
   intialize(): void {
