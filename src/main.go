@@ -29,8 +29,8 @@ func mapRoutes() {
 
 	goweb.MapController(&SprintsController{})
 	goweb.MapController("sprints/[sprintId]/rounds", &RoundsController{})
-	goweb.MapStatic("/index", "static-ui")
 	/*
+		goweb.MapStatic("/index", "static-ui")
 		goweb.MapStaticFile("/main-es2015.js", "static-ui/main-es2015.js")
 		goweb.MapStaticFile("/polyfills-es2015.js", "static-ui/polyfills-es2015.js")
 		goweb.MapStaticFile("/runtime-es2015.js", "static-ui/runtime-es2015.js")
