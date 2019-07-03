@@ -16,15 +16,19 @@ const (
 	Address string = ":8080"
 )
 
+var DEV = true
+
 func mapRoutes() {
 
-	goweb.MapBefore(func(c context.Context) error {
-		c.HttpResponseWriter().Header().Set("Access-Control-Allow-Origin", "*")
-		c.HttpResponseWriter().Header().Set("Access-Control-Allow-Credentials", "true")
-		c.HttpResponseWriter().Header().Set("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT")
-		c.HttpResponseWriter().Header().Set("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers")
-		return nil
-	})
+	if DEV {
+		goweb.MapBefore(func(c context.Context) error {
+			c.HttpResponseWriter().Header().Set("Access-Control-Allow-Origin", "*")
+			c.HttpResponseWriter().Header().Set("Access-Control-Allow-Credentials", "true")
+			c.HttpResponseWriter().Header().Set("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT")
+			c.HttpResponseWriter().Header().Set("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers")
+			return nil
+		})
+	}
 
 	goweb.Map("GET", "/", func(c context.Context) error {
 		return goweb.Respond.WithRedirect(c, "/index", "")
@@ -32,20 +36,30 @@ func mapRoutes() {
 
 	goweb.MapController(&SprintsController{})
 	goweb.MapController("sprints/[sprintId]/rounds", &RoundsController{})
-	/*
+
+	if !DEV {
 		goweb.MapStatic("/index", "static-ui")
 		goweb.MapStaticFile("/main-es2015.js", "static-ui/main-es2015.js")
 		goweb.MapStaticFile("/polyfills-es2015.js", "static-ui/polyfills-es2015.js")
 		goweb.MapStaticFile("/runtime-es2015.js", "static-ui/runtime-es2015.js")
 		goweb.MapStaticFile("/styles-es2015.js", "static-ui/styles-es2015.js")
 		goweb.MapStaticFile("/vendor-es2015.js", "static-ui/vendor-es2015.js")
-	*/
+	}
 }
 
 func main() {
+
 	mapRoutes()
 
 	log.Print("Staring server ...")
+
+	if (DEV) {
+		log.Print("In DEV mode, all CORS access will be allowed (UNSAFE).")
+		log.Print("DO NOT use in production.")
+	} else {
+		log.Print("In PROD mode, all pages will be statically mapped. Run ./build-static-ui.sh to build static ui with Angular.")
+	}
+
 
 	server := &http.Server{
 		Addr:           Address,
