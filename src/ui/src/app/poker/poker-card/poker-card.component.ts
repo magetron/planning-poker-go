@@ -7,15 +7,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PokerCardComponent implements OnInit {
 
-  points: number[] = [0, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100, -1]
+  points: number[] = [0, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100, -2]
 
   constructor() { }
 
   ngOnInit() {
   }
 
-  beautify(point) {
-    if (point && point === -1 ) {
+  cardify(point) {
+    if (point && point === -2 ) {
       return '?';
     }
     return point;
