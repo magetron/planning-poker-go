@@ -37,7 +37,7 @@ func (sc *SprintsController) Create(ctx context.Context) error {
 	sprint.Name = dataMap["Name"].(string)
 
 	sc.Sprints = append(sc.Sprints, sprint)
-	log.Print("New Sprint with SprintId %s", sprint.Id)
+	log.Printf("New Sprint with SprintId %s", sprint.Id)
 
 	return goweb.API.RespondWithData(ctx, newid)
 }
@@ -64,7 +64,7 @@ func (sc *SprintsController) Read(id string, ctx context.Context) error {
 	}
 
 	if DEV {
-		log.Print("Accessed Sprint %s Information", id)
+		log.Printf("Accessed Sprint %s Information", id)
 	}
 
 	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
@@ -84,7 +84,7 @@ func (sc *SprintsController) Delete(id string, ctx context.Context) error {
 		}
 	}
 	sc.Sprints = newList
-	log.Print("Deleted Sprint %s", id)
+	log.Printf("Deleted Sprint %s", id)
 
 	return goweb.Respond.WithOK(ctx)
 }
