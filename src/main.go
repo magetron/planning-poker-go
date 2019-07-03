@@ -20,6 +20,7 @@ func mapRoutes() {
 
 	goweb.MapBefore(func(c context.Context) error {
 		c.HttpResponseWriter().Header().Set("Access-Control-Allow-Origin", "*")
+		c.HttpResponseWriter().Header().Set("Access-Control-Allow-Headers", "*")
 		return nil
 	})
 
