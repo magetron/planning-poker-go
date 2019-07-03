@@ -6,6 +6,7 @@ import { MatCardModule } from '@angular/material';
 
 //import page 3 components here
 import { PokerCardComponent } from './poker-card/poker-card.component';
+import { MemberslistComponent } from './memberslist/memberslist.component';
 
 @NgModule({
   //imports for mega data within other modules
@@ -21,6 +22,7 @@ import { PokerCardComponent } from './poker-card/poker-card.component';
 
   declarations: [
     PokerCardComponent,
+    MemberslistComponent,
   ],
 
   exports: [

@@ -7,8 +7,8 @@
 @include mat-core();
 
 // Define the default theme (same as the example above).
-$ppoker-app-primary: mat-palette($mat-cyan, 300);
-$ppoker-app-accent:  mat-palette($mat-pink, A200, A100, A400);
+$ppoker-app-primary: mat-palette($mat-blue, 900);
+$ppoker-app-accent:  mat-palette($mat-purple, 600);
 $ppoker-app-theme:   mat-light-theme($ppoker-app-primary, $ppoker-app-accent);
 
 // Include the default theme styles.
@@ -30,7 +30,7 @@ $dark-theme:   mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
 
 
 .background-primary {
-  background: mat-color($mat-cyan, 50);
+  background: mat-color($mat-blue, 50);
 }
 .background-secondary {
   background: mat-color($mat-purple, 50);
@@ -41,6 +41,6 @@ $dark-theme:   mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
 }
 
 .button-primary {
-  background: mat-color($mat-pink, 300);
+  background: mat-color($mat-purple, 600);
   color: mat-color($mat-blue, 50);
 }
