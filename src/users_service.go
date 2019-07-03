@@ -36,8 +36,6 @@ func (us *UsersService) Create(ctx context.Context) error {
 
 	urlId := ctx.PathValue("sprintId")
 
-	log.Printf("New User Added to sprintID %s", urlId)
-
 	dataMap := data.(map[string]interface{})
 
 	user := new(User)
@@ -59,6 +57,8 @@ func (us *UsersService) Create(ctx context.Context) error {
 		us.AllUsers = append(us.AllUsers, users)
 	}
 
+	log.Printf("New User %s Added to sprintID %s", user.Id, urlId)
+
 	return goweb.API.RespondWithData(ctx, user)
 }
 
@@ -74,6 +74,10 @@ func (us *UsersService) ReadMany(ctx context.Context) error {
 		if users.SprintId == urlId {
 			return goweb.API.RespondWithData(ctx, users.Users)
 		}
+	}
+
+	if DEV {
+		log.Printf("Accessed all Users Information in Sprint %s", urlId)
 	}
 
 	return goweb.API.RespondWithData(ctx, make([]*User, 0))
@@ -92,6 +96,10 @@ func (us *UsersService) Read(id string, ctx context.Context) error {
 				}
 			}
 		}
+	}
+
+	if DEV {
+		log.Printf("Accessed Users %s Information in Sprint %s", id, urlId)
 	}
 
 	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
