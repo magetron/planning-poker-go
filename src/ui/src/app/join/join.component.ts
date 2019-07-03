@@ -41,10 +41,10 @@ export class JoinComponent implements OnInit {
         return throwError(err);
       })
     )
-    .subscribe( response => {
-      if (response) {
-        if (response.d['Id'] === this.sprint.id) {
-          this.sprint.name = response.d['Name'];
+    .subscribe( res => {
+      if (res && res.s === 200) {
+        if (res.d['Id'] === this.sprint.id) {
+          this.sprint.name = res.d['Name'];
         } else {
           //TODO: redirect - invalid Id
         }
@@ -52,8 +52,8 @@ export class JoinComponent implements OnInit {
     })
   }
 
-  registerUser(): void {
-    this.comms.joinSprint(this.user, this.sprint).pipe(
+  registerUser(username: string): void {
+    this.comms.joinSprint(username, this.sprint).pipe(
       catchError( err => {
         console.log('Connection error', err);
         //TODO: Handle properly - notify the user, retry?
@@ -61,16 +61,17 @@ export class JoinComponent implements OnInit {
       })
     ).subscribe(
       res => {
-        if (res.s = 200) {
-          this.user.id = res.d['Id']
+        if (res && res.s === 200) {
+          this.user.id = res.d['Id'];
+          this.user.name = res.d['Name'];
+          this.internal.updateUser(this.user);
+          this.router.navigateByUrl(`/table/${this.sprint.id}`);
         } else {
           console.log("Connection error");
         }
       }
     )
-    this.user.name = this.username;
-    this.internal.updateUser(this.user);
-    this.router.navigateByUrl("/table" + this.sprint.id);
+    
   }
 
   intialize(): void {
