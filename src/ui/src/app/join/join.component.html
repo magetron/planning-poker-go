@@ -1,7 +1,19 @@
-<h1>Welcome to Barclays planning poker</h1>
+<div class = "container">
+<mat-card class="background-primary">
+  <mat-card-header>
+    <mat-card-title class="text-primary" >You are about to join {{sprint?.name}}.</mat-card-title>
+    <mat-card-subtitle></mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
 
-<h2> You are about to join {{sprint?.name}}.</h2>
+      <mat-form-field>
+        <input input [(ngModel)]="username" [ngModelOptions]="{standalone: true}" matInput placeholder="Enter your name">
+      </mat-form-field>
 
-<p>Enter your name <input [(ngModel)]="username" placeholder="SuperCoder13"> </p>
+  </mat-card-content>
+  <mat-card-actions>
+    <button class="button-primary" mat-button [disabled]="!(username)" (click)="registerUser(username)">Join session</button>
+  </mat-card-actions>
+</mat-card>
 
-<button [disabled]="!(username)" (click)="registerUser(username)">Join session Now</button>
+</div>

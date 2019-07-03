@@ -1,6 +1,10 @@
+mat-card {
+  margin-top: 2em;
+  margin: auto;
+  max-width: 30em;
+  align-content: center;
+}
 
-.container
-{
-  width: 90%;
-  margin:20px auto;
+mat-form-field {
+  width: 100%;
 }
