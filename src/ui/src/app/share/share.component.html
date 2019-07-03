@@ -5,10 +5,12 @@
     </mat-card-title>
     <mat-card-subtitle>
       Invite others to join your Planning Poker session:
+      <a [routerLink]="['/join', share.id]">
+        <p> {{baseUrl}}/join/{{share.id}} </p>
+      </a>
     </mat-card-subtitle>
   </mat-card-header>
-  <a [routerLink]="['/join', share.id]"><p> {{baseUrl}}/join/{{share.id}} </p></a>  <mat-card-content>
-  </mat-card-content>
-  <mat-card-actions>
+  <mat-card-actions fxLayoutAlign="end">
+    <button (click)="copylink(baseUrl + '/join/' + share.id)" mat-flat-button color="accent"> COPY </button>
   </mat-card-actions>
 </mat-card>
