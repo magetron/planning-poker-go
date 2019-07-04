@@ -11,6 +11,7 @@ import (
 
 	"github.com/stretchr/goweb"
 	"github.com/stretchr/goweb/context"
+	"github.com/gorilla/websocket"
 )
 
 const (
@@ -42,6 +43,27 @@ func mapRoutes() {
 	_ = goweb.MapController(sc)
 	_ = goweb.MapController("sprints/[sprintId]/rounds", rc)
 	_ = goweb.MapController("sprints/[sprintId]/users", us)
+
+
+	upgrader := websocket.Upgrader{
+		ReadBufferSize:  1024,
+		WriteBufferSize: 1024,
+	}
+
+	_, _ = goweb.Map("websocket", func (ctx context.Context) error {
+		r := ctx.HttpRequest()
+		w := ctx.HttpResponseWriter()
+		upgrader.CheckOrigin = func(r *http.Request) bool {
+			return true
+		}
+		ws, err := upgrader.Upgrade(w, r, nil)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println("WebSocket Client Connected")
+		us.Update(ws)
+		return nil
+	})
 
 	if !DEV {
 		root := "./static-ui"

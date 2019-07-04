@@ -1,8 +1,10 @@
 package main
 
 import (
+	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
+	"encoding/json"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/goweb"
@@ -170,4 +172,28 @@ func (us *UsersService) Replace(id string, ctx context.Context) error {
 	}
 
 	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
+}
+
+func (us *UsersService) Update(conn *websocket.Conn) {
+	for {
+		messageType, p, err := conn.ReadMessage()
+		if err != nil {
+			log.Fatal(err)
+			return
+		}
+		log.Printf("User update Socket received id: %s", string(p))
+		for _, users := range us.AllUsers {
+			if users.SprintId == string(p) {
+				usersStr, usersErr := json.Marshal(users.Users)
+				if usersErr != nil {
+					log.Fatal(usersErr)
+				}
+				if err := conn.WriteMessage(messageType, usersStr); err != nil {
+					log.Fatal(err)
+					return
+				}
+			}
+		}
+
+	}
 }
