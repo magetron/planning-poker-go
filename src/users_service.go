@@ -194,6 +194,5 @@ func (us *UsersService) Update(conn *websocket.Conn) {
 				}
 			}
 		}
-
 	}
 }

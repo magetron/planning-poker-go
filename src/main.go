@@ -50,7 +50,7 @@ func mapRoutes() {
 		WriteBufferSize: 1024,
 	}
 
-	_, _ = goweb.Map("websocket", func (ctx context.Context) error {
+	_, _ = goweb.Map("userinfo", func (ctx context.Context) error {
 		r := ctx.HttpRequest()
 		w := ctx.HttpResponseWriter()
 		upgrader.CheckOrigin = func(r *http.Request) bool {
