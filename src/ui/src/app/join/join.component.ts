@@ -82,6 +82,7 @@ export class JoinComponent implements OnInit {
     this.user = {
       name: "",
       id: "",
+      vote: -1,
     }
     this.sprint = {
       name: "",
