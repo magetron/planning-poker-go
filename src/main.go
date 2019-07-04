@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/signal"
 	"time"
+	"path/filepath"
 
 	"github.com/stretchr/goweb"
 	"github.com/stretchr/goweb/context"
@@ -43,12 +44,16 @@ func mapRoutes() {
 	_ = goweb.MapController("sprints/[sprintId]/users", us)
 
 	if !DEV {
-		_, _ = goweb.MapStatic("/index", "static-ui")
-		_, _ = goweb.MapStaticFile("/main-es2015.js", "static-ui/main-es2015.js")
-		_, _ = goweb.MapStaticFile("/polyfills-es2015.js", "static-ui/polyfills-es2015.js")
-		_, _ = goweb.MapStaticFile("/runtime-es2015.js", "static-ui/runtime-es2015.js")
-		_, _ = goweb.MapStaticFile("/styles-es2015.js", "static-ui/styles-es2015.js")
-		_, _ = goweb.MapStaticFile("/vendor-es2015.js", "static-ui/vendor-es2015.js")
+		root := "./static-ui"
+		fileErr := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+			if path != "./static-ui" {
+				_, _ = goweb.MapStaticFile(path[10:], path)
+			}
+			return nil
+		})
+		if fileErr != nil {
+			log.Fatalf("Could not scan static files %s", fileErr)
+		}
 	}
 }
 
