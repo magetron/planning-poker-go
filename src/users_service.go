@@ -7,12 +7,10 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/goweb"
 	"github.com/stretchr/goweb/context"
-	"log"
-	"net/http"
 )
 
 type Users struct {
-	Users   []*User
+	Users    []*User
 	SprintId string
 }
 
@@ -111,7 +109,7 @@ func (us *UsersService) Read(id string, ctx context.Context) error {
 func (us *UsersService) DeleteMany(ctx context.Context) error {
 	urlId := ctx.PathValue("sprintId")
 
-	if us.AllUsers!= nil {
+	if us.AllUsers != nil {
 		for _, users := range us.AllUsers {
 			if users.SprintId == urlId {
 				users.Users = make([]*User, 0)
