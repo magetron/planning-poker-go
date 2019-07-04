@@ -1,6 +1,9 @@
 package main
 
 import (
+	"log"
+	"net/http"
+
 	"github.com/google/uuid"
 	"github.com/stretchr/goweb"
 	"github.com/stretchr/goweb/context"
@@ -103,6 +106,45 @@ func (us *UsersService) Read(id string, ctx context.Context) error {
 	}
 
 	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
+}
+
+func (us *UsersService) DeleteMany(ctx context.Context) error {
+	urlId := ctx.PathValue("sprintId")
+
+	if us.AllUsers!= nil {
+		for _, users := range us.AllUsers {
+			if users.SprintId == urlId {
+				users.Users = make([]*User, 0)
+			}
+		}
+	}
+
+	if DEV {
+		log.Printf("IMPORTANT : Deleted All Users in Sprint %s", urlId)
+	}
+
+	return goweb.Respond.WithOK(ctx)
+
+}
+
+func (us *UsersService) Delete(id string, ctx context.Context) error {
+	urlId := ctx.PathValue("sprintId")
+
+	for _, users := range us.AllUsers {
+		if users.SprintId == urlId {
+			newList := make([]*User, 0)
+			for _, user := range users.Users {
+				if user.Id != id {
+					newList = append(newList, user)
+				}
+			}
+			users.Users = newList
+		}
+	}
+
+	log.Printf("Deleted User %s in Sprint %s", id, urlId)
+
+	return goweb.Respond.WithOK(ctx)
 }
 
 func (us *UsersService) Replace(id string, ctx context.Context) error {
