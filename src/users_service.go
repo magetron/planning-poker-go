@@ -106,7 +106,6 @@ func (us *UsersService) Read(id string, ctx context.Context) error {
 }
 
 func (us *UsersService) Replace(id string, ctx context.Context) error {
-	log.Print(id)
 	data, dataErr := ctx.RequestData()
 
 	if dataErr != nil {
