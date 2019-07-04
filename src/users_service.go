@@ -1,9 +1,6 @@
 package main
 
 import (
-	"log"
-	"net/http"
-
 	"github.com/google/uuid"
 	"github.com/stretchr/goweb"
 	"github.com/stretchr/goweb/context"

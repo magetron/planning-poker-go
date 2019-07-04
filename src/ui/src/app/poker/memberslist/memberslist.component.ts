@@ -16,6 +16,8 @@ export class MemberslistComponent implements OnInit {
   users: User[];
   @Input() sprint_id: string;
 
+  displayedColumns: string[] = ['NAME'];
+
   constructor(
     private comms: CommsService,
     private internal: InternalService) { }
@@ -27,6 +29,6 @@ export class MemberslistComponent implements OnInit {
         this.users = res.d as Array<User>;
       }
     });
-  }
 
+  }
 }

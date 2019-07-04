@@ -1,8 +1,9 @@
 <div fxLayout="row" fxLayoutAlign="space-around stretch">
-  <mat-card (click)="vote(point)" *ngFor="let point of points">
+  <button mat-raised-button class="button-secondary" (click)="vote(point)" *ngFor="let point of points">
     <h1>
         <span>{{cardify(point)}}</span>
     </h1>
-  </mat-card>
+  </button>
 </div>
+<br>
 <app-memberslist [sprint_id]="sprint_id" ></app-memberslist>
