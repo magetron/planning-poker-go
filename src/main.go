@@ -16,7 +16,7 @@ const (
 	Address string = ":8080"
 )
 
-var DEV = true
+var DEV = false
 
 func mapRoutes() {
 
@@ -58,13 +58,12 @@ func main() {
 
 	log.Print("Staring server ...")
 
-	if (DEV) {
+	if DEV {
 		log.Print("In DEV mode, all CORS access will be allowed (UNSAFE).")
 		log.Print("DO NOT use in production.")
 	} else {
 		log.Print("In PROD mode, all pages will be statically mapped. Run ./build-static-ui.sh to build static ui with Angular.")
 	}
-
 
 	server := &http.Server{
 		Addr:           Address,
