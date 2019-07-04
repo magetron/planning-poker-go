@@ -25,16 +25,18 @@ export class NewSprintComponent implements OnInit {
     }
   }
 
-  createSprint(): void {
-      //POST sprint.name to /new
-      if (this.name){
-        this.commsService.createSprint(this.name).subscribe( response => {
-          if (response) {
-            this.sprint.id = response.d;
-            this.sprint.name = this.name;
-            this.intern.updateSprint(this.sprint);
-          }
-        });
-      }
+  createSprint(name: string): void {
+    //POST sprint.name to /new
+    if (name) {
+      this.commsService.createSprint(name).subscribe(response => {
+        if (response) {
+          this.sprint.id = response.d;
+          this.sprint.name = name;
+          this.intern.updateSprint(this.sprint);
+        }
+      });
+    } else {
+      console.log("Empty sprint name submitted");
+    }
   }
 }

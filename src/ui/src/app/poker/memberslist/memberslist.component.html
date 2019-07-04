@@ -1,1 +1,12 @@
-<p>memberslist works!</p>
+<table>
+    <thead>
+        <th>User</th>
+        <th>Id</th>
+    </thead>
+    <tr *ngFor="let user of users">
+        <td>{{user.Name}}</td>
+        <td>{{user.Id}}</td>
+    </tr>
+</table>
+
+

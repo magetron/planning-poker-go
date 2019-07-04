@@ -11,13 +11,14 @@
     <mat-card-content>
       <mat-form-field appearance="outline">
         <mat-label>Sprint Name</mat-label>
-        <input matInput placeholder="Name" [(ngModel)]="name">
+        <input matInput placeholder="Name" [(ngModel)]="name"
+         (keyup.enter)="createSprint(name)" >
         <mat-icon matSuffix>info</mat-icon>
         <mat-hint>Please name your sprint.</mat-hint>
       </mat-form-field>
     </mat-card-content>
     <mat-card-actions fxLayoutAlign="end">
-      <button (click)="createSprint()" mat-flat-button color="accent">
+      <button (click)="createSprint(name)" mat-flat-button color="accent">
         <mat-icon>add</mat-icon> Sprint
       </button>
     </mat-card-actions>

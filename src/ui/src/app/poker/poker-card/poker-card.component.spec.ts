@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PokerCardComponent} from './Poker-card.component';
+import { PokerCardComponent} from './poker-card.component';
 
 describe('PokerCardComponent', () => {
   let component: PokerCardComponent;

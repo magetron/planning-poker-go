@@ -9,9 +9,14 @@ const HTTPOPTIONS = {
   headers: new HttpHeaders({'Content-Type': 'application/json' })
 };
 
-export interface Response {
+export interface SimpleResponse {
   s: number;
   d: string;
+}
+
+export interface ComplexResponse {
+  s: number;
+  d: object;
 }
 
 @Injectable({
@@ -23,12 +28,12 @@ export class CommsService {
 
   constructor(private httpClient: HttpClient) {}
 
-  createSprint(name: string): Observable<Response> {
+  createSprint(name: string): Observable<SimpleResponse> {
     let jsonObject = { Name: name };
 
     if (name !== "") {
       console.log("Creating sprint " + jsonObject.Name);
-      const result = this.httpClient.post<Response>(
+      const result = this.httpClient.post<SimpleResponse>(
         `${globals.apiUrl}/sprints`, jsonObject, HTTPOPTIONS);
       return result;
     } else {
@@ -37,19 +42,25 @@ export class CommsService {
     }
   }
 
-  getSprintDetails(id: string): Observable<Response> {
-    const result = this.httpClient.get<Response>(
+  getSprintDetails(id: string): Observable<SimpleResponse> {
+    const result = this.httpClient.get<SimpleResponse>(
       `${globals.apiUrl}/sprints/${id}`, HTTPOPTIONS);
     return result; 
   }
 
-  joinSprint(username: string, sprint: Sprint) {
+  joinSprint(username: string, sprint: Sprint): Observable<SimpleResponse> {
     let jsonObject = {
       Name: username,
     }
 
-    const result = this.httpClient.post<Response>(
+    const result = this.httpClient.post<SimpleResponse>(
       `${globals.apiUrl}/sprints/${sprint.id}/users`, jsonObject, HTTPOPTIONS);
+    return result;
+  }
+
+  getSprintUsers(sprint_id: string) : Observable<ComplexResponse>{
+    const result = this.httpClient.get<ComplexResponse>(
+      `${globals.apiUrl}/sprints/${sprint_id}/users`, HTTPOPTIONS);
     return result;
   }
 }
