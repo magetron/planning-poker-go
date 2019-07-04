@@ -5,4 +5,5 @@ cd ui
 npm install
 ng build ui --prod
 mv ./dist/ui ../static-ui
-
+cd ..
+go run *.go
