@@ -34,13 +34,6 @@ export class PokerCardComponent implements OnInit {
     }
   }
 
-  cardify(point: number) {
-    if (point && point === -2 ) {
-      return '?';
-    }
-    return point;
-  }
-
   vote(point: number){
     this.comms.selectCard(this.sprint_id, this.user.id, point)
      .subscribe((response => {  
@@ -61,4 +54,10 @@ export class PokerCardComponent implements OnInit {
     }))
   }
 
+  cardify (point: number) {
+    if (point && point === -2 ) {
+      return '?';
+    }
+    return point;
+  }
 }
