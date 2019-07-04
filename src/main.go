@@ -17,7 +17,7 @@ const (
 	Address string = ":8080"
 )
 
-var DEV = false
+var DEV = true
 
 func mapRoutes() {
 
