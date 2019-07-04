@@ -1,12 +1,11 @@
 package main
 
 import (
-	"log"
-	"net/http"
-
 	"github.com/google/uuid"
 	"github.com/stretchr/goweb"
 	"github.com/stretchr/goweb/context"
+	"log"
+	"net/http"
 )
 
 type Users struct {
@@ -41,6 +40,7 @@ func (us *UsersService) Create(ctx context.Context) error {
 	user := new(User)
 	user.Id = uuid.New().String()
 	user.Name = dataMap["Name"].(string)
+	user.Vote = -1
 
 	foundId := false
 	for _, users := range us.AllUsers {
@@ -100,6 +100,33 @@ func (us *UsersService) Read(id string, ctx context.Context) error {
 
 	if DEV {
 		log.Printf("Accessed Users %s Information in Sprint %s", id, urlId)
+	}
+
+	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
+}
+
+func (us *UsersService) Replace(id string, ctx context.Context) error {
+	data, dataErr := ctx.RequestData()
+
+	if dataErr != nil {
+		return goweb.API.RespondWithError(ctx, http.StatusInternalServerError, dataErr.Error())
+	}
+
+	dataMap := data.(map[string]interface{})
+	voteVal := dataMap["Vote"].(float64)
+
+	urlId := ctx.PathValue("sprintId")
+
+	for _, users := range us.AllUsers {
+		if users.SprintId == urlId {
+			for _, user := range users.Users {
+				if user.Id == id {
+					user.Vote = voteVal
+					log.Printf("User %s voted %f in the current round of Sprint %s", user.Id, voteVal, urlId)
+					return goweb.Respond.WithOK(ctx)
+				}
+			}
+		}
 	}
 
 	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)

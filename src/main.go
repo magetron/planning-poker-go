@@ -34,9 +34,13 @@ func mapRoutes() {
 		return goweb.Respond.WithRedirect(c, "/index", "")
 	})
 
-	_ = goweb.MapController(&SprintsController{})
-	_ = goweb.MapController("sprints/[sprintId]/rounds", &RoundsController{})
-	_ = goweb.MapController("sprints/[sprintId]/users", &UsersService{})
+	sc := new(SprintsController)
+	rc := new(RoundsController)
+	us := new(UsersService)
+
+	_ = goweb.MapController(sc)
+	_ = goweb.MapController("sprints/[sprintId]/rounds", rc)
+	_ = goweb.MapController("sprints/[sprintId]/users", us)
 
 	if !DEV {
 		_, _ = goweb.MapStatic("/index", "static-ui")
