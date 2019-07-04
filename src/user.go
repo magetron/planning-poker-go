@@ -7,7 +7,7 @@ import (
 type User struct {
 	Id   string
 	Name string
-	Vote int
+	Vote float64
 }
 
 
