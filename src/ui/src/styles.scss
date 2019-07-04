@@ -44,3 +44,7 @@ $dark-theme:   mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
   background: mat-color($mat-purple, 600);
   color: mat-color($mat-blue, 50);
 }
+
+.button-secondary {
+  background: mat-color($mat-blue, 50);
+}
