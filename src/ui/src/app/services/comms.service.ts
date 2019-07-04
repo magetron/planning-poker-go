@@ -6,8 +6,13 @@ import * as globals from './globals.service';
 import { Sprint } from '../models/sprint';
 
 const HTTPOPTIONS = {
-  headers: new HttpHeaders({'Content-Type': 'application/json' })
+  headers: new HttpHeaders({'Content-Type': 'application/json'})
 };
+
+const HTTPOPTIONS_NO_BODY = {
+  headers: new HttpHeaders({'Content-Type': 'application/json'}),
+  observe: "response" as 'body',
+}
 
 export interface SimpleResponse {
   s: number;
@@ -62,5 +67,20 @@ export class CommsService {
     const result = this.httpClient.get<ComplexResponse>(
       `${globals.apiUrl}/sprints/${sprint_id}/users`, HTTPOPTIONS);
     return result;
+  }
+
+  //TODO: WTH does this observable contain?
+  selectCard(sprint_id: string, user_id: string, vote: number): Observable<any> {
+    let jsonObject = {
+      "Vote": vote,
+    }
+    const result = this.httpClient.put<SimpleResponse>(
+      `${globals.apiUrl}/sprints/${sprint_id}/users/${user_id}`,
+       jsonObject, HTTPOPTIONS_NO_BODY);
+    return result;
+  }
+
+  setSprintName(sprint_id: string, ) {
+
   }
 }
