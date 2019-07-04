@@ -16,7 +16,7 @@ export class MemberslistComponent implements OnInit {
   users: User[];
   @Input() sprint_id: string;
 
-  displayedColumns: string[] = ['NAME'];
+  displayedColumns: string[] = ['NAME', 'VOTE'];
 
   constructor(
     private comms: CommsService,
@@ -29,6 +29,15 @@ export class MemberslistComponent implements OnInit {
         this.users = res.d as Array<User>;
       }
     });
+  }
 
+  //TODO: share this function with poker-card component
+  cardify (point: number) {
+    if (point && point === -2 ) {
+      return '?';
+    } else if (point === -1) {
+      return ' ';
+    }
+    return point;
   }
 }
