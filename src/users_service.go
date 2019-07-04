@@ -1,12 +1,11 @@
 package main
 
 import (
-	"log"
-	"net/http"
-
 	"github.com/google/uuid"
 	"github.com/stretchr/goweb"
 	"github.com/stretchr/goweb/context"
+	"log"
+	"net/http"
 )
 
 type Users struct {
@@ -106,15 +105,25 @@ func (us *UsersService) Read(id string, ctx context.Context) error {
 	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 }
 
-func (us *UsersService) Vote(id string, value int, ctx context.Context) error {
+func (us *UsersService) Replace(id string, ctx context.Context) error {
+	log.Print(id)
+	data, dataErr := ctx.RequestData()
+
+	if dataErr != nil {
+		return goweb.API.RespondWithError(ctx, http.StatusInternalServerError, dataErr.Error())
+	}
+
+	dataMap := data.(map[string]interface{})
+	voteVal := dataMap["Vote"].(float64)
+
 	urlId := ctx.PathValue("sprintId")
 
 	for _, users := range us.AllUsers {
 		if users.SprintId == urlId {
 			for _, user := range users.Users {
 				if user.Id == id {
-					user.Vote = value
-					log.Printf("User %s voted %s in the current round of Sprint %s", user.Id, value, urlId)
+					user.Vote = voteVal
+					log.Printf("User %s voted %f in the current round of Sprint %s", user.Id, voteVal, urlId)
 					return goweb.Respond.WithOK(ctx)
 				}
 			}
