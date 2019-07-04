@@ -1,5 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { InternalService } from 'src/app/services/internal.service';
+import { User } from 'src/app/models/user';
+import { CommsService } from 'src/app/services/comms.service';
 
 @Component({
   selector: 'app-poker-card',
@@ -11,13 +14,19 @@ export class PokerCardComponent implements OnInit {
 
   points: number[] = [0, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100, -2]
   @Input() sprint_id: string;
+  user: User;
 
   constructor(
     private route: ActivatedRoute,
+    private internal: InternalService,
+    private comms: CommsService,
   ) { }
 
   ngOnInit() {
     this.sprint_id = this.route.snapshot.paramMap.get('sprint_id');
+    this.internal.user$.subscribe(
+      res => this.user = res
+    )
     console.log("Poker-card reporting for sprint "+this.sprint_id);
   }
 
@@ -29,7 +38,14 @@ export class PokerCardComponent implements OnInit {
   }
 
   vote(point: number){
-    
+    this.comms.selectCard(this.sprint_id, this.user.id, point)
+     .subscribe((response => {  
+        if (response.status === 200) {
+          console.log("Selection success");
+        } else {
+          console.log("Selection error");
+        }
+    }))
   }
 
 }
