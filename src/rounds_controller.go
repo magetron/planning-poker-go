@@ -41,6 +41,9 @@ func (rc *RoundsController) Create(ctx context.Context) error {
 
 	round := new(Round)
 	round.Name = dataMap["Name"].(string)
+	round.Avg = 0
+	round.Med = 0
+	round.Archived = false
 
 	foundId := false
 	for _, rs := range rc.AllRounds {
@@ -144,6 +147,11 @@ func (rc *RoundsController) Delete (id string, ctx context.Context) error {
 
 	urlId := ctx.PathValue("sprintId")
 
+	roundId, convErr := strconv.Atoi(id)
+	if convErr != nil {
+		return goweb.API.RespondWithError(ctx, http.StatusInternalServerError, convErr.Error())
+	}
+
 	voteMap := voteData.(map[string]interface{})
 	voteArr := voteMap["Votes"].([]float64)
 	voteAvg := float64(0)
@@ -155,8 +163,19 @@ func (rc *RoundsController) Delete (id string, ctx context.Context) error {
 		voteAvg += vote
 	}
 	voteAvg /= float64(len(voteArr))
-	rc.AllRounds[0].Rounds[0].Avg = voteAvg
-	rc.AllRounds[0].Rounds[0].Med = voteMed
+
+	for _, rs := range rc.AllRounds {
+		if rs.SprintId == urlId {
+			for _, r := range rs.Rounds {
+				if r.Id == roundId {
+					r.Avg = voteAvg
+					r.Med = voteMed
+					r.Archived = true
+				}
+			}
+		}
+	}
+
 
 	return goweb.Respond.WithOK(ctx)
 
