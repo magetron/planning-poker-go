@@ -181,7 +181,7 @@ func (us *UsersService) Update(conn *websocket.Conn) {
 			log.Fatal(err)
 			return
 		}
-		log.Printf("User update Socket received id: %s", string(p))
+		log.Printf("User update websocket received id: %s", string(p))
 		for _, users := range us.AllUsers {
 			if users.SprintId == string(p) {
 				usersStr, usersErr := json.Marshal(users.Users)
