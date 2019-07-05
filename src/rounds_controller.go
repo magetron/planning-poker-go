@@ -41,6 +41,9 @@ func (rc *RoundsController) Create(ctx context.Context) error {
 
 	round := new(Round)
 	round.Name = dataMap["Name"].(string)
+	round.Avg = 0
+	round.Med = 0
+	round.Archived = false
 
 	foundId := false
 	for _, rs := range rc.AllRounds {
@@ -126,6 +129,53 @@ func (rc *RoundsController) DeleteMany(ctx context.Context) error {
 	if DEV {
 		log.Printf("IMPORTANT : Deleted All Rounds in Sprint %s", urlId)
 	}
+
+	return goweb.Respond.WithOK(ctx)
+
+}
+
+func (rc *RoundsController) Delete (id string, ctx context.Context) error {
+	voteData, voteErr := ctx.RequestData()
+
+	if voteErr != nil {
+		return goweb.API.RespondWithError(ctx, http.StatusInternalServerError, voteErr.Error())
+	}
+
+	if !ctx.PathParams().Has("sprintId") {
+		return goweb.API.RespondWithError(ctx, http.StatusInternalServerError, "No sprintID Specified in URL.")
+	}
+
+	urlId := ctx.PathValue("sprintId")
+
+	roundId, convErr := strconv.Atoi(id)
+	if convErr != nil {
+		return goweb.API.RespondWithError(ctx, http.StatusInternalServerError, convErr.Error())
+	}
+
+	voteMap := voteData.(map[string]interface{})
+	voteArr := voteMap["Votes"].([]float64)
+	voteAvg := float64(0)
+	voteMed := float64(0)
+	for index, vote := range voteArr {
+		if index == len(voteArr) / 2 {
+			voteMed := vote
+		}
+		voteAvg += vote
+	}
+	voteAvg /= float64(len(voteArr))
+
+	for _, rs := range rc.AllRounds {
+		if rs.SprintId == urlId {
+			for _, r := range rs.Rounds {
+				if r.Id == roundId {
+					r.Avg = voteAvg
+					r.Med = voteMed
+					r.Archived = true
+				}
+			}
+		}
+	}
+
 
 	return goweb.Respond.WithOK(ctx)
 
