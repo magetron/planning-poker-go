@@ -10,7 +10,7 @@ import { PokerControlComponent } from './poker/poker-control/poker-control.compo
 const routes: Routes = [
   { path: 'new', component: NewSprintComponent },
   { path: 'join/:sprint_id', component: JoinComponent },
-  { path: 'table/:sprint_id', component: PokerCardComponent },
+  { path: 'table/:sprint_id', component: PokerControlComponent },
   //{ path: 'session', component: },
   { path: '',   redirectTo: '/new', pathMatch: 'full' },
   { path: 'index', redirectTo: '/new' },
