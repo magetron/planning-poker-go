@@ -62,7 +62,7 @@ func (rc *RoundsController) Create(ctx context.Context) error {
 		rc.AllRounds = append(rc.AllRounds, rounds)
 	}
 
-	log.Printf("New Round %s Added to sprintID %s", round.Id, urlId)
+	log.Printf("New Round %d Added to sprintID %s", round.Id, urlId)
 
 	return goweb.API.RespondWithData(ctx, round)
 }
@@ -153,16 +153,8 @@ func (rc *RoundsController) Delete (id string, ctx context.Context) error {
 	}
 
 	voteMap := voteData.(map[string]interface{})
-	voteArr := voteMap["Votes"].([]float64)
-	voteAvg := float64(0)
-	voteMed := float64(0)
-	for index, vote := range voteArr {
-		if index == len(voteArr) / 2 {
-			voteMed := vote
-		}
-		voteAvg += vote
-	}
-	voteAvg /= float64(len(voteArr))
+	voteAvg := voteMap["Average"].(float64)
+	voteMed := voteMap["Median"].(float64)
 
 	for _, rs := range rc.AllRounds {
 		if rs.SprintId == urlId {
@@ -175,7 +167,6 @@ func (rc *RoundsController) Delete (id string, ctx context.Context) error {
 			}
 		}
 	}
-
 
 	return goweb.Respond.WithOK(ctx)
 
