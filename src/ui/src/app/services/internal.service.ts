@@ -10,7 +10,7 @@ import { Sprint } from '../models/sprint';
 
 export class InternalService {
 
-  private user = new BehaviorSubject<User>({name: "", id: ""});
+  private user = new BehaviorSubject<User>({name: "", id: "", vote: -1});
   private sprint = new BehaviorSubject<Sprint>({name: "", id: ""});
 
   user$ = this.user.asObservable();

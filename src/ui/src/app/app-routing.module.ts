@@ -8,7 +8,7 @@ import { PokerCardComponent } from './poker/poker-card/poker-card.component';
 
 const routes: Routes = [
   { path: 'new', component: NewSprintComponent },
-  { path: 'join/:sprint_id', component: JoinComponent }, //TODO: use the right parameter
+  { path: 'join/:sprint_id', component: JoinComponent },
   { path: 'table/:sprint_id', component: PokerCardComponent },
   //{ path: 'session', component: },
   { path: '',   redirectTo: '/new', pathMatch: 'full' },
@@ -19,7 +19,7 @@ const routes: Routes = [
 @NgModule({
   declarations: [],
   imports: [
-    RouterModule.forRoot(routes),
+    RouterModule.forRoot(routes, {useHash: true}),
   ],
   exports: [ RouterModule ]
 })

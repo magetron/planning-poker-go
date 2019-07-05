@@ -1,7 +1,7 @@
 import { Component, OnInit, Input} from '@angular/core';
 
 import { Sprint } from '../models/sprint';
-import { baseUrl } from '../services/globals.service';
+import * as globals from '../services/globals.service';
 
 @Component({
   selector: 'app-share',
@@ -12,12 +12,12 @@ import { baseUrl } from '../services/globals.service';
 export class ShareComponent implements OnInit {
 
   @Input() share : Sprint;
-  baseUrl: string = '';
+  baseUrl: string;
 
   constructor() { }
 
   ngOnInit() {
-    this.baseUrl = location.origin;
+    this.baseUrl = globals.baseUrl;
   }
 
   copylink(link: string) {
