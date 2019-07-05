@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs'; 
+import { Observable } from 'rxjs';
 
 import * as globals from './globals.service';
 import { Sprint } from '../models/sprint';
@@ -50,7 +50,7 @@ export class CommsService {
   getSprintDetails(id: string): Observable<SimpleResponse> {
     const result = this.httpClient.get<SimpleResponse>(
       `${globals.apiUrl}/sprints/${id}`, HTTPOPTIONS);
-    return result; 
+    return result;
   }
 
   joinSprint(username: string, sprint: Sprint): Observable<SimpleResponse> {
@@ -80,7 +80,14 @@ export class CommsService {
     return result;
   }
 
-  setSprintName(sprint_id: string, ) {
-
+  addStory (sprint_id: string, sprint_story: string): Observable<any>{
+    let jsonObject = {
+      "Name": sprint_story,
+    }
+    const result = this.httpClient.put<SimpleResponse>(
+      `${globals.apiUrl}/sprints/${sprint_id}/rounds`,
+       jsonObject, HTTPOPTIONS_NO_BODY);
+    return result;
   }
+
 }
