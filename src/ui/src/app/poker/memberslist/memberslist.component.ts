@@ -4,6 +4,9 @@ import { InternalService } from 'src/app/services/internal.service';
 import { CommsService } from 'src/app/services/comms.service';
 import { User } from 'src/app/models/user';
 import { Sprint } from 'src/app/models/sprint';
+import { Cardify } from '../../models/cardify.component';
+import { webSocket, WebSocketSubject } from "rxjs/webSocket";
+import * as globals from "../../services/globals.service";
 
 @Component({
   selector: 'app-memberslist',
@@ -11,33 +14,61 @@ import { Sprint } from 'src/app/models/sprint';
   styleUrls: ['./memberslist.component.css']
 })
 
-export class MemberslistComponent implements OnInit {
+export class MemberslistComponent extends Cardify implements OnInit {
 
   users: User[];
   @Input() sprint_id: string;
+  voteSocket$: WebSocketSubject<string>;
 
   displayedColumns: string[] = ['NAME', 'VOTE'];
 
   constructor(
     private comms: CommsService,
-    private internal: InternalService) { }
+    private internal: InternalService) {
+      super();
+     }
 
   ngOnInit() {
-    console.log("Pulling data for sprint "+ this.sprint_id);
+    this.voteSocket$ = webSocket({
+      url: globals.voteSocket,
+      serializer: msg => msg, //Don't JSON encode the sprint_id
+      deserializer: ({data}) => {
+        let j = JSON.parse(data);
+        this.refreshSocket();
+        return j;
+      },
+      openObserver: {
+        next: function () {
+           () => this.refreshSocket();
+        }
+      },
+      binaryType: "blob",
+    });
+    //TODO: catch server unavailable
+    
+    this.voteSocket$.subscribe(
+      msg => { // Called whenever there is a message from the server.
+        console.log('socket received');
+        console.log(msg.toString());
+        this.users = JSON.parse(msg) as Array<User>;
+      }, 
+      err => console.log(err), // Called if at any point WebSocket API signals some kind of error.
+      () => console.log('complete') // Called when connection is closed (for whatever reason).
+    );
+
+    /*
     this.comms.getSprintUsers(this.sprint_id).subscribe(res => {
       if (res && res.s === 200) {
         this.users = res.d as Array<User>;
       }
-    });
+    });*/
   }
 
-  //TODO: share this function with poker-card component
-  cardify (point: number) {
-    if (point && point === -2 ) {
-      return '?';
-    } else if (point === -1) {
-      return ' ';
-    }
-    return point;
+  refreshSocket(): void {
+    console.log("Pulling data for sprint " + this.sprint_id);
+    this.voteSocket$.next(this.sprint_id);
+    setTimeout(function() {
+      ()=> this.refreshSocket()
+    }, globals.socketRefreshTime);
   }
 }
