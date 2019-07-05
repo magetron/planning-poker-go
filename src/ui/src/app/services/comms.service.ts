@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs'; 
+import { webSocket } from 'rxjs/webSocket';
 
 import * as globals from './globals.service';
 import { Sprint } from '../models/sprint';
@@ -30,6 +31,7 @@ export interface ComplexResponse {
 
 export class CommsService {
   baseUrl: string = '';
+  //ws: WebSocket = webSocket('ws://'+globals.apiUrl);
 
   constructor(private httpClient: HttpClient) {}
 
@@ -64,6 +66,12 @@ export class CommsService {
   }
 
   getSprintUsers(sprint_id: string) : Observable<ComplexResponse>{
+    const result = this.httpClient.get<ComplexResponse>(
+      `${globals.apiUrl}/sprints/${sprint_id}/users`, HTTPOPTIONS);
+    return result;
+  }
+
+  getSprintUsers2(sprint_id: string) : Observable<ComplexResponse>{
     const result = this.httpClient.get<ComplexResponse>(
       `${globals.apiUrl}/sprints/${sprint_id}/users`, HTTPOPTIONS);
     return result;
