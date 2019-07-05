@@ -10,14 +10,14 @@ import { CommsService } from 'src/app/services/comms.service';
   templateUrl: './poker-control.component.html',
   styleUrls: ['./poker-control.component.css']
 })
+
 export class PokerControlComponent implements OnInit {
 
   @Input() sprint_id: string;
-  story: String = '';
   sprint: Sprint;
   user: User;
-
   curStory: string = 'default';
+  nextStory: String = '';
   storylist:string[];
 
   constructor(
@@ -37,27 +37,11 @@ export class PokerControlComponent implements OnInit {
         if (response){
           console.log("Story submitted");
           this.curStory = story;
-          this.story = '';
-        }
-      });
-    }else{
-      console.log("Empty story title submitted");
-    }
-  }
-
-
-  createSprint(name: string): void {
-    //POST sprint.name to /new
-    if (name) {
-      this.comms.createSprint(name).subscribe(response => {
-        if (response) {
-          this.sprint.id = response.d;
-          this.sprint.name = name;
-          this.internal.updateSprint(this.sprint);
+          this.nextStory = '';
         }
       });
     } else {
-      console.log("Empty sprint name submitted");
+      console.log("Empty story title submitted");
     }
   }
 
