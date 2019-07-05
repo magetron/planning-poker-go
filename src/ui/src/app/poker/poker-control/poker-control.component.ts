@@ -28,6 +28,7 @@ export class PokerControlComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.sprint_id = this.route.snapshot.paramMap.get('sprint_id');
   }
 
 
@@ -35,7 +36,7 @@ export class PokerControlComponent implements OnInit {
     if(story) {
       this.comms.addStory(this.sprint_id, story).subscribe(response => {
         if (response){
-          console.log("Story submitted");
+          console.log("Story submitted, Sprint-id:",this.sprint_id);
           this.curStory = story;
           this.nextStory = '';
         }

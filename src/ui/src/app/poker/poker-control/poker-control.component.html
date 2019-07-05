@@ -4,7 +4,7 @@
 <mat-card class="background-secondary">
   <mat-card-header>
     <mat-card-title class="text-primary">
-      Current Story Title: {{curStory}}
+      Story Title: {{curStory}}
     </mat-card-title>
     <mat-card-subtitle>
     </mat-card-subtitle>
@@ -15,6 +15,24 @@
       <input matInput placeholder="Story" [(ngModel)]="nextStory"
        (keyup.enter)="addStory(nextStory)" >
     </mat-form-field>
+  </mat-card-content>
+  <mat-card-actions>
+  </mat-card-actions>
+</mat-card>
+<br>
+
+<mat-card>
+  <mat-card-header>
+    <mat-card-title class="text-primary">
+      Recommended:
+    </mat-card-title>
+    <mat-card-subtitle>
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    Mean:
+    Median:
+    Mode:
   </mat-card-content>
   <mat-card-actions>
   </mat-card-actions>
