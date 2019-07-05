@@ -88,7 +88,14 @@ export class CommsService {
     return result;
   }
 
-  setSprintName(sprint_id: string, ) {
-
+  addStory (sprint_id: string, sprint_story: string): Observable<any>{
+    let jsonObject = {
+      "Name": sprint_story,
+    }
+    const result = this.httpClient.put<SimpleResponse>(
+      `${globals.apiUrl}/sprints/${sprint_id}/rounds`,
+       jsonObject, HTTPOPTIONS_NO_BODY);
+    return result;
   }
+
 }

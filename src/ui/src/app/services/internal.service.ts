@@ -25,4 +25,5 @@ export class InternalService {
   updateSprint(sprint: Sprint) {
     this.sprint.next(sprint);
   }
+
 }

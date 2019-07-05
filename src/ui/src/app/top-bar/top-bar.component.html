@@ -1,4 +1,11 @@
-<mat-toolbar color="primary">
-    <mat-icon>loyalty</mat-icon>Planning Poker
-    <span margin-left=10em>{{user?.name}} : {{sprint?.name}}</span>
+<mat-toolbar fxLayout="row" color="primary">
+  <div fxFlex fxLayoutAlign="left">
+    <mat-icon>loyalty</mat-icon><h1>Planning Poker</h1>
+  </div>
+  <div fxFlex fxLayoutAlign="center">
+    <span>{{sprint?.name}}</span>
+  </div>
+  <div fxFlex fxLayoutAlign="end">
+    <span margin-left=10em>{{user?.name}}</span>
+  </div>
 </mat-toolbar>

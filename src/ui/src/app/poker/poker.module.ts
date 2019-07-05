@@ -1,16 +1,22 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { MatCardModule } from '@angular/material';
-import { MatTableModule } from '@angular/material/table';
-import { MatButtonModule } from '@angular/material/button';
+import { MatTableModule, MatButtonModule, MatInputModule,  MatFormFieldModule, MatCardModule} from '@angular/material';
 
 //import page 3 components here
 import { PokerCardComponent } from './poker-card/poker-card.component';
 import { MemberslistComponent } from './memberslist/memberslist.component';
+import { PokerControlComponent } from './poker-control/poker-control.component';
 
 @NgModule({
+  declarations: [
+    PokerCardComponent,
+    MemberslistComponent,
+    PokerControlComponent,
+  ],
+
   //imports for mega data within other modules
   imports: [
     CommonModule,
@@ -18,20 +24,19 @@ import { MemberslistComponent } from './memberslist/memberslist.component';
     FlexLayoutModule,
     MatCardModule,
     MatTableModule,
-    MatButtonModule
+    MatButtonModule,
+    MatInputModule,
+    MatFormFieldModule,
+    FormsModule
   ],
 
   //service
   providers:[],
 
-  declarations: [
-    PokerCardComponent,
-    MemberslistComponent,
-  ],
-
   exports: [
     CommonModule,
     PokerCardComponent,
+    PokerControlComponent
   ],
 
   bootstrap: []

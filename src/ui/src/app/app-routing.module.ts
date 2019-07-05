@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { NewSprintComponent } from './new-sprint/new-sprint.component';
 import { JoinComponent } from './join/join.component';
 import { PokerCardComponent } from './poker/poker-card/poker-card.component';
+import { PokerControlComponent } from './poker/poker-control/poker-control.component';
 
 
 const routes: Routes = [
