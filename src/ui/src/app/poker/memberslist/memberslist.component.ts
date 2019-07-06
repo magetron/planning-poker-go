@@ -18,7 +18,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
 
   users: User[];
   @Input() sprint_id: string;
-  voteSocket$: WebSocketSubject<string>;
+  voteSocket$: WebSocketSubject<any>;
 
   displayedColumns: string[] = ['NAME', 'VOTE'];
 
@@ -33,7 +33,8 @@ export class MemberslistComponent extends Cardify implements OnInit {
       url: globals.voteSocket,
       serializer: msg => msg, //Don't JSON encode the sprint_id
       deserializer: ({data}) => {
-        let j = JSON.parse(data);
+        console.log(data);
+        let j = JSON.parse(data) as User[];
         this.refreshSocket();
         return j;
       },
@@ -49,8 +50,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
     this.voteSocket$.subscribe(
       msg => { // Called whenever there is a message from the server.
         console.log('socket received');
-        console.log(msg.toString());
-        this.users = JSON.parse(msg) as Array<User>;
+        this.users = msg; 
       }, 
       err => console.log(err), // Called if at any point WebSocket API signals some kind of error.
       () => console.log('complete') // Called when connection is closed (for whatever reason).
