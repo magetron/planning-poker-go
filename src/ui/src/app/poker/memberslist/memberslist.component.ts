@@ -35,33 +35,24 @@ export class MemberslistComponent extends Cardify implements OnInit {
       deserializer: ({data}) => {
         console.log(data);
         let j = JSON.parse(data) as User[];
-        this.refreshSocket();
         return j;
-      },
-      openObserver: {
-        next: function () {
-           () => this.refreshSocket();
-        }
       },
       binaryType: "blob",
     });
-    //TODO: catch server unavailable
     
+    //TODO: catch server unavailable
     this.voteSocket$.subscribe(
       msg => { // Called whenever there is a message from the server.
         console.log('socket received');
-        this.users = msg; 
+        this.users = msg;
+        this.refreshSocket();
       }, 
       err => console.log(err), // Called if at any point WebSocket API signals some kind of error.
       () => console.log('complete') // Called when connection is closed (for whatever reason).
     );
-
-    /*
-    this.comms.getSprintUsers(this.sprint_id).subscribe(res => {
-      if (res && res.s === 200) {
-        this.users = res.d as Array<User>;
-      }
-    });*/
+    
+    //Start talking ot the socket
+    this.refreshSocket();
   }
 
   refreshSocket(): void {
