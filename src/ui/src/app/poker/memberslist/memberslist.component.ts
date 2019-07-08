@@ -45,7 +45,6 @@ export class MemberslistComponent extends Cardify implements OnInit {
       msg => { // Called whenever there is a message from the server.
         console.log('socket received');
         this.users = msg;
-        this.refreshSocket();
       }, 
       err => console.log(err), // Called if at any point WebSocket API signals some kind of error.
       () => console.log('complete') // Called when connection is closed (for whatever reason).
@@ -56,10 +55,8 @@ export class MemberslistComponent extends Cardify implements OnInit {
   }
 
   refreshSocket(): void {
-    console.log("Pulling data for sprint " + this.sprint_id);
+    //console.log("Pulling data for sprint " + this.sprint_id);
     this.voteSocket$.next(this.sprint_id);
-    setTimeout(function() {
-      ()=> this.refreshSocket()
-    }, globals.socketRefreshTime);
+    setTimeout(() => this.refreshSocket(), globals.socketRefreshTime);
   }
 }
