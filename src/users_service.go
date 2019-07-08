@@ -178,7 +178,7 @@ func (us *UsersService) Update(conn *websocket.Conn) {
 	for {
 		messageType, p, err := conn.ReadMessage()
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
 			return
 		}
 		log.Printf("User update websocket received id: %s", string(p))
@@ -186,10 +186,10 @@ func (us *UsersService) Update(conn *websocket.Conn) {
 			if users.SprintId == string(p) {
 				usersStr, usersErr := json.Marshal(users.Users)
 				if usersErr != nil {
-					log.Fatal(usersErr)
+					log.Println(usersErr)
 				}
 				if err := conn.WriteMessage(messageType, usersStr); err != nil {
-					log.Fatal(err)
+					log.Println(err)
 					return
 				}
 			}

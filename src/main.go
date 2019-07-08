@@ -58,11 +58,11 @@ func mapRoutes() {
 		}
 		ws, err := upgrader.Upgrade(w, r, nil)
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
 		}
 		log.Println("WebSocket Client Connected")
 		us.Update(ws)
-		return nil
+		return ws.Close()
 	})
 
 	if !DEV {
@@ -73,9 +73,11 @@ func mapRoutes() {
 			}
 			return nil
 		})
+
 		if fileErr != nil {
 			log.Fatalf("Could not scan static files %s", fileErr)
 		}
+
 	}
 }
 
