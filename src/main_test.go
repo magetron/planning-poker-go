@@ -70,7 +70,6 @@ func TestSprintCycle(t *testing.T) {
 
 }
 
-
 func TestEmptyRound(t *testing.T) {
 
 	codecService := goweb.DefaultHttpHandler().CodecService()
@@ -80,8 +79,8 @@ func TestEmptyRound(t *testing.T) {
 	mapRoutes()
 
 	sprintId := ""
-	goweb.Test(t, goweb.RequestBuilderFunc(func () *http.Request {
-		newReqBody, newReqBodyErr := json.Marshal(map[string]string {
+	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
+		newReqBody, newReqBodyErr := json.Marshal(map[string]string{
 			"Name": "New Sprint",
 		})
 		if newReqBodyErr != nil {
@@ -99,8 +98,54 @@ func TestEmptyRound(t *testing.T) {
 		sprintId = response.Output[6:15]
 	})
 
-	goweb.Test(t, "GET sprints/" + sprintId + "rounds/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "GET sprints/"+sprintId+"rounds/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusNotFound, response.StatusCode, "Status code should be Not Found for Empty Round.")
 	})
+}
 
+
+func TestRoundCycle (t *testing.T) {
+
+	codecService := goweb.DefaultHttpHandler().CodecService()
+	handler := handlers.NewHttpHandler(codecService)
+	goweb.SetDefaultHttpHandler(handler)
+
+	mapRoutes()
+
+	sprintId := ""
+	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
+		newReqBody, newReqBodyErr := json.Marshal(map[string]string{
+			"Name": "New Sprint",
+		})
+		if newReqBodyErr != nil {
+			log.Fatal(newReqBodyErr)
+		}
+		newReq, newErr := http.NewRequest("POST", "sprints/", bytes.NewBuffer(newReqBody))
+		if newErr != nil {
+			log.Fatal(newErr)
+		}
+		newReq.Header.Set("Content-Type", "application/json")
+		return newReq
+	}), func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for New Sprint.")
+		assert.Equal(t, 25, len(response.Output), "Response Length should be 25 for New Sprint.")
+		sprintId = response.Output[6:15]
+	})
+
+	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
+		newReqBody, newReqBodyErr := json.Marshal(map[string]string{
+			"Name": "Task 1",
+		})
+		if newReqBodyErr != nil {
+			log.Fatal(newReqBodyErr)
+		}
+		newReq, newErr := http.NewRequest("POST", "sprints/" + sprintId + "/rounds/", bytes.NewBuffer(newReqBody))
+		if newErr != nil {
+			log.Fatal(newErr)
+		}
+		newReq.Header.Set("Content-Type", "application/json")
+		return newReq
+	}), func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for New Round.")
+	})
 }
