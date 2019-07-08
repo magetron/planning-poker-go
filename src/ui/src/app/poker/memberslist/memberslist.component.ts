@@ -43,7 +43,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
     //TODO: catch server unavailable
     this.voteSocket$.subscribe(
       msg => { // Called whenever there is a message from the server.
-        console.log('socket received');
+        //console.log('socket received');
         this.users = msg;
       }, 
       err => console.log(err), // Called if at any point WebSocket API signals some kind of error.

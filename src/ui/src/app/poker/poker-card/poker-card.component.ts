@@ -30,7 +30,7 @@ export class PokerCardComponent extends Cardify implements OnInit {
       res => this.user = res
     )
     //Kick undefined users to rejoin, for example when reloading page
-    if (!this.user || !this.user.vote) {
+    if (!this.user || !this.user.id) {
       this.router.navigate(["join", this.sprint_id])
     }
   }
@@ -41,11 +41,12 @@ export class PokerCardComponent extends Cardify implements OnInit {
         if (response.status === 200) {
           console.log("Selection success");
           
-          document.getElementById(point.toString()).classList.add("selected");
           let old = document.getElementById(this.user.vote.toString())
           if (old) {
             old.classList.remove("selected");
           }
+          document.getElementById(point.toString()).classList.add("selected");
+
           this.user.vote = point;
           this.internal.updateUser(this.user);
           
