@@ -6,19 +6,19 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"time"
 	"path/filepath"
+	"time"
 
+	"github.com/gorilla/websocket"
 	"github.com/stretchr/goweb"
 	"github.com/stretchr/goweb/context"
-	"github.com/gorilla/websocket"
 )
 
 const (
 	Address string = ":8080"
 )
 
-var DEV = true
+var DEV = false
 
 func mapRoutes() {
 
@@ -44,13 +44,12 @@ func mapRoutes() {
 	_ = goweb.MapController("sprints/[sprintId]/rounds", rc)
 	_ = goweb.MapController("sprints/[sprintId]/users", us)
 
-
 	upgrader := websocket.Upgrader{
 		ReadBufferSize:  1024,
 		WriteBufferSize: 1024,
 	}
 
-	_, _ = goweb.Map("userinfo", func (ctx context.Context) error {
+	_, _ = goweb.Map("userinfo", func(ctx context.Context) error {
 		r := ctx.HttpRequest()
 		w := ctx.HttpResponseWriter()
 		upgrader.CheckOrigin = func(r *http.Request) bool {
@@ -65,7 +64,7 @@ func mapRoutes() {
 		return ws.Close()
 	})
 
-	_, _ = goweb.Map("roundinfo", func (ctx context.Context) error {
+	_, _ = goweb.Map("roundinfo", func(ctx context.Context) error {
 		r := ctx.HttpRequest()
 		w := ctx.HttpResponseWriter()
 		upgrader.CheckOrigin = func(r *http.Request) bool {
