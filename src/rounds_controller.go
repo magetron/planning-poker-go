@@ -1,6 +1,8 @@
 package main
 
 import (
+	"encoding/json"
+	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
 	"strconv"
@@ -170,4 +172,27 @@ func (rc *RoundsController) Delete (id string, ctx context.Context) error {
 
 	return goweb.Respond.WithOK(ctx)
 
+}
+
+func (rc *RoundsController) Update(conn *websocket.Conn) {
+	for {
+		messageType, p, err := conn.ReadMessage()
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		log.Printf("User update websocket received id: %s", string(p))
+		for _, rounds := range rc.AllRounds {
+			if rounds.SprintId == string(p) {
+				roundsStr, roundsErr := json.Marshal(rounds.Rounds)
+				if roundsErr != nil {
+					log.Println(roundsErr)
+				}
+				if err := conn.WriteMessage(messageType, roundsStr); err != nil {
+					log.Println(err)
+					return
+				}
+			}
+		}
+	}
 }

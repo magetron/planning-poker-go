@@ -60,8 +60,23 @@ func mapRoutes() {
 		if err != nil {
 			log.Println(err)
 		}
-		log.Println("WebSocket Client Connected")
+		log.Println("WebSocket userinfo/ Client Connected")
 		us.Update(ws)
+		return ws.Close()
+	})
+
+	_, _ = goweb.Map("roundinfo", func (ctx context.Context) error {
+		r := ctx.HttpRequest()
+		w := ctx.HttpResponseWriter()
+		upgrader.CheckOrigin = func(r *http.Request) bool {
+			return true
+		}
+		ws, err := upgrader.Upgrade(w, r, nil)
+		if err != nil {
+			log.Println(err)
+		}
+		log.Println("WebSocket roundinfo/ Client Connected")
+		rc.Update(ws)
 		return ws.Close()
 	})
 
