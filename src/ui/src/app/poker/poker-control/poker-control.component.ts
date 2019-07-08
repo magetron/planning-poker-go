@@ -33,10 +33,10 @@ export class PokerControlComponent implements OnInit {
 
 
   addStory (story: string): void {
-    if(story) {
+    if (story) {
       this.comms.addStory(this.sprint_id, story).subscribe(response => {
-        if (response){
-          console.log("Story submitted, Sprint-id:",this.sprint_id);
+        if (response && response.status === 200) {
+          console.log("Story submitted, Sprint-id:", this.sprint_id);
           this.curStory = story;
           this.nextStory = '';
         }

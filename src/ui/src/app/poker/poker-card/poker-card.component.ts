@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { InternalService } from 'src/app/services/internal.service';
 import { User } from 'src/app/models/user';
 import { CommsService } from 'src/app/services/comms.service';
+import { Cardify } from '../../models/cardify.component';
 
 @Component({
   selector: 'app-poker-card',
@@ -10,7 +11,7 @@ import { CommsService } from 'src/app/services/comms.service';
   styleUrls: ['./poker-card.component.css']
 })
 
-export class PokerCardComponent implements OnInit {
+export class PokerCardComponent extends Cardify implements OnInit {
 
   points: number[] = [0, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100, -2]
   @Input() sprint_id: string;
@@ -21,7 +22,7 @@ export class PokerCardComponent implements OnInit {
     private route: ActivatedRoute,
     private internal: InternalService,
     private comms: CommsService,
-  ) { }
+  ) { super(); }
 
   ngOnInit() {
     this.sprint_id = this.route.snapshot.paramMap.get('sprint_id');
@@ -52,12 +53,5 @@ export class PokerCardComponent implements OnInit {
           console.log("Selection error");
         }
     }))
-  }
-
-  cardify (point: number) {
-    if (point && point === -2 ) {
-      return '?';
-    }
-    return point;
   }
 }

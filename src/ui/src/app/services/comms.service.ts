@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { webSocket } from 'rxjs/webSocket';
+import { Observable } from 'rxjs'; 
+import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
 import * as globals from './globals.service';
 import { Sprint } from '../models/sprint';
@@ -31,7 +31,6 @@ export interface ComplexResponse {
 
 export class CommsService {
   baseUrl: string = '';
-  //ws: WebSocket = webSocket('ws://'+globals.apiUrl);
 
   constructor(private httpClient: HttpClient) {}
 
@@ -71,12 +70,6 @@ export class CommsService {
     return result;
   }
 
-  getSprintUsers2(sprint_id: string) : Observable<ComplexResponse>{
-    const result = this.httpClient.get<ComplexResponse>(
-      `${globals.apiUrl}/sprints/${sprint_id}/users`, HTTPOPTIONS);
-    return result;
-  }
-
   //TODO: WTH does this observable contain?
   selectCard(sprint_id: string, user_id: string, vote: number): Observable<any> {
     let jsonObject = {
@@ -96,6 +89,5 @@ export class CommsService {
       `${globals.apiUrl}/sprints/${sprint_id}/rounds`,
        jsonObject, HTTPOPTIONS_NO_BODY);
     return result;
-  }
-
+    }
 }
