@@ -65,6 +65,21 @@ func mapRoutes() {
 		return ws.Close()
 	})
 
+	_, _ = goweb.Map("roundinfo", func (ctx context.Context) error {
+		r := ctx.HttpRequest()
+		w := ctx.HttpResponseWriter()
+		upgrader.CheckOrigin = func(r *http.Request) bool {
+			return true
+		}
+		ws, err := upgrader.Upgrade(w, r, nil)
+		if err != nil {
+			log.Println(err)
+		}
+		log.Println("WebSocket Client Connected")
+		rc.Update(ws)
+		return ws.Close()
+	})
+
 	if !DEV {
 		root := "./static-ui"
 		fileErr := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
