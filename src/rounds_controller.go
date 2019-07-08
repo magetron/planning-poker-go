@@ -181,7 +181,7 @@ func (rc *RoundsController) Update(conn *websocket.Conn) {
 			log.Println(err)
 			return
 		}
-		log.Printf("User update websocket received id: %s", string(p))
+		log.Printf("Round update websocket received id: %s", string(p))
 		for _, rounds := range rc.AllRounds {
 			if rounds.SprintId == string(p) {
 				roundsStr, roundsErr := json.Marshal(rounds.Rounds)
