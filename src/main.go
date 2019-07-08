@@ -60,7 +60,7 @@ func mapRoutes() {
 		if err != nil {
 			log.Println(err)
 		}
-		log.Println("WebSocket Client Connected")
+		log.Println("WebSocket userinfo/ Client Connected")
 		us.Update(ws)
 		return ws.Close()
 	})
@@ -75,7 +75,7 @@ func mapRoutes() {
 		if err != nil {
 			log.Println(err)
 		}
-		log.Println("WebSocket Client Connected")
+		log.Println("WebSocket roundinfo/ Client Connected")
 		rc.Update(ws)
 		return ws.Close()
 	})
