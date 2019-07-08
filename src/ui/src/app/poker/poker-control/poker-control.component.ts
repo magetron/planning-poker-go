@@ -17,7 +17,7 @@ export class PokerControlComponent implements OnInit {
   sprint: Sprint;
   user: User;
   curStory: string = 'default';
-  nextStory: String = '';
+  nextStory: string = '';
   storylist:string[];
 
   constructor(
