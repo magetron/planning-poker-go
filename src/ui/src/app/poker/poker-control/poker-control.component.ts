@@ -1,9 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+
 import { InternalService } from 'src/app/services/internal.service';
 import { User } from 'src/app/models/user';
 import { Sprint } from 'src/app/models/sprint';
 import { CommsService } from 'src/app/services/comms.service';
+import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
+import * as globals from '../../services/globals.service';
 
 @Component({
   selector: 'app-poker-control',
@@ -18,7 +21,8 @@ export class PokerControlComponent implements OnInit {
   user: User;
   curStory: string = 'default';
   nextStory: string = '';
-  storylist:string[];
+  storyList: Sprint[];
+  roundInfoSocket$: WebSocketSubject<any>;
 
   constructor(
     private router: Router,
@@ -29,8 +33,30 @@ export class PokerControlComponent implements OnInit {
 
   ngOnInit() {
     this.sprint_id = this.route.snapshot.paramMap.get('sprint_id');
+    this.roundInfoSocket$ = webSocket({
+      url: globals.roundInfoSocket,
+      serializer: msg => msg, //Don't JSON encode the sprint_id
+      deserializer: ({data}) => {
+        console.log(data);
+        let j = JSON.parse(data) as User[];
+        return j;
+      },
+      binaryType: "blob",
+    });
+    
+    //TODO: catch server unavailable
+    this.roundInfoSocket$.subscribe(
+      msg => { // Called whenever there is a message from the server.
+        //console.log('socket received');
+        this.storyList = msg;
+      }, 
+      err => console.log(err), // Called if at any point WebSocket API signals some kind of error.
+      () => console.log('complete') // Called when connection is closed (for whatever reason).
+    );
+    
+    //Start talking ot the socket
+    this.refreshSocket();
   }
-
 
   addStory (story: string): void {
     if (story) {
@@ -46,4 +72,9 @@ export class PokerControlComponent implements OnInit {
     }
   }
 
+  refreshSocket(): void {
+    //console.log("Pulling data for sprint " + this.sprint_id);
+    this.roundInfoSocket$.next(this.sprint_id);
+    setTimeout(() => this.refreshSocket(), globals.socketRefreshTime);
+  }
 }
