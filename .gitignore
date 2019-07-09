@@ -5,6 +5,7 @@ static-ui/
 
 #running go build would create this
 src/planningpoker
+src/gc
 
 #VS code
 .vscode

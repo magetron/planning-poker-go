@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/stretchr/goweb"
 	"github.com/stretchr/goweb/context"
@@ -35,6 +36,7 @@ func (sc *SprintsController) Create(ctx context.Context) error {
 	newid, _ := sid.Generate()
 	sprint.Id = newid
 	sprint.Name = dataMap["Name"].(string)
+	sprint.CreationTime = time.Now()
 
 	sc.Sprints = append(sc.Sprints, sprint)
 	log.Printf("New Sprint with SprintId %s", sprint.Id)

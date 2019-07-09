@@ -20,6 +20,10 @@ const (
 
 var DEV = true
 
+var sc = new(SprintsController)
+var rc = new(RoundsController)
+var us = new(UsersService)
+
 func mapRoutes() {
 
 	if DEV {
@@ -36,9 +40,6 @@ func mapRoutes() {
 		return goweb.Respond.WithRedirect(c, "/index", "")
 	})
 
-	sc := new(SprintsController)
-	rc := new(RoundsController)
-	us := new(UsersService)
 
 	_ = goweb.MapController(sc)
 	_ = goweb.MapController("sprints/[sprintId]/rounds", rc)
@@ -79,6 +80,8 @@ func mapRoutes() {
 		rc.Update(ws)
 		return ws.Close()
 	})
+
+	_, _ = goweb.Map("POST", "gc", garbageCollector)
 
 	if !DEV {
 		root := "./static-ui"
@@ -139,4 +142,30 @@ func main() {
 
 	log.Fatalf("Error in Server: %s", server.Serve(listener))
 
+}
+
+func garbageCollector (ctx context.Context) error {
+	log.Print("Collecting Garbage...")
+	for i, s := range sc.Sprints {
+		if time.Now().Sub(s.CreationTime).Hours() > 12 {
+			for irs, rs := range rc.AllRounds {
+				if rs.SprintId == s.Id {
+					rc.AllRounds[len(rc.AllRounds) - 1], rc.AllRounds[irs] = rc.AllRounds[irs], rc.AllRounds[len(rc.AllRounds) - 1]
+					rc.AllRounds = rc.AllRounds[:len(rc.AllRounds) - 1]
+					break
+				}
+			}
+			for iu, u := range us.AllUsers {
+				if u.SprintId == s.Id {
+					us.AllUsers[len(us.AllUsers) - 1], us.AllUsers[iu] = us.AllUsers[iu], us.AllUsers[len(us.AllUsers) - 1]
+					us.AllUsers = us.AllUsers[:len(us.AllUsers) - 1]
+					break
+				}
+			}
+			sc.Sprints[len(sc.Sprints) - 1], sc.Sprints[i] = sc.Sprints[i], sc.Sprints[len(sc.Sprints) - 1]
+			sc.Sprints = sc.Sprints[:len(sc.Sprints) - 1]
+			break
+		}
+	}
+	return nil
 }
