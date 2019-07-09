@@ -26,6 +26,32 @@ func TestEmptySprint(t *testing.T) {
 
 }
 
+func TestEmptyNameSprint(t *testing.T) {
+	codecService := goweb.DefaultHttpHandler().CodecService()
+	handler := handlers.NewHttpHandler(codecService)
+	goweb.SetDefaultHttpHandler(handler)
+
+	mapRoutes()
+
+	goweb.Test(t, goweb.RequestBuilderFunc(func () *http.Request {
+		newReqBody, newReqBodyErr := json.Marshal(map[string]string {
+			"Name": "",
+		})
+		if newReqBodyErr != nil {
+			log.Fatal(newReqBodyErr)
+		}
+		newReq, newErr := http.NewRequest("POST", "sprints/", bytes.NewBuffer(newReqBody))
+		if newErr != nil {
+			log.Fatal(newErr)
+		}
+		newReq.Header.Set("Content-Type", "application/json")
+		return newReq
+	}), func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for New Sprint.")
+		assert.Equal(t, 25, len(response.Output), "Response Length should be 25 for New Sprint.")
+	})
+}
+
 func TestSprintCycle(t *testing.T) {
 
 	codecService := goweb.DefaultHttpHandler().CodecService()
