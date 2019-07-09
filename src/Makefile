@@ -12,6 +12,8 @@ NGPROD=$(NGCMD) build --prod
 UINAME=ui
 UIPATH=../static-ui
 
+.PHONY: dev prod build build-prod test clean run
+
 dev: 
 	test build
 
