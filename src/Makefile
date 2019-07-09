@@ -12,7 +12,7 @@ NGPROD=$(NGCMD) build --prod
 UINAME=ui
 UIPATH=../static-ui
 
-.PHONY: dev prod build build-prod test clean run
+.PHONY: dev prod build build-prod test clean run-dev run
 
 dev: 
 	test build
@@ -37,8 +37,12 @@ clean:
 	rm -f $(BINARY_UNIX)
 	cd ui; rm -rf $(UIPATH)
 
-run:
+run-dev:
 	$(GOBUILD) -o $(BINARY_NAME) -v ./...
 	./$(BINARY_NAME) &
 	cd ui; $(NGSERVE)
+
+run:
+	$(GOBUILD) -o $(BINARY_NAME) -v ./...
+	./$(BINARY_NAME)
 

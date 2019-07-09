@@ -2,31 +2,41 @@
 
 Powered by Interns
 
-# Building & running
+## Building
+
+Building the program is as simple as:
+
 ```bash
-cd /src
-source ./build-static-ui.sh
-go run *.go
+make build
+```
+or in Production mode
+
+```bash
+make build-prod
 ```
 
-#Testing (to be automated)
+After building, it's a good idea to test it by
 
-## Sprint Sessions
-``` bash
-curl -d '{"Name":"First Sprint"}' -H 'Content-Type: application/json' http://localhost:8080/sprints
-curl http://localhost:8080/sprints
+```bash
+make test
 ```
 
-## Users
-``` bash
-curl -d '{"Name":"John Appleseed"}' -H 'Content-Type: application/json' http://localhost:8080/sprints/[sprintId]]/users
-curl http://localhost:8080/sprints/[sprintId]/users
-curl -X POST -d '{"Vote":[voteVal]}' -H 'Content-Type: application/json' http://localhost:8080/sprints/[sprintId]/users/[userId]
+If you are too lazy, just
+
+```bash
+make all
 ```
 
-## Rounds
-``` bash
-curl -d '{"Name":"Task 1"}' -H 'Content-Type: application/json' http://localhost:8080/sprints/[sprintId]]/rounds
-curl http://localhost:8080/sprints/[sprintId]/rounds
+## Developing
+
+To use the program in DEV mode and allow CORS for testing, run
+
+```bash
+make run-dev
+```
+
+Or if you have built the program and simply want to run it, do
+```bash
+make run
 ```
 
