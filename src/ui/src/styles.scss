@@ -35,6 +35,9 @@ $dark-theme:   mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
 .background-secondary {
   background: mat-color($mat-purple, 50);
 }
+.background-third {
+  background: mat-color($mat-yellow, 50);
+}
 
 .text-primary {
   color: mat-color($mat-grey, 800);

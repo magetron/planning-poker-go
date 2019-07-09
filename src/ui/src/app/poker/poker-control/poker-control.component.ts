@@ -22,6 +22,7 @@ export class PokerControlComponent implements OnInit {
   nextStory: string = '';
   storyList: Round[];
   roundInfoSocket$: WebSocketSubject<any>;
+  stats: number[];
 
   constructor(
     private router: Router,
@@ -57,6 +58,7 @@ export class PokerControlComponent implements OnInit {
     
     //Start talking ot the socket
     this.refreshSocket();
+    this.internal.stats$.subscribe(msg => this.stats = msg);
   }
 
   addStory (story: string): void {
