@@ -66,11 +66,11 @@ export class MemberslistComponent extends Cardify implements OnInit {
     let result = [];
     for (const i of this.users) {
       if (i.Vote != -1) {
-        console.log("Vote added", i.Vote);
+        //console.log("Vote added", i.Vote);
         result.push(i.Vote);
         console.log("Vote Array is ", result);
       } else {
-        console.log("no vote registered");
+        console.log("No vote is registered");
       }
     }
     var avg = parseFloat(this.mean(result).toFixed(2));

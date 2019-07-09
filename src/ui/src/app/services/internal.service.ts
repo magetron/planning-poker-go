@@ -30,7 +30,6 @@ export class InternalService {
 
   updateStats(stats: number[]) {
     this.stats.next(stats);
-    //console.log("this.stats = ", this.stats._value[0]);
   }
 
 }
