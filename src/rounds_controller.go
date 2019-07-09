@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/stretchr/goweb"
 	"github.com/stretchr/goweb/context"
@@ -46,6 +47,7 @@ func (rc *RoundsController) Create(ctx context.Context) error {
 	round.Avg = 0
 	round.Med = 0
 	round.Archived = false
+	round.CreationTime = time.Now().Unix()
 
 	foundId := false
 	for _, rs := range rc.AllRounds {
