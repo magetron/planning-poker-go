@@ -65,7 +65,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
   analysisVote(): Array<number> {
     let result = [];
     for (const i of this.users) {
-      if (i.Vote != -1) {
+      if (i.Vote != -1 && i.Vote != -2 ) {
         //console.log("Vote added", i.Vote);
         result.push(i.Vote);
         console.log("Vote Array is ", result);
