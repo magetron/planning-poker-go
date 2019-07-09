@@ -81,8 +81,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
   }
 
   mean(arr): number {
-    var i,
-    sum = 0,
+    var i, sum = 0;
     for (i = 0; i < arr.length; i++) {
       sum += arr[i];
     }
