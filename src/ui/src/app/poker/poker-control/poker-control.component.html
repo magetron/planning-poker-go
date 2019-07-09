@@ -21,18 +21,18 @@
 </mat-card>
 <br>
 
-<mat-card>
+<mat-card class="background-third">
   <mat-card-header>
     <mat-card-title class="text-primary">
-      Recommended:
+      Recommended: {{stats[1]}}
     </mat-card-title>
     <mat-card-subtitle>
     </mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
-    Mean:
-    Median:
-    Mode:
+    Mean: {{stats[2]}}
+    Median: {{stats[1]}}
+    Mode: {{stats[0]}}
   </mat-card-content>
   <mat-card-actions>
   </mat-card-actions>

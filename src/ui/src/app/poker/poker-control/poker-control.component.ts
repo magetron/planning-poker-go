@@ -23,6 +23,7 @@ export class PokerControlComponent implements OnInit {
   nextStory: string = '';
   storyList: Sprint[];
   roundInfoSocket$: WebSocketSubject<any>;
+  stats: number[];
 
   constructor(
     private router: Router,
@@ -43,19 +44,20 @@ export class PokerControlComponent implements OnInit {
       },
       binaryType: "blob",
     });
-    
+
     //TODO: catch server unavailable
     this.roundInfoSocket$.subscribe(
       msg => { // Called whenever there is a message from the server.
         //console.log('socket received');
         this.storyList = msg;
-      }, 
+      },
       err => console.log(err), // Called if at any point WebSocket API signals some kind of error.
       () => console.log('complete') // Called when connection is closed (for whatever reason).
     );
-    
+
     //Start talking ot the socket
     this.refreshSocket();
+    this.internal.stats$.subscribe(msg => this.stats = msg);
   }
 
   addStory (story: string): void {
