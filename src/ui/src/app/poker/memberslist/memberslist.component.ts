@@ -82,12 +82,11 @@ export class MemberslistComponent extends Cardify implements OnInit {
 
   mean(arr): number {
     var i,
-      sum = 0,
-      len = arr.length;
-    for (i = 0; i < len; i++) {
+    sum = 0,
+    for (i = 0; i < arr.length; i++) {
       sum += arr[i];
     }
-    return sum / len;
+    return sum / arr.length;
   }
 
   median(arr): number {
@@ -96,9 +95,11 @@ export class MemberslistComponent extends Cardify implements OnInit {
       return a - b;
     });
     var half = Math.floor(arr.length / 2);
-    if (arr.length % 2)
+    if (arr.length % 2){
       return arr[half];
-    return (arr[half - 1] + arr[half]) / 2.0;
+    } else {
+      return (arr[half - 1] + arr[half]) / 2.0;
+    }
   }
 
   mode(arr): number {
@@ -113,10 +114,8 @@ export class MemberslistComponent extends Cardify implements OnInit {
     }
 
     for (i in count)
-      if (count.hasOwnProperty(i)) {
-        if (count[i] === maxIndex) {
+      if (count.hasOwnProperty(i) && count[i] === maxIndex) {
           modes.push(Number(i));
-        }
       }
     return Math.max.apply(null, modes);
   }
