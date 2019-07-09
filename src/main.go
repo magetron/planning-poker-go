@@ -147,7 +147,7 @@ func main() {
 func garbageCollector (ctx context.Context) error {
 	log.Print("Collecting Garbage...")
 	for i, s := range sc.Sprints {
-		if time.Now().Sub(s.CreationTime).Seconds() > 1 {
+		if time.Now().Sub(s.CreationTime).Hours() > 12 {
 			for irs, rs := range rc.AllRounds {
 				if rs.SprintId == s.Id {
 					rc.AllRounds[len(rc.AllRounds) - 1], rc.AllRounds[irs] = rc.AllRounds[irs], rc.AllRounds[len(rc.AllRounds) - 1]
