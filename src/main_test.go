@@ -26,6 +26,32 @@ func TestEmptySprint(t *testing.T) {
 
 }
 
+func TestEmptyNameSprint(t *testing.T) {
+	codecService := goweb.DefaultHttpHandler().CodecService()
+	handler := handlers.NewHttpHandler(codecService)
+	goweb.SetDefaultHttpHandler(handler)
+
+	mapRoutes()
+
+	goweb.Test(t, goweb.RequestBuilderFunc(func () *http.Request {
+		newReqBody, newReqBodyErr := json.Marshal(map[string]string {
+			"Name": "",
+		})
+		if newReqBodyErr != nil {
+			log.Fatal(newReqBodyErr)
+		}
+		newReq, newErr := http.NewRequest("POST", "sprints/", bytes.NewBuffer(newReqBody))
+		if newErr != nil {
+			log.Fatal(newErr)
+		}
+		newReq.Header.Set("Content-Type", "application/json")
+		return newReq
+	}), func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for New Sprint.")
+		assert.Equal(t, 25, len(response.Output), "Response Length should be 25 for New Sprint.")
+	})
+}
+
 func TestSprintCycle(t *testing.T) {
 
 	codecService := goweb.DefaultHttpHandler().CodecService()
@@ -249,6 +275,28 @@ func TestUserCycle(t *testing.T) {
 	goweb.Test(t, "GET sprints/" + sprintId + "/users/" + userId, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for Existing User.")
 		assert.Equal(t, `{"d":{"Id":"` + userId + `","Name":"New User","Vote":-1},"s":200}`, response.Output, "Response should be Existing User object.")
+	})
+
+	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
+		newReqBody, newReqBodyErr := json.Marshal(map[string]float64{
+			"Vote": 0.1,
+		})
+		if newReqBodyErr != nil {
+			log.Fatal(newReqBodyErr)
+		}
+		newReq, newErr := http.NewRequest("PUT", "sprints/" + sprintId +"/users/" + userId, bytes.NewBuffer(newReqBody))
+		if newErr != nil {
+			log.Fatal(newErr)
+		}
+		newReq.Header.Set("Content-Type", "application/json")
+		return newReq
+	}), func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for User voting.")
+	})
+
+	goweb.Test(t, "GET sprints/" + sprintId + "/users/" + userId, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for Existing User.")
+		assert.Equal(t, `{"d":{"Id":"` + userId + `","Name":"New User","Vote":0.1},"s":200}`, response.Output, "Response should be Existing User object.")
 	})
 
 	goweb.Test(t, "DELETE sprints/" + sprintId + "/users/" + userId, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
