@@ -15,10 +15,12 @@ UIPATH=../static-ui
 .PHONY: dev prod build build-prod test clean run-dev run
 
 dev: 
-	test build
+	make test 
+	make build
 
 prod:
-	test build-prod
+	make test 
+	make build-prod
 
 build:
 	$(GOBUILD) -o $(BINARY_NAME) -v
