@@ -20,6 +20,10 @@ const (
 
 var DEV = true
 
+var sc = new(SprintsController)
+var rc = new(RoundsController)
+var us = new(UsersService)
+
 func mapRoutes() {
 
 	if DEV {
@@ -36,9 +40,6 @@ func mapRoutes() {
 		return goweb.Respond.WithRedirect(c, "/index", "")
 	})
 
-	sc := new(SprintsController)
-	rc := new(RoundsController)
-	us := new(UsersService)
 
 	_ = goweb.MapController(sc)
 	_ = goweb.MapController("sprints/[sprintId]/rounds", rc)
@@ -79,6 +80,8 @@ func mapRoutes() {
 		rc.Update(ws)
 		return ws.Close()
 	})
+
+	_, _ = goweb.Map("POST", "gc", garbageCollector)
 
 	if !DEV {
 		root := "./static-ui"
@@ -139,4 +142,9 @@ func main() {
 
 	log.Fatalf("Error in Server: %s", server.Serve(listener))
 
+}
+
+func garbageCollector (ctx context.Context) error {
+	log.Print("Collecting Garbage")
+	return nil
 }
