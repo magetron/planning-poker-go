@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { InternalService } from 'src/app/services/internal.service';
 import { User } from 'src/app/models/user';
 import { Sprint } from 'src/app/models/sprint';
+import { Round } from '../../models/round';
 import { CommsService } from 'src/app/services/comms.service';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import * as globals from '../../services/globals.service';
@@ -17,11 +18,9 @@ import * as globals from '../../services/globals.service';
 export class PokerControlComponent implements OnInit {
 
   @Input() sprint_id: string;
-  sprint: Sprint;
-  user: User;
   curStory: string = 'default';
   nextStory: string = '';
-  storyList: Sprint[];
+  storyList: Round[];
   roundInfoSocket$: WebSocketSubject<any>;
 
   constructor(
@@ -33,13 +32,13 @@ export class PokerControlComponent implements OnInit {
 
   ngOnInit() {
     this.sprint_id = this.route.snapshot.paramMap.get('sprint_id');
+
     this.roundInfoSocket$ = webSocket({
       url: globals.roundInfoSocket,
       serializer: msg => msg, //Don't JSON encode the sprint_id
       deserializer: ({data}) => {
-        console.log(data);
-        let j = JSON.parse(data) as User[];
-        return j;
+        //console.log(data);
+        return JSON.parse(data);
       },
       binaryType: "blob",
     });
@@ -49,6 +48,8 @@ export class PokerControlComponent implements OnInit {
       msg => { // Called whenever there is a message from the server.
         //console.log('socket received');
         this.storyList = msg;
+        console.log("storyList: ", this.storyList[this.storyList.length-1]);
+        this.curStory = this.storyList[this.storyList.length-1]["Name"];
       }, 
       err => console.log(err), // Called if at any point WebSocket API signals some kind of error.
       () => console.log('complete') // Called when connection is closed (for whatever reason).
@@ -65,6 +66,8 @@ export class PokerControlComponent implements OnInit {
           console.log("Story submitted, Sprint-id:", this.sprint_id);
           this.curStory = story;
           this.nextStory = '';
+        } else {
+          console.log("Server communication error");
         }
       });
     } else {
