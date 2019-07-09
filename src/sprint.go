@@ -1,8 +1,9 @@
 package main
 
+import "time"
+
 type Sprint struct {
 	Id   string
 	Name string
-	CreationTime int32
-	CoffeeBreak	 int32
+	CreationTime time.Time
 }
