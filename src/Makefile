@@ -25,10 +25,12 @@ prod:
 build:
 	$(GOBUILD) -o $(BINARY_NAME) -v
 	cd ui; $(NGBUILD) $(UINAME) --outputPath=$(UIPATH)
+	cd _gc; $(GOBUILD) -o ../gc
 
 build-prod:
 	$(GOBUILD) -o $(BINARY_NAME) -v
 	cd ui; $(NGPROD) $(UINAME) --outputPath=$(UIPATH)
+	cd _gc; $(GOBUILD) -o ../gc
 
 test:
 	$(GOTEST) -v ./...
@@ -38,6 +40,7 @@ clean:
 	rm -f $(BINARY_NAME)
 	rm -f $(BINARY_UNIX)
 	cd ui; rm -rf $(UIPATH)
+	rm -f gc
 
 run-dev:
 	$(GOBUILD) -o $(BINARY_NAME) -v ./...
@@ -45,6 +48,8 @@ run-dev:
 	cd ui; $(NGSERVE)
 
 run:
+	cd _gc; $(GOBUILD) -o ../gc
+	./gc &
 	$(GOBUILD) -o $(BINARY_NAME) -v ./...
 	./$(BINARY_NAME)
 
