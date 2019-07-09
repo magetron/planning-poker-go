@@ -63,20 +63,16 @@ export class MemberslistComponent extends Cardify implements OnInit {
   }
 
   analysisVote(): Array<number> {
-    let result = [];
-    for (const i of this.users) {
-      if (i.Vote != -1 && i.Vote != -2 ) {
-        //console.log("Vote added", i.Vote);
-        result.push(i.Vote);
-        console.log("Vote Array is ", result);
-      } else {
-        console.log("No vote is registered");
-      }
-    }
+    //result is an array of votes
+    let result = this.users.map(i => i.Vote);
+    //strip non-votes
+    result = result.filter(i => i !== -1 && i !== -2);
+
+    //calculate parameters
     var avg = parseFloat(this.mean(result).toFixed(2));
     var median = this.median(result);
     var mode = this.mode(result);
-    console.log("Mode, Median, Avg = ", [mode, median, avg]);
+    //console.log("Mode, Median, Avg = ", [mode, median, avg]);
     return [mode, median, avg];
   }
 

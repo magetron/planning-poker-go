@@ -60,7 +60,7 @@ export class CommsService {
     }
 
     const result = this.httpClient.post<SimpleResponse>(
-      `${globals.apiUrl}/sprints/${sprint.id}/users`, jsonObject, HTTPOPTIONS);
+      `${globals.apiUrl}/sprints/${sprint.Id}/users`, jsonObject, HTTPOPTIONS);
     return result;
   }
 

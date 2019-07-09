@@ -4,4 +4,5 @@ export interface Round {
     Avg: number,
     Med: number,
     Archived: boolean,
+    CreationTime: number,
 }

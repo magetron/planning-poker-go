@@ -1,6 +1,6 @@
 export interface User {
-  name: string;
-  id: string;
+  Name: string;
+  Id: string;
   Vote: number;
 //  scrum_master: boolean; //TODO
 }

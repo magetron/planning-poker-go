@@ -21,6 +21,13 @@
 </mat-card>
 <br>
 
+<div >
+  <h1>
+{{timePassed/60 + ":" + (timePassed%60).toLocaleString("en", {minimumIntegerDigits: 2})}}
+  </h1>
+</div>
+<br>
+
 <mat-card class="background-third">
   <mat-card-header>
     <mat-card-title class="text-primary">

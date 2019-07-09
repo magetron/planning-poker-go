@@ -30,10 +30,10 @@ export class JoinComponent implements OnInit {
 
   ngOnInit() {
     this.intialize();
-    this.sprint.id = this.route.snapshot.paramMap.get('sprint_id');
+    this.sprint.Id = this.route.snapshot.paramMap.get('sprint_id');
     //TODO: get sprint title from backend
     //if you get a sprint title, set the sprint
-    this.comms.getSprintDetails(this.sprint.id)
+    this.comms.getSprintDetails(this.sprint.Id)
       .pipe(
         catchError(err => {
           console.log('Connection error', err);
@@ -43,8 +43,8 @@ export class JoinComponent implements OnInit {
       )
       .subscribe(res => {
         if (res && res.s === 200) {
-          if (res.d['Id'] === this.sprint.id) {
-            this.sprint.name = res.d['Name'];
+          if (res.d['Id'] === this.sprint.Id) {
+            this.sprint.Name = res.d['Name'];
             this.internal.updateSprint(this.sprint);
           } else {
             //TODO: redirect - invalid Id
@@ -64,10 +64,13 @@ export class JoinComponent implements OnInit {
       ).subscribe(
         res => {
           if (res && res.s === 200) {
-            this.user.id = res.d['Id'];
-            this.user.name = res.d['Name'];
+            this.user.Id = res.d['Id'];
+            this.user.Name = res.d['Name'];
             this.internal.updateUser(this.user);
-            this.router.navigateByUrl(`/table/${this.sprint.id}`);
+            this.router.navigateByUrl(`/table/${this.sprint.Id}`);
+          } else if (res && res.s === 404) {
+            console.log("Sprint not found");
+            this.router.navigateByUrl(`/new`); //TODO get .status and test that instead
           } else {
             console.log("Connection error");
           }
@@ -80,13 +83,13 @@ export class JoinComponent implements OnInit {
 
   intialize(): void {
     this.user = {
-      name: "",
-      id: "",
+      Name: "",
+      Id: "",
       Vote: -1,
     }
     this.sprint = {
-      name: "",
-      id: "",
+      Name: "",
+      Id: "",
     }
   }
 }
