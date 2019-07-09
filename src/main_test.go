@@ -193,8 +193,8 @@ func TestEmptyUser(t *testing.T) {
 		sprintId = response.Output[6:15]
 	})
 
-	goweb.Test(t, "GET sprints/"+sprintId+"users/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
-		assert.Equal(t, http.StatusNotFound, response.StatusCode, "Status code should be Not Found for Empty Round.")
+	goweb.Test(t, "GET sprints/"+sprintId+"/users/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for querying all Users.")
 	})
 }
 
@@ -243,6 +243,20 @@ func TestUserCycle(t *testing.T) {
 	}), func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for New User.")
 		userId = response.Output[12:48]
-		assert.Equal(t, `{"d":{"Id":"` + userId + `","Name":"New User","Vote":-1},"s":200}`, response.Output, "Response should be user object.")
+		assert.Equal(t, `{"d":{"Id":"` + userId + `","Name":"New User","Vote":-1},"s":200}`, response.Output, "Response should be User object.")
 	})
+
+	goweb.Test(t, "GET sprints/" + sprintId + "/users/" + userId, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for Existing User.")
+		assert.Equal(t, `{"d":{"Id":"` + userId + `","Name":"New User","Vote":-1},"s":200}`, response.Output, "Response should be Existing User object.")
+	})
+
+	goweb.Test(t, "DELETE sprints/" + sprintId + "/users/" + userId, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for Deleting User.")
+	})
+
+	goweb.Test(t, "GET sprints/"+sprintId+"/users/" + userId, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		assert.Equal(t, http.StatusNotFound, response.StatusCode, "Status code should be Not Found for non-existing User.")
+	})
+
 }
