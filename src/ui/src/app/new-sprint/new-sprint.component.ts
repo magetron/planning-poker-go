@@ -20,8 +20,8 @@ export class NewSprintComponent implements OnInit {
 
   ngOnInit() {
     this.sprint = {
-      id: '',
-      name: ''
+      Id: '',
+      Name: ''
     }
   }
 
@@ -30,8 +30,10 @@ export class NewSprintComponent implements OnInit {
     if (name) {
       this.commsService.createSprint(name).subscribe(response => {
         if (response) {
-          this.sprint.id = response.d;
-          this.sprint.name = name;
+          this.sprint = {
+            Id: response.d,
+            Name: name
+          }
           this.intern.updateSprint(this.sprint);
         }
       });

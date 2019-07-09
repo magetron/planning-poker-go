@@ -1,4 +1,4 @@
 export interface Sprint {
-    id: string;
-    name: string;
+    Id: string;
+    Name: string;
 }
