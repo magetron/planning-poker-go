@@ -2,8 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { InternalService } from 'src/app/services/internal.service';
-//import { User } from 'src/app/models/user'; 
-//import { Sprint } from 'src/app/models/sprint';
+import { User } from 'src/app/models/user'; 
+import { Sprint } from 'src/app/models/sprint';
 import { Round } from '../../models/round';
 import { CommsService } from 'src/app/services/comms.service';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
