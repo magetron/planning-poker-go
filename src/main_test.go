@@ -183,7 +183,7 @@ func TestRoundCycle (t *testing.T) {
 	})
 
 	goweb.Test(t, "GET sprints/"+sprintId+"/rounds/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
-		assert.Equal(t, `{"d":[{"Id":1,"Name":"Task 1","Med":0,"Avg":0,"Archived":false`, response.Output[:62], "Should have exact same information for new Round.")
+		assert.Equal(t, `{"d":[{"Id":1,"Name":"Task 1","Med":0,"Avg":0,"Final":0,"Archived":false`, response.Output[:72], "Should have exact same information for new Round.")
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for Existing Round.")
 	})
 
