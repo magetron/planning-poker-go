@@ -33,6 +33,7 @@ func TestEmptyNameSprint(t *testing.T) {
 
 	mapRoutes()
 
+	sprintId := ""
 	goweb.Test(t, goweb.RequestBuilderFunc(func () *http.Request {
 		newReqBody, newReqBodyErr := json.Marshal(map[string]string {
 			"Name": "",
@@ -49,7 +50,13 @@ func TestEmptyNameSprint(t *testing.T) {
 	}), func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for New Sprint.")
 		assert.Equal(t, 25, len(response.Output), "Response Length should be 25 for New Sprint.")
+		sprintId = response.Output[6:15]
 	})
+
+	goweb.Test(t, "DELETE sprints/" + sprintId, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for Deleting Sprint.")
+	})
+
 }
 
 func TestSprintCycle(t *testing.T) {
@@ -82,7 +89,7 @@ func TestSprintCycle(t *testing.T) {
 
 	goweb.Test(t, "GET sprints/" + sprintId, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for Existing Sprint.")
-		assert.Equal(t, `{"d":{"Id":"` + sprintId + `","Name":"New Sprint"},"s":200}`, response.Output, "Response should contain name New Sprint.")
+		assert.Equal(t, `{"d":{"Id":"` + sprintId + `","Name":"New Sprint",`, response.Output[:43], "Response should contain name New Sprint.")
 	})
 
 	goweb.Test(t, "DELETE sprints/" + sprintId, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
@@ -176,7 +183,7 @@ func TestRoundCycle (t *testing.T) {
 	})
 
 	goweb.Test(t, "GET sprints/"+sprintId+"/rounds/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
-		assert.Equal(t, `{"d":[{"Id":1,"Name":"Task 1","Med":0,"Avg":0,"Archived":false}],"s":200}`, response.Output, "Should have exact same information for new Round.")
+		assert.Equal(t, `{"d":[{"Id":1,"Name":"Task 1","Med":0,"Avg":0,"Archived":false`, response.Output[:62], "Should have exact same information for new Round.")
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for Existing Round.")
 	})
 
