@@ -139,7 +139,7 @@ func (rc *RoundsController) DeleteMany(ctx context.Context) error {
 
 }
 
-func (rc *RoundsController) Delete (id string, ctx context.Context) error {
+func (rc *RoundsController) Replace (id string, ctx context.Context) error {
 	voteData, voteErr := ctx.RequestData()
 
 	if voteErr != nil {
