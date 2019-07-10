@@ -46,6 +46,7 @@ func (rc *RoundsController) Create(ctx context.Context) error {
 	round.Name = dataMap["Name"].(string)
 	round.Avg = 0
 	round.Med = 0
+	round.Final = 0
 	round.Archived = false
 	round.CreationTime = time.Now().Unix()
 
