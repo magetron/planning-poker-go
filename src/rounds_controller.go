@@ -159,6 +159,7 @@ func (rc *RoundsController) Delete (id string, ctx context.Context) error {
 	voteMap := voteData.(map[string]interface{})
 	voteAvg := voteMap["Average"].(float64)
 	voteMed := voteMap["Median"].(float64)
+	voteFin := voteMap["Final"].(float64)
 
 	for _, rs := range rc.AllRounds {
 		if rs.SprintId == urlId {
@@ -166,6 +167,7 @@ func (rc *RoundsController) Delete (id string, ctx context.Context) error {
 				if r.Id == roundId {
 					r.Avg = voteAvg
 					r.Med = voteMed
+					r.Final = voteFin
 					r.Archived = true
 				}
 			}

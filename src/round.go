@@ -5,6 +5,7 @@ type Round struct {
 	Name 		string
 	Med 		float64
 	Avg 		float64
+	Final		float64
 	Archived 	bool
 	CreationTime int64
 }
