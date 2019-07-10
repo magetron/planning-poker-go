@@ -2,7 +2,7 @@
   <button mat-raised-button class="button-secondary" id={{point}}
   (click)="vote(point)" *ngFor="let point of points">
     <h1>
-        <span>{{cardify(point)}}</span>
+        <span>{{cardify(point, true)}}</span>
     </h1>
   </button>
 </div>
