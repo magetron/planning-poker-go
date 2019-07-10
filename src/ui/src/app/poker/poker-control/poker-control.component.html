@@ -23,7 +23,7 @@
 
 <div >
   <h1>
-{{timePassed/60 + ":" + (timePassed%60).toLocaleString("en", {minimumIntegerDigits: 2})}}
+{{(timePassed/60).toLocaleString("en", {maximumFractionDigits: 0}) + ":" + (timePassed%60).toLocaleString("en", {minimumIntegerDigits: 2, maximumFractionDigits: 0})}}
   </h1>
 </div>
 <br>
