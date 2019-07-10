@@ -92,7 +92,7 @@ export class PokerControlComponent implements OnInit {
   startTimer(): void {
     if (this.storyList && this.storyList[this.storyList.length - 1].CreationTime) {
       console.log("Timer started");
-      setInterval(() => this.timePassed = new Date().getTime() - this.storyList[this.storyList.length - 1].CreationTime, 1000)
+      setInterval(() => this.timePassed = new Date().getTime() / 1000 - this.storyList[this.storyList.length - 1].CreationTime, 1000)
     } else {
       console.log("Time start failed");
       setTimeout(()=> this.startTimer(), globals.socketRefreshTime);
