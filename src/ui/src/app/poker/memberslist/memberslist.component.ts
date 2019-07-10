@@ -20,7 +20,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
   @Input() sprint_id: string;
   voteSocket$: WebSocketSubject<any>;
   showV: boolean = false;
-  btn1text: string[];
+  btn1text: string;
   displayedColumns: string[] = ['NAME', 'VOTE'];
 
   constructor(
@@ -118,15 +118,8 @@ export class MemberslistComponent extends Cardify implements OnInit {
   }
 
   showVoteFunc(): void {
-
-  let result = [];
-
-  console.log("state:", document.getElementById("btn1").classList)
-
-  var state = document.getElementById("btn1").classList.toggle("showV"); //in showV state
-  console.log("toggle show V", state)
-  var state2 = document.getElementById("btn1").classList.toggle("hideV")
-  console.log("toggle hide V", state2)
+  var state = document.getElementById("btn1").classList.toggle("showV"); 
+  document.getElementById("btn1").classList.toggle("hideV")
 
   if (state){
     this.showV = true;
