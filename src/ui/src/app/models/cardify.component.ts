@@ -1,11 +1,15 @@
 
 export class Cardify {
-    cardify (point: number) {
-        if (point && point === -2 ) {
+  cardify(point: number, showV: boolean) {
+    if (showV){
+      if (point && point === -2) {
         return '?';
-        } else if (point === -1) {
+      } else if (point === -1) {
         return ' ';
-        }
-        return point;
+      }
+      return point;
+    } else {
+      return '--';
     }
+  }
 }

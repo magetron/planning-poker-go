@@ -19,7 +19,8 @@ export class MemberslistComponent extends Cardify implements OnInit {
   users: User[];
   @Input() sprint_id: string;
   voteSocket$: WebSocketSubject<any>;
-
+  showV: boolean = false;
+  btn1text: string[];
   displayedColumns: string[] = ['NAME', 'VOTE'];
 
   constructor(
@@ -54,6 +55,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
 
     //Start talking ot the socket
     this.refreshSocket();
+    this.btn1text = "Show Vote";
   }
 
   refreshSocket(): void {
@@ -117,5 +119,26 @@ export class MemberslistComponent extends Cardify implements OnInit {
           modes.push(Number(i));
       }
     return Math.max.apply(null, modes);
+  }
+
+  showVoteFunc(): void {
+
+  let result = [];
+
+  console.log("state:", document.getElementById("btn1").classList)
+
+  var state = document.getElementById("btn1").classList.toggle("showV"); //in showV state
+  console.log("toggle show V", state)
+  var state2 = document.getElementById("btn1").classList.toggle("hideV")
+  console.log("toggle hide V", state2)
+
+  if (state){
+    this.showV = true;
+    this.btn1text = "Hide Vote";
+  } else {
+    this.showV = false;
+    this.btn1text = "Show Vote";
+  }
+
   }
 }

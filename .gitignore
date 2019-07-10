@@ -4,6 +4,8 @@ static-ui/
 .directory
 
 #running go build would create this
+src
+!src/
 src/planningpoker
 
 #VS code

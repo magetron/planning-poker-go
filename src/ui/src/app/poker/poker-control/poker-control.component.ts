@@ -43,7 +43,7 @@ export class PokerControlComponent implements OnInit {
       },
       binaryType: "blob",
     });
-    
+
     //TODO: catch server unavailable
     this.roundInfoSocket$.subscribe(
       msg => { // Called whenever there is a message from the server.
@@ -51,11 +51,11 @@ export class PokerControlComponent implements OnInit {
         this.storyList = msg;
         console.log("storyList: ", this.storyList[this.storyList.length-1]);
         this.curStory = this.storyList[this.storyList.length-1]["Name"];
-      }, 
+      },
       err => console.log(err), // Called if at any point WebSocket API signals some kind of error.
       () => console.log('complete') // Called when connection is closed (for whatever reason).
     );
-    
+
     //Start talking ot the socket
     this.refreshSocket();
     this.internal.stats$.subscribe(msg => this.stats = msg);
@@ -82,4 +82,5 @@ export class PokerControlComponent implements OnInit {
     this.roundInfoSocket$.next(this.sprint_id);
     setTimeout(() => this.refreshSocket(), globals.socketRefreshTime);
   }
+
 }
