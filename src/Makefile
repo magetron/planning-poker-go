@@ -38,7 +38,6 @@ test:
 clean:
 	$(GOCLEAN)
 	rm -f $(BINARY_NAME)
-	rm -f $(BINARY_UNIX)
 	cd ui; rm -rf $(UIPATH)
 	rm -f gc
 
