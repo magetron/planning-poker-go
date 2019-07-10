@@ -33,7 +33,7 @@ build-prod:
 	cd _gc; $(GOBUILD) -o ../gc
 
 test:
-	$(GOTEST) -v ./...
+	$(GOTEST) --cover -v ./...
 
 clean:
 	$(GOCLEAN)
