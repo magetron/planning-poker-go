@@ -170,7 +170,7 @@ func (rc *RoundsController) Replace (id string, ctx context.Context) error {
 					r.Med = voteMed
 					r.Final = voteFin
 					r.Archived = true
-					log.Printf("Round %d in Sprint %d is archived.", r.Id, rs.SprintId)
+					log.Printf("Round %d in Sprint %s is archived.", r.Id, rs.SprintId)
 					return goweb.API.RespondWithData(ctx, r)
 				}
 			}
