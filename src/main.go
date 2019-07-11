@@ -81,6 +81,22 @@ func mapRoutes() {
 		return ws.Close()
 	})
 
+	_, _ = goweb.Map("coffeeinfo", func (ctx context.Context) error {
+		r := ctx.HttpRequest()
+		w := ctx.HttpResponseWriter()
+		upgrader.CheckOrigin = func(r *http.Request) bool {
+			return true
+		}
+		ws, err := upgrader.Upgrade(w, r, nil)
+		if err != nil {
+			log.Println(err)
+		}
+		log.Println("WebSocket coffeeinfo/ Client Connected")
+		rc.Update(ws)
+		return ws.Close()
+	})
+
+
 	_, _ = goweb.Map("POST", "gc", garbageCollector)
 
 	if !DEV {
