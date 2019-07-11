@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs'; 
+import { Observable } from 'rxjs';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
 import * as globals from './globals.service';
@@ -89,5 +89,17 @@ export class CommsService {
       `${globals.apiUrl}/sprints/${sprint_id}/rounds`,
        jsonObject, HTTPOPTIONS_NO_BODY);
     return result;
+  }
+
+  archiveRound (sprint_id: string, round_no:number, avg: number, med:number, fin:number): Observable<any>{
+    let jsonObject = {
+      "Average": avg,
+      "Median": med,
+      "Final": fin,
     }
+    const result = this.httpClient.put<SimpleResponse>(
+      `${globals.apiUrl}/sprints/${sprint_id}/rounds/${round_no}`,
+       jsonObject, HTTPOPTIONS_NO_BODY);
+    return result;
+  }
 }

@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { InternalService } from 'src/app/services/internal.service';
-import { User } from 'src/app/models/user'; 
+import { User } from 'src/app/models/user';
 import { Sprint } from 'src/app/models/sprint';
 import { Round } from '../../models/round';
 import { CommsService } from 'src/app/services/comms.service';
@@ -18,8 +18,16 @@ import * as globals from '../../services/globals.service';
 export class PokerControlComponent implements OnInit {
 
   @Input() sprint_id: string;
-  curStory: string = 'default';
-  nextStory: string = '';
+  curStory: Round = {
+    "Name": "default",
+    "Id" : 0,
+    "Avg" : 0,
+    "Med" : 0,
+    "Final" : 0,
+    "Archived" : false,
+    "CreationTime" : 0,
+  };
+  nextStory: string = "";
   storyList: Round[];
   roundInfoSocket$: WebSocketSubject<any>;
   stats: number[];
@@ -56,7 +64,11 @@ export class PokerControlComponent implements OnInit {
         //console.log('socket received');
         this.storyList = msg;
         //console.log("storyList: ",msg," ", this.storyList[this.storyList.length - 1]);
-        this.curStory = this.storyList[this.storyList.length - 1].Name;
+        this.curStory = this.storyList[this.storyList.length - 1];
+
+        if (this.curStory.Archived){
+          this.curStory.Name = "--";
+        }
       },
       err => console.log(err), // Called if at any point WebSocket API signals some kind of error.
       () => console.log('complete') // Called when connection is closed (for whatever reason).
@@ -68,19 +80,16 @@ export class PokerControlComponent implements OnInit {
   }
 
   addStory (story: string): void {
-    if (story) {
-      this.comms.addStory(this.sprint_id, story).subscribe(response => {
-        if (response && response.status === 200) {
-          console.log("Story submitted, Sprint-id:", this.sprint_id);
-          this.curStory = story;
-          this.nextStory = '';
-        } else {
-          console.log("Server communication error");
-        }
-      });
-    } else {
-      console.log("Empty story title submitted");
-    }
+    this.startTimer();
+    this.comms.addStory(this.sprint_id, story).subscribe(response => {
+      if (response && response.status === 200) {
+        //console.log("Story submitted, Sprint-id:", this.sprint_id);
+        this.curStory.Name = story;
+        this.nextStory = "";
+      } else {
+        console.log("Server communication error");
+      }
+    });
   }
 
   refreshSocket(): void {
@@ -91,8 +100,8 @@ export class PokerControlComponent implements OnInit {
 
   startTimer(): void {
     if (this.storyList && this.storyList[this.storyList.length - 1].CreationTime) {
-      console.log("Timer started");
       setInterval(() => this.timePassed = new Date().getTime() / 1000 - this.storyList[this.storyList.length - 1].CreationTime, 1000)
+      console.log("Timer started, ID:");
     } else {
       console.log("Time start failed");
       setTimeout(()=> this.startTimer(), globals.socketRefreshTime);
@@ -100,7 +109,14 @@ export class PokerControlComponent implements OnInit {
   }
 
   archiveRound(): void{
-
+    console.log("curStory", this.curStory)
+    this.comms.archiveRound(this.sprint_id, this.curStory.Id, this.curStory.Avg, this.curStory.Med, this.curStory.Final).subscribe(response => {
+      if (response && response.status === 200) {
+        console.log("Round archived: ", this.curStory.Id);
+      } else {
+        console.log("Server communication error");
+      }
+    });
   }
 
 }

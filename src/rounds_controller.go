@@ -141,7 +141,7 @@ func (rc *RoundsController) DeleteMany(ctx context.Context) error {
 
 func (rc *RoundsController) Replace (id string, ctx context.Context) error {
 	voteData, voteErr := ctx.RequestData()
-
+	
 	if voteErr != nil {
 		return goweb.API.RespondWithError(ctx, http.StatusInternalServerError, voteErr.Error())
 	}

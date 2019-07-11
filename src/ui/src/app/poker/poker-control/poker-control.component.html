@@ -4,7 +4,7 @@
 <div class="containerX">
   <div class="box" fxlayout="row" style="flex-direction: row; box-sizing: border-box; display: flex;">
     <div fxflex="50%" fxflex.gt-sm="25" fxhide.md="" style="cursor: pointer; flex-direction: row; box-sizing: border-box; display: flex; flex: 1 1 100%; max-width: 15%;">
-      <div fxflex="" style="flex: 1 1 0%; box-sizing: border-box;">     
+      <div fxflex="" style="flex: 1 1 0%; box-sizing: border-box;">
        <app-memberslist [sprint_id]="sprint_id" ></app-memberslist>
       </div>
     </div>
@@ -19,7 +19,10 @@
             </mat-card-subtitle>
           </mat-card-header>
           <mat-card-content fxLayoutAlign="center">
-            <h1>{{(timePassed/60).toLocaleString("en", {maximumFractionDigits: 0}) + ":" + (timePassed%60).toLocaleString("en", {minimumIntegerDigits: 2, maximumFractionDigits: 0})}}</h1>
+            <div *ngIf="curStory.Archived; else notArchived"> <h1>0:00</h1> </div>
+            <ng-template #notArchived>
+              <h1>{{(timePassed/60).toLocaleString("en", {maximumFractionDigits: 0}) + ":" + (timePassed%60).toLocaleString("en", {minimumIntegerDigits: 2, maximumFractionDigits: 0})}}</h1>
+            </ng-template>
           </mat-card-content>
           <mat-card-actions>
           </mat-card-actions>
@@ -29,11 +32,11 @@
       <div fxflex="" style="flex: 1 1 1e-9px; box-sizing: border-box;">
         <div class="containerX" style="flex-direction: row; box-sizing: border-box; display: flex;">
           <div class="coloredContainerX box" fxflex="" fxlayout="row" fxlayout.sm="column" fxlayout.xs="column" style="flex-direction: row; box-sizing: border-box; display: flex; flex: 1 1 0%;">
-            <div fxflex="" style="flex: 1 1 0%; box-sizing: border-box;"> 
+            <div fxflex="" style="flex: 1 1 0%; box-sizing: border-box;">
               <mat-card class="background-secondary" style="max-width: 90%">
                 <mat-card-header>
                   <mat-card-title class="text-primary">
-                    Story Title: {{curStory}}
+                    Story Title: {{curStory.Name}}
                   </mat-card-title>
                   <mat-card-subtitle>
                   </mat-card-subtitle>
@@ -50,7 +53,7 @@
                 </mat-card-actions>
               </mat-card>
             </div>
-            <div fxflex="" style="flex: 1 1 0%; box-sizing: border-box;"> 
+            <div fxflex="" style="flex: 1 1 0%; box-sizing: border-box;">
               <mat-card class="background-third" style="max-width: 90%">
                 <mat-card-header>
                   <mat-card-title class="text-primary">
@@ -77,5 +80,3 @@
   </div>
 </div>
 <br>
-
-

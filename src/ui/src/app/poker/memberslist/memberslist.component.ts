@@ -34,7 +34,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
       url: globals.voteSocket,
       serializer: msg => msg, //Don't JSON encode the sprint_id
       deserializer: ({ data }) => {
-        console.log(data);
+        //console.log(data);
         let j = JSON.parse(data) as User[];
         return j;
       },
@@ -118,7 +118,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
   }
 
   showVoteFunc(): void {
-  var state = document.getElementById("btn1").classList.toggle("showV"); 
+  var state = document.getElementById("btn1").classList.toggle("showV");
   document.getElementById("btn1").classList.toggle("hideV")
 
   if (state){
