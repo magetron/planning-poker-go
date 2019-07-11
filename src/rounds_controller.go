@@ -170,13 +170,13 @@ func (rc *RoundsController) Replace (id string, ctx context.Context) error {
 					r.Med = voteMed
 					r.Final = voteFin
 					r.Archived = true
+					log.Printf("Round %d in Sprint %d is archived.", r.Id, rs.SprintId)
+					return goweb.API.RespondWithData(ctx, r)
 				}
 			}
 		}
 	}
-
-	return goweb.Respond.WithOK(ctx)
-
+	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 }
 
 func (rc *RoundsController) Update(conn *websocket.Conn) {
