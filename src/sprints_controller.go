@@ -103,12 +103,12 @@ func (sc *SprintsController) Update (conn websocket.Conn) {
 		for _, sprint := range sc.Sprints {
 			if sprint.Id == string(p) {
 				statusStr := ""
-				if time.Now().Sub(sprint.CreationTime).Hours() > 2 {
+				if time.Now().Sub(sprint.CreationTime).Seconds() > 15 {
 					statusStr = "true"
 				} else {
 					statusStr = "false"
 				}
-				if err := conn.WriteMessage(messageType, statusStr); err != nil {
+				if err := conn.WriteMessage(messageType, []byte(statusStr)); err != nil {
 					log.Println(err)
 					return
 				}
