@@ -32,6 +32,8 @@ export class PokerControlComponent implements OnInit {
   roundInfoSocket$: WebSocketSubject<any>;
   stats: number[];
   timePassed = 0;
+  displayedColumns: string[] = ['ROUNDS', 'RESULT'];
+  user: User;
 
   constructor(
     private router: Router,
@@ -67,7 +69,17 @@ export class PokerControlComponent implements OnInit {
         this.curStory = this.storyList[this.storyList.length - 1];
 
         if (this.curStory.Archived){
-          this.curStory.Name = "--";
+          this.comms.selectCard(this.sprint_id, this.user.Id, -1).subscribe(response => {
+              if (response.status === 200) {
+                //console.log("Initialize vote");
+              } else {
+                //console.log("Initialize vote fail");
+              }
+          });
+        } else {
+          this.curStory.Avg = this.stats[2];
+          this.curStory.Med = this.stats[1];
+          this.curStory.Final = this.stats[1];
         }
       },
       err => console.log(err), // Called if at any point WebSocket API signals some kind of error.
@@ -77,6 +89,7 @@ export class PokerControlComponent implements OnInit {
     //Start talking ot the socket
     this.refreshSocket();
     this.internal.stats$.subscribe(msg => this.stats = msg);
+    this.internal.user$.subscribe(msg => this.user = msg);
   }
 
   addStory (story: string): void {
@@ -109,13 +122,20 @@ export class PokerControlComponent implements OnInit {
   }
 
   archiveRound(): void{
-    console.log("curStory", this.curStory)
     this.comms.archiveRound(this.sprint_id, this.curStory.Id, this.curStory.Avg, this.curStory.Med, this.curStory.Final).subscribe(response => {
       if (response && response.status === 200) {
         console.log("Round archived: ", this.curStory.Id);
       } else {
         console.log("Server communication error");
       }
+    });
+
+    this.comms.selectCard(this.sprint_id, this.user.Id, -1).subscribe(response => {
+        if (response.status === 200) {
+          console.log("Initialize vote");
+        } else {
+          console.log("Initialize vote fail");
+        }
     });
   }
 

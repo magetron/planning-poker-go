@@ -36,7 +36,10 @@
               <mat-card class="background-secondary" style="max-width: 90%">
                 <mat-card-header>
                   <mat-card-title class="text-primary">
-                    Story Title: {{curStory.Name}}
+                    <div *ngIf="curStory.Archived; else notArchivedTitle"><h3>Story Title: -- </h3></div>
+                    <ng-template #notArchivedTitle>
+                      <h3>Story Title: {{curStory.Name}}</h3>
+                    </ng-template>
                   </mat-card-title>
                   <mat-card-subtitle>
                   </mat-card-subtitle>
@@ -72,6 +75,23 @@
                 <mat-card-actions>
                 </mat-card-actions>
               </mat-card>
+            </div>
+            <div fxflex="" style="flex: 1 1 0%; box-sizing: border-box;">
+
+              <table mat-table [dataSource]=storyList class="mat-elevation-z8">
+                <!-- Position Column -->
+                <ng-container matColumnDef="ROUNDS">
+                  <th mat-header-cell *matHeaderCellDef> ROUNDS </th>
+                  <td mat-cell *matCellDef="let storyList"> {{storyList.Name}} </td>
+                </ng-container>
+                <ng-container matColumnDef="RESULT">
+                  <th mat-header-cell *matHeaderCellDef> RESULT </th>
+                  <td mat-cell *matCellDef="let storyList"> {{storyList.Final}} </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+
             </div>
           </div>
         </div>
