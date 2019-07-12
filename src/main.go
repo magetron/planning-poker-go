@@ -18,7 +18,7 @@ const (
 	Address string = ":8080"
 )
 
-var DEV = true
+var DEV = false
 
 var sc = new(SprintsController)
 var rc = new(RoundsController)
