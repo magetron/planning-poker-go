@@ -5,6 +5,7 @@ import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
 import * as globals from './globals.service';
 import { Sprint } from '../models/sprint';
+import { throwMatDuplicatedDrawerError } from '@angular/material';
 
 const HTTPOPTIONS = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -102,4 +103,6 @@ export class CommsService {
        jsonObject, HTTPOPTIONS_NO_BODY);
     return result;
   }
+
+  //logOut (sprint_id: string,)
 }
