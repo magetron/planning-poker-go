@@ -1,11 +1,10 @@
 package main
 
 import (
-	"encoding/json"
+	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
-
-	"github.com/gorilla/websocket"
+	"encoding/json"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/goweb"
@@ -45,7 +44,6 @@ func (us *UsersService) Create(ctx context.Context) error {
 	user.Id = uuid.New().String()
 	user.Name = dataMap["Name"].(string)
 	user.Vote = -1
-	user.Rank = 3
 
 	foundId := false
 	for _, users := range us.AllUsers {
@@ -62,22 +60,8 @@ func (us *UsersService) Create(ctx context.Context) error {
 		us.AllUsers = append(us.AllUsers, users)
 	}
 
-	foundMaster := false
-	for _, users := range us.AllUsers {
-		if users.SprintId == urlId {
-			for _, user := range users.Users {
-				if user.Rank == 1 {
-					foundMaster = true
-				}
-			}
-		}
-	}
-
-	if !foundMaster {
-		user.Rank = 1
-	}
-
 	log.Printf("New User %s Added to sprintID %s", user.Id, urlId)
+
 	return goweb.API.RespondWithData(ctx, user)
 }
 
@@ -145,49 +129,21 @@ func (us *UsersService) DeleteMany(ctx context.Context) error {
 
 func (us *UsersService) Delete(id string, ctx context.Context) error {
 	urlId := ctx.PathValue("sprintId")
-	//rank float64, successorId string
-	log.Printf("Breakpoint0 Deleted User %s in Sprint %s", id, urlId)
+
 	for _, users := range us.AllUsers {
-		log.Printf("Breakpoint1 Deleted User %s in Sprint %s", id, urlId)
 		if users.SprintId == urlId {
-
-			slice1 := make([]*User, 0)
-			slice2 := make([]*User, 0)
-
-			log.Printf("Breakpoint2 Deleted User in Sprint %s", users.SprintId)
-			for i := 0; i < len(users.Users); i++ {
-				if users.Users[i].Id == id {
-					slice1 = users.Users[0:i]
-					slice2 = users.Users[i+1:]
-
-					for j := range slice2 {
-						slice1 = append(slice1, slice2[j])
-					}
-					users.Users = slice1
-
-					break
+			newList := make([]*User, 0)
+			for _, user := range users.Users {
+				if user.Id != id {
+					newList = append(newList, user)
 				}
 			}
-
-			//newList := make([]*User, 0)
-			//for _, user := range users.Users {
-			//	if user.Id != id {
-			//		newList = append(newList, user)
-			//	}
-			//}
-			//users.Users = newList
-
-			//if rank == 1 {
-			//	for _, user := range users.Users {
-			//		if user.Id == successorId {
-			//			user.Rank = 1
-			//		}
-			//	}
-			//}
+			users.Users = newList
 		}
 	}
 
-	log.Printf("Delete command reach the end! User %s in Sprint %s", id, urlId)
+	log.Printf("Deleted User %s in Sprint %s", id, urlId)
+
 	return goweb.Respond.WithOK(ctx)
 }
 

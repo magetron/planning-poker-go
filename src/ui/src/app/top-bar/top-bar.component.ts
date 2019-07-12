@@ -22,8 +22,4 @@ export class TopBarComponent implements OnInit {
     this.internal.sprint$.subscribe(sprint => this.sprint = sprint)
   }
 
-  //logOut() {
-    
-  //}
-
 }
