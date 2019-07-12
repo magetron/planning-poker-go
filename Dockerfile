@@ -1,11 +1,10 @@
-FROM centos 
+FROM centos:latest
 
 EXPOSE 8080
 
-COPY ./src/planningpoker ~/
-COPY ./src/gc ~/
-COPY ./src/static-ui ~/
+COPY src/planningpoker planningpoker 
+COPY src/gc gc
+COPY src/run.sh run.sh
+COPY src/static-ui static-ui
 
-WORKDIR ~/
-
-CMD ["./planningpoker"]
+CMD ./run.sh
