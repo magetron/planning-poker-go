@@ -1,22 +1,23 @@
-FROM golang:1.12.7-stretch
+FROM centos 
 
 EXPOSE 8080
 
-
 COPY ./src .
 
-RUN ls
+RUN yum -y update
+RUN yum -y install git
 
-RUN go get github.com/google/uuid
-RUN go get github.com/gorilla/websocket
-RUN go get github.com/stretchr/goweb
-RUN go get github.com/stretchr/codecs
-RUN go get github.com/stretchr/objx
-RUN go get github.com/stretchr/stew
-RUN go get github.com/stretchr/testify
-RUN go get github.com/teris-io/shortid
+RUN wget https://dl.google.com/go/go1.12.7.linux-amd64.tar.gz
+RUN tar -xzf go1.12.6.linux-amd64.tar.gz
+RUN mv go /usr/local
 
-RUN make build
+RUN export GOROOT=/usr/local/go
+RUN export GOPATH=$HOME
+RUN export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
+
+RUN go get -v ./...
+
+RUN make run
 
 EXPOSE 8080
 
