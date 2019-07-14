@@ -46,6 +46,7 @@ func (us *UsersService) Create(ctx context.Context) error {
 	user.Name = dataMap["Name"].(string)
 	user.Vote = -1
 	user.Rank = 3
+	user.Successor = "default"
 
 	foundId := false
 	for _, users := range us.AllUsers {
@@ -146,17 +147,15 @@ func (us *UsersService) DeleteMany(ctx context.Context) error {
 func (us *UsersService) Delete(id string, ctx context.Context) error {
 	urlId := ctx.PathValue("sprintId")
 	//rank float64, successorId string
-	log.Printf("Breakpoint0 Deleted User %s in Sprint %s", id, urlId)
 	for _, users := range us.AllUsers {
-		log.Printf("Breakpoint1 Deleted User %s in Sprint %s", id, urlId)
 		if users.SprintId == urlId {
 
 			slice1 := make([]*User, 0)
 			slice2 := make([]*User, 0)
 
-			log.Printf("Breakpoint2 Deleted User in Sprint %s", users.SprintId)
 			for i := 0; i < len(users.Users); i++ {
 				if users.Users[i].Id == id {
+
 					slice1 = users.Users[0:i]
 					slice2 = users.Users[i+1:]
 
@@ -187,7 +186,7 @@ func (us *UsersService) Delete(id string, ctx context.Context) error {
 		}
 	}
 
-	log.Printf("Delete command reach the end! User %s in Sprint %s", id, urlId)
+	log.Printf("Delete User %s in Sprint %s", id, urlId)
 	return goweb.Respond.WithOK(ctx)
 }
 
@@ -200,21 +199,40 @@ func (us *UsersService) Replace(id string, ctx context.Context) error {
 
 	dataMap := data.(map[string]interface{})
 	voteVal := dataMap["Vote"].(float64)
+	successorId := dataMap["Successor"].(string)
 
 	urlId := ctx.PathValue("sprintId")
 
 	for _, users := range us.AllUsers {
 		if users.SprintId == urlId {
+
+			isMaster := false
 			for _, user := range users.Users {
 				if user.Id == id {
 					user.Vote = voteVal
 					log.Printf("User %s voted %f in the current round of Sprint %s", user.Id, voteVal, urlId)
-					return goweb.Respond.WithOK(ctx)
+
+					if user.Rank == 1 {
+						user.Rank = 3
+						isMaster = true
+					} else {
+						return goweb.Respond.WithOK(ctx)
+					}
+
+				}
+			}
+
+			if isMaster {
+				for _, user := range users.Users {
+					if user.Id == successorId {
+						user.Rank = 1
+						log.Printf("Transferred master position to successor %s", successorId)
+						return goweb.Respond.WithOK(ctx)
+					}
 				}
 			}
 		}
 	}
-
 	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 }
 
