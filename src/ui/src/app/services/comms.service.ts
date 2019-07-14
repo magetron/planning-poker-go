@@ -5,7 +5,8 @@ import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
 import * as globals from './globals.service';
 import { Sprint } from '../models/sprint';
-import { throwMatDuplicatedDrawerError } from '@angular/material';
+//import { throwMatDuplicatedDrawerError } from '@angular/material';
+//import { resolveTxt } from 'dns';
 
 const HTTPOPTIONS = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -72,13 +73,14 @@ export class CommsService {
   }
 
   //TODO: WTH does this observable contain?
-  selectCard(sprint_id: string, user_id: string, vote: number): Observable<any> {
+  selectCard(sprint_id: string, user_id: string, vote: number, successor_id:string): Observable<any> {
     let jsonObject = {
       "Vote": vote,
+      "Successor": successor_id
     }
     const result = this.httpClient.put<SimpleResponse>(
       `${globals.apiUrl}/sprints/${sprint_id}/users/${user_id}`,
-       jsonObject, HTTPOPTIONS_NO_BODY);
+       jsonObject, HTTPOPTIONS);
     return result;
   }
 
@@ -104,5 +106,15 @@ export class CommsService {
     return result;
   }
 
-  //logOut (sprint_id: string,)
+  deleteUser (sprint_id: string, user_id: string): Observable<any>{
+    const result = this.httpClient.delete<SimpleResponse>(
+      `${globals.apiUrl}/sprints/${sprint_id}/users/${user_id}`,HTTPOPTIONS);
+    return result;
+  }
+
+  getUserDetails (sprint_id: string, user_id: string): Observable<SimpleResponse>{
+    const result = this.httpClient.get<SimpleResponse>(
+      `${globals.apiUrl}/sprints/${sprint_id}/users/${user_id}`, HTTPOPTIONS);
+    return result;
+  }
 }

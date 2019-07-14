@@ -46,7 +46,7 @@ func (us *UsersService) Create(ctx context.Context) error {
 	user.Name = dataMap["Name"].(string)
 	user.Vote = -1
 	user.Rank = 3
-	user.Successor = "default"
+	user.Successor = "none"
 
 	foundId := false
 	for _, users := range us.AllUsers {
@@ -140,13 +140,12 @@ func (us *UsersService) DeleteMany(ctx context.Context) error {
 		log.Printf("IMPORTANT : Deleted All Users in Sprint %s", urlId)
 	}
 
-	return goweb.Respond.WithOK(ctx)
+	return goweb.API.RespondWithData(ctx, us.AllUsers)
 
 }
 
 func (us *UsersService) Delete(id string, ctx context.Context) error {
 	urlId := ctx.PathValue("sprintId")
-	//rank float64, successorId string
 	for _, users := range us.AllUsers {
 		if users.SprintId == urlId {
 
@@ -163,31 +162,14 @@ func (us *UsersService) Delete(id string, ctx context.Context) error {
 						slice1 = append(slice1, slice2[j])
 					}
 					users.Users = slice1
-
 					break
 				}
 			}
-
-			//newList := make([]*User, 0)
-			//for _, user := range users.Users {
-			//	if user.Id != id {
-			//		newList = append(newList, user)
-			//	}
-			//}
-			//users.Users = newList
-
-			//if rank == 1 {
-			//	for _, user := range users.Users {
-			//		if user.Id == successorId {
-			//			user.Rank = 1
-			//		}
-			//	}
-			//}
 		}
+		log.Printf("Delete User %s", id)
+		return goweb.API.RespondWithData(ctx, users.Users)
 	}
-
-	log.Printf("Delete User %s in Sprint %s", id, urlId)
-	return goweb.Respond.WithOK(ctx)
+	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 }
 
 func (us *UsersService) Replace(id string, ctx context.Context) error {
@@ -212,23 +194,37 @@ func (us *UsersService) Replace(id string, ctx context.Context) error {
 					user.Vote = voteVal
 					log.Printf("User %s voted %f in the current round of Sprint %s", user.Id, voteVal, urlId)
 
-					if user.Rank == 1 {
+					if user.Rank < 3 && successorId != "none" {
+						log.Printf("User eligible to set successor cuz its rank is %f", user.Rank)
 						user.Rank = 3
 						isMaster = true
 					} else {
-						return goweb.Respond.WithOK(ctx)
+						user.Successor = "none"
+						log.Printf("User NOT eligible to set successor cuz its rank is %f", user.Rank)
+						return goweb.API.RespondWithData(ctx, user)
+						//if not master, return user info
 					}
 
 				}
 			}
 
+			log.Printf("print isMaster value: %B", isMaster)
+
 			if isMaster {
 				for _, user := range users.Users {
 					if user.Id == successorId {
 						user.Rank = 1
+						user.Successor = "none"
 						log.Printf("Transferred master position to successor %s", successorId)
-						return goweb.Respond.WithOK(ctx)
+						break
 					}
+				}
+			}
+
+			for _, user := range users.Users {
+				if user.Id == id {
+					return goweb.API.RespondWithData(ctx, users)
+					//if user is master, return all user in the sprint
 				}
 			}
 		}

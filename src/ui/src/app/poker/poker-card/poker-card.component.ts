@@ -35,13 +35,12 @@ export class PokerCardComponent extends Cardify implements OnInit {
     if (!this.user || !this.user.Id) {
       this.router.navigate(["join", this.sprint_id])
     }
-
     //this.internal.round$.subscribe(msg => this.round = msg);
   }
 
   vote(point: number){
-    this.comms.selectCard(this.sprint_id, this.user.Id, point).subscribe((response => {
-        if (response.status === 200) {
+    this.comms.selectCard(this.sprint_id, this.user.Id, point, "none").subscribe((response => {
+        if (response && response.s === 200) {
           console.log("Selection success");
 
           let old = document.getElementById(this.user.Vote.toString())
@@ -50,8 +49,8 @@ export class PokerCardComponent extends Cardify implements OnInit {
           }
           document.getElementById(point.toString()).classList.add("selected");
 
-          this.user.Vote = point;
-          this.internal.updateUser(this.user);
+          //this.user.Vote = point;
+          //this.internal.updateUser(this.user);
 
         } else {
           console.log("Selection error");

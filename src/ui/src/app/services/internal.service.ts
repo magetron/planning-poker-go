@@ -11,7 +11,7 @@ import { Sprint } from '../models/sprint';
 
 export class InternalService {
 
-  private user = new BehaviorSubject<User>({Name: "", Id: "", Vote: -1});
+  private user = new BehaviorSubject<User>({Name: "", Id: "", Vote: -1, Rank: 3, Successor:"none"});
   private sprint = new BehaviorSubject<Sprint>({Name: "", Id: ""});
   private stats = new BehaviorSubject<number[]>([0,0,0]);
   //private round = new BehaviorSubject<Round>({Name: "default",Id : 0,Avg : 0,Med: 0,Final: 0,Archived : false,CreationTime : 0,});

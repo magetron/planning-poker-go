@@ -17,6 +17,7 @@ import * as globals from "../../services/globals.service";
 export class MemberslistComponent extends Cardify implements OnInit {
 
   users: User[];
+  user: User;
   @Input() sprint_id: string;
   voteSocket$: WebSocketSubject<any>;
   showV: boolean = false;
@@ -47,6 +48,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
         //console.log('socket received');
         this.users = msg;
         this.internal.updateStats(this.analysisVote());
+        //this.internal.updateUser(this.user);
         //console.log("this.stats = ", this.internal.stats._value[0])
       },
       err => console.log(err), // Called if at any point WebSocket API signals some kind of error.
@@ -56,6 +58,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
     //Start talking ot the socket
     this.refreshSocket();
     this.btn1text = "Show Vote";
+    this.internal.user$.subscribe(msg => this.user = msg);
   }
 
   refreshSocket(): void {
@@ -130,4 +133,34 @@ export class MemberslistComponent extends Cardify implements OnInit {
   }
 
   }
+
+  setNextMaster(user) : void{
+    //console.log("Current user ",this.user, "trying to set ", user, "as successor.");
+    //console.log("Current user rank",this.user.Rank);
+    if (this.user.Rank < 3){
+      //console.log("Current user can set its successor because its rank is ",this.user.Rank);
+      this.comms.selectCard(this.sprint_id, this.user.Id, this.user.Vote, user.Id).subscribe(response => {
+        if (response && response.s === 200) {
+          console.log("Set successor");
+
+          //this.user.Successor = response.d["Sucessor"];
+          //this.user.Rank = response.d["Rank"];
+          console.log("print response info",response.d);
+          //this.internal.updateUser(this.user);
+        } else {
+          console.log("Set successor failed");
+        }
+      })
+    }
+  }
+
+  crowned (user): string{
+    //this.internal.updateUser(this.user);
+    if (user.Rank == 1) {
+      return ("Master:" + user.Name)
+    } else {
+      return (user.Name)
+    }
+  }
+
 }

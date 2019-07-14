@@ -66,6 +66,8 @@ export class JoinComponent implements OnInit {
           if (res && res.s === 200) {
             this.user.Id = res.d['Id'];
             this.user.Name = res.d['Name'];
+            this.user.Rank = res.d['Rank'];
+            //this.user.Successor = res.d['Successor'];
             this.internal.updateUser(this.user);
             this.router.navigateByUrl(`/table/${this.sprint.Id}`);
           } else if (res && res.s === 404) {
@@ -82,10 +84,14 @@ export class JoinComponent implements OnInit {
   }
 
   intialize(): void {
+    console.log("intialize func is being called")
     this.user = {
       Name: "",
       Id: "",
       Vote: -1,
+      Rank: -1,
+      Successor: "none",
+
     }
     this.sprint = {
       Name: "",
