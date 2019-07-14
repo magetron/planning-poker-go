@@ -48,7 +48,6 @@ export class PokerCardComponent extends Cardify implements OnInit {
             old.classList.remove("selected");
           }
           document.getElementById(point.toString()).classList.add("selected");
-
           //this.user.Vote = point;
           //this.internal.updateUser(this.user);
 

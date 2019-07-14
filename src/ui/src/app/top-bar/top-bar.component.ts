@@ -1,5 +1,5 @@
 import { Component, OnInit, Input} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { CommsService } from 'src/app/services/comms.service';
 import { InternalService } from '../services/internal.service'; 
 import { User } from '../models/user';
@@ -18,6 +18,7 @@ export class TopBarComponent implements OnInit {
   @Input() sprint_id: string;
 
   constructor(
+    private router: Router,
     private route: ActivatedRoute,
     private comms: CommsService,
     private internal: InternalService
@@ -27,6 +28,10 @@ export class TopBarComponent implements OnInit {
     this.sprint_id = this.route.snapshot.paramMap.get('sprint_id');
     this.internal.user$.subscribe(user => this.user = user);
     this.internal.sprint$.subscribe(sprint => this.sprint = sprint)
+  }
+
+  isInvalid() {
+    return(this.user.Rank == 1)
   }
 
   logOut() {
@@ -42,6 +47,7 @@ export class TopBarComponent implements OnInit {
           this.comms.deleteUser (this.sprint.Id, this.user.Id).subscribe(response => {
             if (response.s == 200) {
               console.log("User logged out");
+              this.router.navigateByUrl(`/new`);
             } else {
               console.log("User log out failed");
             }
