@@ -31,7 +31,9 @@ export class TopBarComponent implements OnInit {
   }
 
   isInvalid() {
-    return(this.user.Rank == 1)
+    return(false)
+    //return(this.user.Rank)
+    //TODO: set up log out as a new component and update the button everytime a master changes
   }
 
   logOut() {
