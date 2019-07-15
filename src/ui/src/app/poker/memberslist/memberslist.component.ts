@@ -140,7 +140,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
     
     if (this.user.Rank < 3){
       this.comms.appointSuccessor(this.sprint_id, this.user.Id, user.Id).subscribe(response => {
-        console.log("-----------debug: ", user.Id);
+        //console.log("-----------debug: ", user.Id);
         if (response && response.s === 200) {
           //this.user.Rank = response.d["Rank"] 
           //this.internal.updateUser(this.user);

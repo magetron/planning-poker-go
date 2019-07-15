@@ -96,9 +96,7 @@ func mapRoutes() {
 
 	_, _ = goweb.Map("POST", "gc", garbageCollector)
 
-	_, _ = goweb.Map("PUT", "sprints/[sprintId]/admin", func(ctx context.Context) error {
-		return (us.appointMaster(ctx))
-	})
+	_, _ = goweb.Map("PUT", "sprints/[sprintId]/admin", us.appointMaster)
 
 	if !DEV {
 		root := "./static-ui"

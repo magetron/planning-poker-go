@@ -45,7 +45,7 @@ func (us *UsersService) Create(ctx context.Context) error {
 	user.Id = uuid.New().String()
 	user.Name = dataMap["Name"].(string)
 	user.Vote = -1
-	user.Rank = 3
+	user.Rank = 3 //(1,2,3 refers to master, admin, user respectively)(admin feature to be implemented)
 
 	foundId := false
 	for _, users := range us.AllUsers {
@@ -167,7 +167,7 @@ func (us *UsersService) Delete(id string, ctx context.Context) error {
 				}
 			}
 		}
-		log.Printf("Delete User %s", id)
+		log.Printf("Delete User %s in Sprint %s", id, urlId)
 		return goweb.Respond.WithOK(ctx)
 	}
 	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
@@ -191,7 +191,7 @@ func (us *UsersService) Replace(id string, ctx context.Context) error {
 				if user.Id == id {
 					user.Vote = voteVal
 					log.Printf("User %s voted %f in the current round of Sprint %s", user.Id, voteVal, urlId)
-					return goweb.API.RespondWithData(ctx, user)
+					return goweb.Respond.WithOK(ctx)
 				}
 			}
 		}
