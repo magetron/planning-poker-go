@@ -141,7 +141,7 @@ func (us *UsersService) DeleteMany(ctx context.Context) error {
 		log.Printf("IMPORTANT : Deleted All Users in Sprint %s", urlId)
 	}
 
-	return goweb.API.RespondWithData(ctx, us.AllUsers)
+	return goweb.Respond.WithOK(ctx)
 
 }
 
@@ -153,12 +153,13 @@ func (us *UsersService) Delete(id string, ctx context.Context) error {
 			slice1 := make([]*User, 0)
 			slice2 := make([]*User, 0)
 
-			for i := 0; i < len(users.Users); i++ {
-				if users.Users[i].Id == id {
+			for i, user := range users.Users {
+				if user.Id == id {
 
 					slice1 = users.Users[0:i]
 					slice2 = users.Users[i+1:]
 
+					//TODO: find joint func for slice
 					for j := range slice2 {
 						slice1 = append(slice1, slice2[j])
 					}
@@ -168,7 +169,7 @@ func (us *UsersService) Delete(id string, ctx context.Context) error {
 			}
 		}
 		log.Printf("Delete User %s", id)
-		return goweb.API.RespondWithData(ctx, users.Users)
+		return goweb.Respond.WithOK(ctx)
 	}
 	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 }
@@ -182,20 +183,43 @@ func (us *UsersService) Replace(id string, ctx context.Context) error {
 
 	dataMap := data.(map[string]interface{})
 	voteVal := dataMap["Vote"].(float64)
-	successorId := dataMap["Successor"].(string)
 
 	urlId := ctx.PathValue("sprintId")
 
 	for _, users := range us.AllUsers {
 		if users.SprintId == urlId {
 
-			isMaster := false
 			for _, user := range users.Users {
 				if user.Id == id {
 					user.Vote = voteVal
 					log.Printf("User %s voted %f in the current round of Sprint %s", user.Id, voteVal, urlId)
+				}
+			}
+		}
+	}
+	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
+}
 
-					if user.Rank < 3 && successorId != "none" {
+func (us *UsersService) UpdateMany(ctx context.Context) error {
+	data, dataErr := ctx.RequestData()
+
+	if dataErr != nil {
+		return goweb.API.RespondWithError(ctx, http.StatusInternalServerError, dataErr.Error())
+	}
+
+	urlId := ctx.PathValue("sprintId")
+
+	dataMap := data.(map[string]interface{})
+	userId := dataMap["Id"].(string)
+	successorId := dataMap["Successor"].(string)
+
+	for _, users := range us.AllUsers {
+		if users.SprintId == urlId {
+
+			isMaster := false
+			for _, user := range users.Users {
+				if user.Id == userId {
+					if user.Rank < 3 {
 						log.Printf("User eligible to set successor cuz its rank is %f", user.Rank)
 						user.Rank = 3
 						isMaster = true
@@ -203,13 +227,9 @@ func (us *UsersService) Replace(id string, ctx context.Context) error {
 						user.Successor = "none"
 						log.Printf("User NOT eligible to set successor cuz its rank is %f", user.Rank)
 						return goweb.API.RespondWithData(ctx, user)
-						//if not master, return user info
 					}
-
 				}
 			}
-
-			log.Printf("print isMaster value: %B", isMaster)
 
 			if isMaster {
 				for _, user := range users.Users {
@@ -223,7 +243,7 @@ func (us *UsersService) Replace(id string, ctx context.Context) error {
 			}
 
 			for _, user := range users.Users {
-				if user.Id == id {
+				if user.Id == userId {
 					return goweb.API.RespondWithData(ctx, users)
 					//if user is master, return all user in the sprint
 				}
@@ -231,6 +251,7 @@ func (us *UsersService) Replace(id string, ctx context.Context) error {
 		}
 	}
 	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
+
 }
 
 func (us *UsersService) Update(conn *websocket.Conn) {

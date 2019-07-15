@@ -47,7 +47,7 @@ export class TopBarComponent implements OnInit {
           console.log("Cannot logout, you havn't set your successor yet!");
         } else {
           this.comms.deleteUser (this.sprint.Id, this.user.Id).subscribe(response => {
-            if (response.s == 200) {
+            if (response == null) {
               console.log("User logged out");
               this.router.navigateByUrl(`/new`);
             } else {
