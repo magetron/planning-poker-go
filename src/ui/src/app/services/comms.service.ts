@@ -5,8 +5,6 @@ import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
 import * as globals from './globals.service';
 import { Sprint } from '../models/sprint';
-//import { throwMatDuplicatedDrawerError } from '@angular/material';
-//import { resolveTxt } from 'dns';
 
 const HTTPOPTIONS = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
