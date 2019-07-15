@@ -136,13 +136,13 @@ export class MemberslistComponent extends Cardify implements OnInit {
   setNextMaster(user) : void{
     //console.log("debug userId ", user.Id);
     //console.log("debug this.userId ", this.user.Id);
-    //console.log("debug this.user.Rank ", this.user.Rank);
+    //console.log("debug this.user.Master ", this.user.Master);
     
-    if (this.user.Rank < 3){
+    if (this.user.Master ){
       this.comms.appointSuccessor(this.sprint_id, this.user.Id, user.Id).subscribe(response => {
         //console.log("-----------debug: ", user.Id);
         if (response && response.s === 200) {
-          //this.user.Rank = response.d["Rank"] 
+          //this.user.Master = response.d["Master"] 
           //this.internal.updateUser(this.user);
           console.log("Set successor");
           //TODO:update front end this.user via emmit
@@ -154,11 +154,11 @@ export class MemberslistComponent extends Cardify implements OnInit {
     //console.log("func ended");
     //console.log("debug userId ", user.Id);
     //console.log("debug this.userId ", this.user.Id);
-    //console.log("debug this.user.Rank ", this.user.Rank);
+    //console.log("debug this.user.Master ", this.user.Master);
   }
 
   crowned (user): string{
-    if (user.Rank == 1) {
+    if (user.Master) {
       return ("Master:" + user.Name)
     } else {
       return (user.Name)

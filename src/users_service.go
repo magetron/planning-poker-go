@@ -45,7 +45,7 @@ func (us *UsersService) Create(ctx context.Context) error {
 	user.Id = uuid.New().String()
 	user.Name = dataMap["Name"].(string)
 	user.Vote = -1
-	user.Rank = 3 //(1,2,3 refers to master, admin, user respectively)(admin feature to be implemented)
+	user.Master = false //(1,2,3 refers to master, admin, user respectively)(admin feature to be implemented)
 
 	foundId := false
 	for _, users := range us.AllUsers {
@@ -66,7 +66,7 @@ func (us *UsersService) Create(ctx context.Context) error {
 	for _, users := range us.AllUsers {
 		if users.SprintId == urlId {
 			for _, user := range users.Users {
-				if user.Rank == 1 {
+				if user.Master {
 					foundMaster = true
 					break
 				}
@@ -75,7 +75,7 @@ func (us *UsersService) Create(ctx context.Context) error {
 	}
 
 	if !foundMaster {
-		user.Rank = 1
+		user.Master = true
 	}
 
 	log.Printf("New User %s Added to sprintID %s", user.Id, urlId)
@@ -242,12 +242,12 @@ func (us *UsersService) appointMaster(ctx context.Context) error {
 			isMaster := false
 			for _, user := range users.Users {
 				if user.Id == userId {
-					if user.Rank < 3 {
-						log.Printf("User eligible to set successor cuz its rank is %f", user.Rank)
-						user.Rank = 3
+					if user.Master {
+						log.Printf("User eligible to set successor cuz its rank is %f", user.Master)
+						user.Master = false
 						isMaster = true
 					} else {
-						log.Printf("User NOT eligible to set successor cuz its rank is %f", user.Rank)
+						log.Printf("User NOT eligible to set successor cuz its rank is %f", user.Master)
 						return goweb.API.RespondWithData(ctx, users.Users)
 					}
 				}
@@ -256,7 +256,7 @@ func (us *UsersService) appointMaster(ctx context.Context) error {
 			if isMaster {
 				for _, user := range users.Users {
 					if user.Id == successorId {
-						user.Rank = 1
+						user.Master = true
 						log.Printf("Transferred master position to successor %s", successorId)
 						break
 					}
