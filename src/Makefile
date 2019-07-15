@@ -3,6 +3,7 @@ GOBUILD=$(GOCMD) build
 GOCLEAN=$(GOCMD) clean
 GOTEST=$(GOCMD) test
 GOGET=$(GOCMD) get
+ARCH=amd64
 BINARY_NAME=planningpoker
 BINARY_UNIX=$(BINARY_NAME)_unix
 NGCMD=ng
@@ -11,6 +12,7 @@ NGBUILD=$(NGCMD) build
 NGPROD=$(NGCMD) build --prod
 UINAME=ui
 UIPATH=../static-ui
+
 
 .PHONY: dev prod build build-prod test clean run-dev run
 
@@ -31,6 +33,11 @@ build-prod:
 	$(GOBUILD) -o $(BINARY_NAME) -v
 	cd ui; $(NGPROD) $(UINAME) --outputPath=$(UIPATH)
 	cd _gc; $(GOBUILD) -o ../gc
+
+build-linux:
+	env GOOS=linux GOARCH=$(ARCH) $(GOBUILD) -o $(BINARY_NAME)
+	cd ui; $(NGPROD) $(UINAME) --outputPath=$(UIPATH)
+	cd _gc; env GOOS=linux GOARCH=$(ARCH) $(GOBUILD) -o ../gc
 
 test:
 	$(GOTEST) --cover -v ./...

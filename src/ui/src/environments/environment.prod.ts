@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  /*gateway: 'http://localhost:8080',*/
+  gateway: 'http://3.248.4.156:8080',
 };

@@ -12,3 +12,6 @@ src/gc
 
 #IDEA
 .idea
+
+#PEM
+planning-poker-admin.pem
