@@ -48,7 +48,6 @@ export class MemberslistComponent extends Cardify implements OnInit {
         //console.log('socket received');
         this.users = msg;
         this.internal.updateStats(this.analysisVote());
-        //this.internal.updateUser(this.user);
         //console.log("this.stats = ", this.internal.stats._value[0])
       },
       err => console.log(err), // Called if at any point WebSocket API signals some kind of error.
@@ -135,18 +134,27 @@ export class MemberslistComponent extends Cardify implements OnInit {
   }
 
   setNextMaster(user) : void{
-    console.log("debug: ", user.Id);
+    //console.log("debug userId ", user.Id);
+    //console.log("debug this.userId ", this.user.Id);
+    //console.log("debug this.user.Rank ", this.user.Rank);
+    
     if (this.user.Rank < 3){
-      console.log("debug: ", user.Id);
       this.comms.appointSuccessor(this.sprint_id, this.user.Id, user.Id).subscribe(response => {
+        console.log("-----------debug: ", user.Id);
         if (response && response.s === 200) {
+          //this.user.Rank = response.d["Rank"] 
+          //this.internal.updateUser(this.user);
           console.log("Set successor");
-          //console.log("print response info",response.d["Users"]);
+          //TODO:update front end this.user via emmit
         } else {
           console.log("Set successor failed");
         }
       })
     }
+    //console.log("func ended");
+    //console.log("debug userId ", user.Id);
+    //console.log("debug this.userId ", this.user.Id);
+    //console.log("debug this.user.Rank ", this.user.Rank);
   }
 
   crowned (user): string{

@@ -81,7 +81,7 @@ export class CommsService {
     return result;
   }
 
-  appointSuccessor(sprint_id: string, user_id: string, successor_id:string): Observable<SimpleResponse> {
+  appointSuccessor(sprint_id: string, user_id: string, successor_id:string): Observable<any> {
     let jsonObject = {
       "Id": user_id,
       "Sucessor": successor_id

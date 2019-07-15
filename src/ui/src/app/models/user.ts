@@ -3,6 +3,5 @@ export interface User {
   Id: string;
   Vote: number;
   Rank: number;
-  Successor: string;
 //  scrum_master: boolean; //TODO
 }
