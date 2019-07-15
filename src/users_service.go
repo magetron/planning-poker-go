@@ -69,6 +69,7 @@ func (us *UsersService) Create(ctx context.Context) error {
 			for _, user := range users.Users {
 				if user.Rank == 1 {
 					foundMaster = true
+					break
 				}
 			}
 		}
