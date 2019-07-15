@@ -188,70 +188,16 @@ func (us *UsersService) Replace(id string, ctx context.Context) error {
 
 	for _, users := range us.AllUsers {
 		if users.SprintId == urlId {
-
 			for _, user := range users.Users {
 				if user.Id == id {
 					user.Vote = voteVal
 					log.Printf("User %s voted %f in the current round of Sprint %s", user.Id, voteVal, urlId)
+					return goweb.API.RespondWithData(ctx, user)
 				}
 			}
 		}
 	}
 	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
-}
-
-func (us *UsersService) UpdateMany(ctx context.Context) error {
-	data, dataErr := ctx.RequestData()
-
-	if dataErr != nil {
-		return goweb.API.RespondWithError(ctx, http.StatusInternalServerError, dataErr.Error())
-	}
-
-	urlId := ctx.PathValue("sprintId")
-
-	dataMap := data.(map[string]interface{})
-	userId := dataMap["Id"].(string)
-	successorId := dataMap["Successor"].(string)
-
-	for _, users := range us.AllUsers {
-		if users.SprintId == urlId {
-
-			isMaster := false
-			for _, user := range users.Users {
-				if user.Id == userId {
-					if user.Rank < 3 {
-						log.Printf("User eligible to set successor cuz its rank is %f", user.Rank)
-						user.Rank = 3
-						isMaster = true
-					} else {
-						user.Successor = "none"
-						log.Printf("User NOT eligible to set successor cuz its rank is %f", user.Rank)
-						return goweb.API.RespondWithData(ctx, user)
-					}
-				}
-			}
-
-			if isMaster {
-				for _, user := range users.Users {
-					if user.Id == successorId {
-						user.Rank = 1
-						user.Successor = "none"
-						log.Printf("Transferred master position to successor %s", successorId)
-						break
-					}
-				}
-			}
-
-			for _, user := range users.Users {
-				if user.Id == userId {
-					return goweb.API.RespondWithData(ctx, users)
-					//if user is master, return all user in the sprint
-				}
-			}
-		}
-	}
-	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
-
 }
 
 func (us *UsersService) Update(conn *websocket.Conn) {

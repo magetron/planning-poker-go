@@ -73,13 +73,23 @@ export class CommsService {
   }
 
   //TODO: WTH does this observable contain?
-  selectCard(sprint_id: string, user_id: string, vote: number, successor_id:string): Observable<any> {
+  selectCard(sprint_id: string, user_id: string, vote: number): Observable<any> {
     let jsonObject = {
       "Vote": vote,
-      "Successor": successor_id
     }
     const result = this.httpClient.put<SimpleResponse>(
       `${globals.apiUrl}/sprints/${sprint_id}/users/${user_id}`,
+       jsonObject, HTTPOPTIONS_NO_BODY);
+    return result;
+  }
+
+  appointSuccessor(sprint_id: string, user_id: string, successor_id:string): Observable<SimpleResponse> {
+    let jsonObject = {
+      "Id": user_id,
+      "Sucessor": successor_id
+    }
+    const result = this.httpClient.put<SimpleResponse>(
+      `${globals.apiUrl}/sprints/${sprint_id}/admin`,
        jsonObject, HTTPOPTIONS);
     return result;
   }

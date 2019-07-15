@@ -30,7 +30,7 @@ func mapRoutes() {
 		_, _ = goweb.MapBefore(func(c context.Context) error {
 			c.HttpResponseWriter().Header().Set("Access-Control-Allow-Origin", "*")
 			c.HttpResponseWriter().Header().Set("Access-Control-Allow-Credentials", "true")
-			c.HttpResponseWriter().Header().Set("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,DELETE")
+			c.HttpResponseWriter().Header().Set("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,DELETE,PATCH")
 			c.HttpResponseWriter().Header().Set("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers")
 			return nil
 		})
@@ -95,6 +95,61 @@ func mapRoutes() {
 	})
 
 	_, _ = goweb.Map("POST", "gc", garbageCollector)
+
+	_, _ = goweb.Map("PUT", "sprints/[sprintId]/admin", func(ctx context.Context) error {
+
+		data, dataErr := ctx.RequestData()
+
+		if dataErr != nil {
+			return goweb.API.RespondWithError(ctx, http.StatusInternalServerError, dataErr.Error())
+		}
+
+		urlId := ctx.PathValue("sprintId")
+
+		dataMap := data.(map[string]interface{})
+		userId := dataMap["Id"].(string)
+		successorId := dataMap["Sucessor"].(string)
+
+		for _, users := range us.AllUsers {
+			if users.SprintId == urlId {
+
+				isMaster := false
+				for _, user := range users.Users {
+					if user.Id == userId {
+						if user.Rank < 3 {
+							log.Printf("User eligible to set successor cuz its rank is %f", user.Rank)
+							user.Rank = 3
+							isMaster = true
+						} else {
+							user.Successor = "none"
+							log.Printf("User NOT eligible to set successor cuz its rank is %f", user.Rank)
+							return goweb.API.RespondWithData(ctx, users.Users)
+						}
+					}
+				}
+
+				if isMaster {
+					for _, user := range users.Users {
+						if user.Id == successorId {
+							user.Rank = 1
+							user.Successor = "none"
+							log.Printf("Transferred master position to successor %s", successorId)
+							break
+						}
+					}
+				}
+
+				for _, user := range users.Users {
+					if user.Id == userId {
+						return goweb.API.RespondWithData(ctx, users.Users)
+						//if user is master, return all user in the sprint
+					}
+				}
+			}
+		}
+		return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
+
+	})
 
 	if !DEV {
 		root := "./static-ui"

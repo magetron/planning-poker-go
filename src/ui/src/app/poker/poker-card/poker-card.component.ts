@@ -39,8 +39,8 @@ export class PokerCardComponent extends Cardify implements OnInit {
   }
 
   vote(point: number){
-    this.comms.selectCard(this.sprint_id, this.user.Id, point, "none").subscribe((response => {
-        if (response && response.s === 200) {
+    this.comms.selectCard(this.sprint_id, this.user.Id, point).subscribe((response => {
+        if (response.status === 200) {
           console.log("Selection success");
 
           let old = document.getElementById(this.user.Vote.toString())

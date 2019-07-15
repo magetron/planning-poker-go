@@ -69,7 +69,7 @@ export class PokerControlComponent implements OnInit {
         this.curStory = this.storyList[this.storyList.length - 1];
 
         if (this.curStory.Archived){
-          this.comms.selectCard(this.sprint_id, this.user.Id, -1, "none").subscribe(response => {
+          this.comms.selectCard(this.sprint_id, this.user.Id, -1 ).subscribe(response => {
               if (response.status === 200) {
                 //console.log("Initialize vote");
               } else {
@@ -130,7 +130,7 @@ export class PokerControlComponent implements OnInit {
       }
     });
 
-    this.comms.selectCard(this.sprint_id, this.user.Id, -1, "none").subscribe(response => {
+    this.comms.selectCard(this.sprint_id, this.user.Id, -1).subscribe(response => {
         if (response.status === 200) {
           console.log("Initialize vote");
         } else {

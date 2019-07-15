@@ -135,18 +135,13 @@ export class MemberslistComponent extends Cardify implements OnInit {
   }
 
   setNextMaster(user) : void{
-    //console.log("Current user ",this.user, "trying to set ", user, "as successor.");
-    //console.log("Current user rank",this.user.Rank);
+    console.log("debug: ", user.Id);
     if (this.user.Rank < 3){
-      //console.log("Current user can set its successor because its rank is ",this.user.Rank);
-      this.comms.selectCard(this.sprint_id, this.user.Id, this.user.Vote, user.Id).subscribe(response => {
+      console.log("debug: ", user.Id);
+      this.comms.appointSuccessor(this.sprint_id, this.user.Id, user.Id).subscribe(response => {
         if (response && response.s === 200) {
           console.log("Set successor");
-
-          //this.user.Successor = response.d["Sucessor"];
-          //this.user.Rank = response.d["Rank"];
-          console.log("print response info",response.d);
-          //this.internal.updateUser(this.user);
+          //console.log("print response info",response.d["Users"]);
         } else {
           console.log("Set successor failed");
         }
@@ -155,7 +150,6 @@ export class MemberslistComponent extends Cardify implements OnInit {
   }
 
   crowned (user): string{
-    //this.internal.updateUser(this.user);
     if (user.Rank == 1) {
       return ("Master:" + user.Name)
     } else {
