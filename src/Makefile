@@ -14,7 +14,7 @@ UINAME=ui
 UIPATH=../static-ui
 
 
-.PHONY: dev prod build build-prod test clean run-dev run
+.PHONY: dev prod docker build-dev build-prod test clean run-dev run
 
 dev: 
 	make test 
