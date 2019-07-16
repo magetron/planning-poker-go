@@ -338,7 +338,7 @@ func TestUserCycle(t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("PUT", "sprints/"+sprintId+"/users/"+userId1+"/setadmin", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "sprints/"+sprintId+"/users/"+userId1+"/setadmin", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
