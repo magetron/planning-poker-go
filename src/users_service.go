@@ -231,7 +231,10 @@ func (us *UsersService) appointMaster(ctx context.Context) error {
 			foundOne := false
 			for i, user := range users.Users {
 				if user.Id == masterId {
-					log.Printf("breakpoint1-------------")
+					if !user.Master {
+						log.Printf("Forbidden non master trying to appoint successor from %s to %s", masterId, successorId)
+						return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
+					}
 					users.Users[0], users.Users[i] = users.Users[i], users.Users[0]
 					if foundOne {
 						users.Users[0].Master = false
@@ -242,7 +245,6 @@ func (us *UsersService) appointMaster(ctx context.Context) error {
 						foundOne = true
 					}
 				} else if user.Id == successorId {
-					log.Printf("breakpoint2-------------")
 					users.Users[1], users.Users[i] = users.Users[i], users.Users[1]
 					if foundOne {
 						users.Users[0].Master = false
