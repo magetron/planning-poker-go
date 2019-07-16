@@ -24,6 +24,10 @@ prod:
 	make test 
 	make build-prod
 
+docker:
+	make test
+	make build-linux
+
 build:
 	$(GOBUILD) -o $(BINARY_NAME) -v
 	cd ui; $(NGBUILD) $(UINAME) --outputPath=$(UIPATH)
