@@ -28,7 +28,7 @@ docker:
 	make test
 	make build-linux
 
-build:
+build-dev:
 	$(GOBUILD) -o $(BINARY_NAME) -v
 	cd ui; $(NGBUILD) $(UINAME) --outputPath=$(UIPATH)
 	cd _gc; $(GOBUILD) -o ../gc
