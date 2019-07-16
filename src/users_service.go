@@ -220,47 +220,41 @@ func (us *UsersService) appointMaster(ctx context.Context) error {
 		return goweb.API.RespondWithError(ctx, http.StatusInternalServerError, dataErr.Error())
 	}
 
-	urlId := ctx.PathValue("sprintId")
+	sprintId := ctx.PathValue("sprintId")
+	masterId := ctx.PathValue("userId")
 
 	dataMap := data.(map[string]interface{})
-	userId := dataMap["Id"].(string)
 	successorId := dataMap["Sucessor"].(string)
 
 	for _, users := range us.AllUsers {
-		if users.SprintId == urlId {
-
-			isMaster := false
-			for _, user := range users.Users {
-				if user.Id == userId {
-					if user.Master {
-						log.Printf("User eligible to set successor")
-						user.Master = false
-						isMaster = true
+		if users.SprintId == sprintId && len(users.Users) > 1 {
+			foundOne := false
+			for i, user := range users.Users {
+				if user.Id == masterId {
+					users.Users[0], users.Users[i] = users.Users[i], users.Users[0]
+					if foundOne {
+						users.Users[0].Master = false
+						users.Users[1].Master = true
+						log.Printf("Transfered Master from %s to %s", users.Users[0].Id, users.Users[1].Id)
+						return goweb.Respond.WithOK(ctx)
 					} else {
-						log.Printf("User NOT eligible to set successor")
-						return goweb.API.RespondWithData(ctx, users.Users)
+						foundOne = true
 					}
-				}
-			}
-
-			if isMaster {
-				for _, user := range users.Users {
-					if user.Id == successorId {
-						user.Master = true
-						log.Printf("Transferred master position to successor %s", successorId)
-						break
+				} else if user.Id == successorId {
+					users.Users[0], users.Users[i] = users.Users[i], users.Users[0]
+					if foundOne {
+						users.Users[0].Master = false
+						users.Users[1].Master = true
+						log.Printf("Transfered Master from %s to %s", users.Users[0].Id, users.Users[1].Id)
+						return goweb.Respond.WithOK(ctx)
+					} else {
+						foundOne = true
 					}
-				}
-			}
-
-			for _, user := range users.Users {
-				if user.Id == userId {
-					return goweb.API.RespondWithData(ctx, users.Users)
-					//if user is master, return all user in the sprint
 				}
 			}
 		}
 	}
+	log.Printf("Failed transfer Master from %s to %s", masterId, successorId)
 	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 
 }

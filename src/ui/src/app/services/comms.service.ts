@@ -83,12 +83,11 @@ export class CommsService {
 
   appointSuccessor(sprint_id: string, user_id: string, successor_id:string): Observable<any> {
     let jsonObject = {
-      "Id": user_id,
       "Sucessor": successor_id
     }
     const result = this.httpClient.put<SimpleResponse>(
-      `${globals.apiUrl}/sprints/${sprint_id}/admin`,
-       jsonObject, HTTPOPTIONS);
+      `${globals.apiUrl}/sprints/${sprint_id}/users/${user_id}/setAdmin`,
+       jsonObject, HTTPOPTIONS_NO_BODY);
     return result;
   }
 

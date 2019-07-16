@@ -48,8 +48,8 @@ export class MemberslistComponent extends Cardify implements OnInit {
         //console.log('socket received');
         this.users = msg;
         this.internal.updateStats(this.analysisVote());
-        //this.internal.updateUser(this.userRank());
-        //console.log("this.stats = ", this.internal.stats._value[0])
+        this.internal.updateUser(this.updateMe());
+        console.log("this.users = ", msg);
       },
       err => console.log(err), // Called if at any point WebSocket API signals some kind of error.
       () => console.log('complete') // Called when connection is closed (for whatever reason).
@@ -134,15 +134,15 @@ export class MemberslistComponent extends Cardify implements OnInit {
 
   }
 
-  setNextMaster(user) : void{
-    //console.log("debug userId ", user.Id);
-    //console.log("debug this.userId ", this.user.Id);
-    //console.log("debug this.user.Master ", this.user.Master);
+  setNextMaster(successor : User) : void{
+    console.log("debug succesor Id ", successor.Id);
+    console.log("debug current user Id ", this.user.Id);
+    console.log("debug is current user Master ?", this.user.Master);
     
-    if (this.user.Master ){
-      this.comms.appointSuccessor(this.sprint_id, this.user.Id, user.Id).subscribe(response => {
+    if (this.user.Master){
+      this.comms.appointSuccessor(this.sprint_id, this.user.Id, successor.Id).subscribe(response => {
         //console.log("-----------debug: ", user.Id);
-        if (response && response.s === 200) {
+        if (response && response.status === 200) {
           //this.user.Master = response.d["Master"] 
           //this.internal.updateUser(this.user);
           console.log("Set successor");
@@ -152,22 +152,33 @@ export class MemberslistComponent extends Cardify implements OnInit {
         }
       })
     }
-    //console.log("func ended");
-    //console.log("debug userId ", user.Id);
-    //console.log("debug this.userId ", this.user.Id);
-    //console.log("debug this.user.Master ", this.user.Master);
-  }
+    console.log("func ended");
+    
+    /*console.log("debug succesor Id ", successor.Id);
+    console.log("debug current user Id ", this.user.Id);
+    console.log("debug is current user Master ?", this.user.Master);
+  */}
 
-  //userRank(): User {
-  //  let id = this.users.map(x => x.Id)
-  //  let rankings = this.users.map(y => y.Master);
-  //  for (let i in id) {
-  //    if (this.user == id[i]){
-  //      this.user.Master = rankings[i];
-  //      return (this.user)
-  //    }
-  //  }
-  //}
+  updateMe(): User {
+    if (this.users.length >1 &&
+     this.users[1].Id == this.user.Id &&
+     this.users[1].Master) {
+      console.log("print this.user", this.users[1]);
+      return (this.users[1])
+    } else{
+      console.log("error", this.users[1]);
+    }  
+      /*
+   let id = this.users[1]
+   let rankings = this.users.map(y => y.Master);
+   id.forEach((item, index)=>{
+     if (this.user.Id == item){
+      this.user.Master = rankings[index];
+      return (this.user)
+     }
+    })*/
+    return(this.user) 
+  }
 
   crowned (user): string{
     if (user.Master) {
