@@ -259,10 +259,11 @@ func TestUserCycle(t *testing.T) {
 		sprintId = response.Output[6:15]
 	})
 
-	userId := ""
+	userId1 := ""
+	userId2 := ""
 	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
 		newReqBody, newReqBodyErr := json.Marshal(map[string]string{
-			"Name": "New User",
+			"Name": "New User 1",
 		})
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
@@ -275,13 +276,32 @@ func TestUserCycle(t *testing.T) {
 		return newReq
 	}), func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for New User.")
-		userId = response.Output[12:48]
-		assert.Equal(t, `{"d":{"Id":"`+userId+`","Name":"New User","Vote":-1,"Master":true},"s":200}`, response.Output, "Response should be User object.")
+		userId1 = response.Output[12:48]
+		assert.Equal(t, `{"d":{"Id":"`+userId1+`","Name":"New User 1","Vote":-1,"Master":true},"s":200}`, response.Output, "Response should be User object.")
 	})
 
-	goweb.Test(t, "GET sprints/"+sprintId+"/users/"+userId, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
+		newReqBody, newReqBodyErr := json.Marshal(map[string]string{
+			"Name": "New User 2",
+		})
+		if newReqBodyErr != nil {
+			log.Fatal(newReqBodyErr)
+		}
+		newReq, newErr := http.NewRequest("POST", "sprints/"+sprintId+"/users/", bytes.NewBuffer(newReqBody))
+		if newErr != nil {
+			log.Fatal(newErr)
+		}
+		newReq.Header.Set("Content-Type", "application/json")
+		return newReq
+	}), func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for New User.")
+		userId2 = response.Output[12:48]
+		assert.Equal(t, `{"d":{"Id":"`+userId2+`","Name":"New User 2","Vote":-1,"Master":false},"s":200}`, response.Output, "Response should be User object.")
+	})
+
+	goweb.Test(t, "GET sprints/"+sprintId+"/users/"+userId1, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for Existing User.")
-		assert.Equal(t, `{"d":{"Id":"`+userId+`","Name":"New User","Vote":-1,"Master":true},"s":200}`, response.Output, "Response should be Existing User object.")
+		assert.Equal(t, `{"d":{"Id":"`+userId1+`","Name":"New User 1","Vote":-1,"Master":true},"s":200}`, response.Output, "Response should be Existing User object.")
 	})
 
 	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
@@ -291,7 +311,7 @@ func TestUserCycle(t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("PUT", "sprints/"+sprintId+"/users/"+userId, bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("PUT", "sprints/"+sprintId+"/users/"+userId1, bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -301,17 +321,55 @@ func TestUserCycle(t *testing.T) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for User voting.")
 	})
 
-	goweb.Test(t, "GET sprints/"+sprintId+"/users/"+userId, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "GET sprints/"+sprintId+"/users/"+userId1, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for Existing User.")
-		assert.Equal(t, `{"d":{"Id":"`+userId+`","Name":"New User","Vote":0.1,"Master":true},"s":200}`, response.Output, "Response should be Existing User object.")
+		assert.Equal(t, `{"d":{"Id":"`+userId1+`","Name":"New User 1","Vote":0.1,"Master":true},"s":200}`, response.Output, "Response should be Existing User object.")
 	})
 
-	goweb.Test(t, "DELETE sprints/"+sprintId+"/users/"+userId, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "GET sprints/"+sprintId+"/users/"+userId2, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for Existing User.")
+		assert.Equal(t, `{"d":{"Id":"`+userId2+`","Name":"New User 2","Vote":-1,"Master":false},"s":200}`, response.Output, "Response should be Existing User object.")
+	})
+
+	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
+		newReqBody, newReqBodyErr := json.Marshal(map[string]string{
+			"Successor": userId2,
+		})
+		if newReqBodyErr != nil {
+			log.Fatal(newReqBodyErr)
+		}
+		newReq, newErr := http.NewRequest("PUT", "sprints/"+sprintId+"/users/"+userId1+"/setadmin", bytes.NewBuffer(newReqBody))
+		if newErr != nil {
+			log.Fatal(newErr)
+		}
+		newReq.Header.Set("Content-Type", "application/json")
+		return newReq
+	}), func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for transferring master position to other user.")
+	})
+
+	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
+		newReqBody, newReqBodyErr := json.Marshal(map[string]string{
+			"Successor": userId2,
+		})
+		if newReqBodyErr != nil {
+			log.Fatal(newReqBodyErr)
+		}
+		newReq, newErr := http.NewRequest("POST", "sprints/"+sprintId+"/users/"+userId1+"/setadmin", bytes.NewBuffer(newReqBody))
+		if newErr != nil {
+			log.Fatal(newErr)
+		}
+		newReq.Header.Set("Content-Type", "application/json")
+		return newReq
+	}), func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		assert.Equal(t, http.StatusNotFound, response.StatusCode, "Status code should be Not Found for non-master trying to set other user as master")
+	})
+
+	goweb.Test(t, "DELETE sprints/"+sprintId+"/users/"+userId1, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for Deleting User.")
 	})
 
-	goweb.Test(t, "GET sprints/"+sprintId+"/users/"+userId, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "GET sprints/"+sprintId+"/users/"+userId1, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusNotFound, response.StatusCode, "Status code should be Not Found for non-existing User.")
 	})
-
 }

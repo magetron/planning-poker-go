@@ -154,11 +154,11 @@ func (us *UsersService) Delete(id string, ctx context.Context) error {
 				if user.Id == id {
 					users.Users[len(users.Users)-1], users.Users[i] = users.Users[i], users.Users[len(users.Users)-1]
 					users.Users = users.Users[:len(users.Users)-1]
+					log.Printf("Delete User %s in Sprint %s", id, urlId)
+					return goweb.Respond.WithOK(ctx)
 				}
 			}
 		}
-		log.Printf("Delete User %s in Sprint %s", id, urlId)
-		return goweb.Respond.WithOK(ctx)
 	}
 	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 }
@@ -224,13 +224,14 @@ func (us *UsersService) appointMaster(ctx context.Context) error {
 	masterId := ctx.PathValue("userId")
 
 	dataMap := data.(map[string]interface{})
-	successorId := dataMap["Sucessor"].(string)
+	successorId := dataMap["Successor"].(string)
 
 	for _, users := range us.AllUsers {
 		if users.SprintId == sprintId && len(users.Users) > 1 {
 			foundOne := false
 			for i, user := range users.Users {
 				if user.Id == masterId {
+					log.Printf("breakpoint1-------------")
 					users.Users[0], users.Users[i] = users.Users[i], users.Users[0]
 					if foundOne {
 						users.Users[0].Master = false
@@ -241,7 +242,8 @@ func (us *UsersService) appointMaster(ctx context.Context) error {
 						foundOne = true
 					}
 				} else if user.Id == successorId {
-					users.Users[0], users.Users[i] = users.Users[i], users.Users[0]
+					log.Printf("breakpoint2-------------")
+					users.Users[1], users.Users[i] = users.Users[i], users.Users[1]
 					if foundOne {
 						users.Users[0].Master = false
 						users.Users[1].Master = true
@@ -252,9 +254,11 @@ func (us *UsersService) appointMaster(ctx context.Context) error {
 					}
 				}
 			}
+			log.Printf("Failed to transfer Master from %s to %s", masterId, successorId)
+			return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 		}
 	}
-	log.Printf("Failed transfer Master from %s to %s", masterId, successorId)
+	log.Printf("Failed to transfer Master from %s to %s", masterId, successorId)
 	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 
 }
