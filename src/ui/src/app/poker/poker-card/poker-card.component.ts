@@ -35,7 +35,6 @@ export class PokerCardComponent extends Cardify implements OnInit {
     if (!this.user || !this.user.Id) {
       this.router.navigate(["join", this.sprint_id])
     }
-
     //this.internal.round$.subscribe(msg => this.round = msg);
   }
 
@@ -49,7 +48,6 @@ export class PokerCardComponent extends Cardify implements OnInit {
             old.classList.remove("selected");
           }
           document.getElementById(point.toString()).classList.add("selected");
-
           this.user.Vote = point;
           this.internal.updateUser(this.user);
 

@@ -81,6 +81,16 @@ export class CommsService {
     return result;
   }
 
+  appointSuccessor(sprint_id: string, user_id: string, successor_id:string): Observable<any> {
+    let jsonObject = {
+      "Successor": successor_id
+    }
+    const result = this.httpClient.post<SimpleResponse>(
+      `${globals.apiUrl}/sprints/${sprint_id}/users/${user_id}/setadmin`,
+       jsonObject, HTTPOPTIONS_NO_BODY);
+    return result;
+  }
+
   addStory (sprint_id: string, sprint_story: string): Observable<any>{
     let jsonObject = {
       "Name": sprint_story,
@@ -100,6 +110,18 @@ export class CommsService {
     const result = this.httpClient.put<SimpleResponse>(
       `${globals.apiUrl}/sprints/${sprint_id}/rounds/${round_no}`,
        jsonObject, HTTPOPTIONS_NO_BODY);
+    return result;
+  }
+
+  deleteUser (sprint_id: string, user_id: string): Observable<any>{
+    const result = this.httpClient.delete<SimpleResponse>(
+      `${globals.apiUrl}/sprints/${sprint_id}/users/${user_id}`,HTTPOPTIONS);
+    return result;
+  }
+
+  getUserDetails (sprint_id: string, user_id: string): Observable<SimpleResponse>{
+    const result = this.httpClient.get<SimpleResponse>(
+      `${globals.apiUrl}/sprints/${sprint_id}/users/${user_id}`, HTTPOPTIONS);
     return result;
   }
 }

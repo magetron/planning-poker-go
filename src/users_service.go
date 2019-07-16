@@ -1,10 +1,11 @@
 package main
 
 import (
-	"github.com/gorilla/websocket"
+	"encoding/json"
 	"log"
 	"net/http"
-	"encoding/json"
+
+	"github.com/gorilla/websocket"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/goweb"
@@ -44,6 +45,7 @@ func (us *UsersService) Create(ctx context.Context) error {
 	user.Id = uuid.New().String()
 	user.Name = dataMap["Name"].(string)
 	user.Vote = -1
+	user.Master = false
 
 	foundId := false
 	for _, users := range us.AllUsers {
@@ -60,8 +62,23 @@ func (us *UsersService) Create(ctx context.Context) error {
 		us.AllUsers = append(us.AllUsers, users)
 	}
 
-	log.Printf("New User %s Added to sprintID %s", user.Id, urlId)
+	foundMaster := false
+	for _, users := range us.AllUsers {
+		if users.SprintId == urlId {
+			for _, user := range users.Users {
+				if user.Master {
+					foundMaster = true
+					break
+				}
+			}
+		}
+	}
 
+	if !foundMaster {
+		user.Master = true
+	}
+
+	log.Printf("New User %s Added to sprintID %s", user.Id, urlId)
 	return goweb.API.RespondWithData(ctx, user)
 }
 
@@ -132,19 +149,18 @@ func (us *UsersService) Delete(id string, ctx context.Context) error {
 
 	for _, users := range us.AllUsers {
 		if users.SprintId == urlId {
-			newList := make([]*User, 0)
-			for _, user := range users.Users {
-				if user.Id != id {
-					newList = append(newList, user)
+
+			for i, user := range users.Users {
+				if user.Id == id {
+					users.Users[len(users.Users)-1], users.Users[i] = users.Users[i], users.Users[len(users.Users)-1]
+					users.Users = users.Users[:len(users.Users)-1]
+					log.Printf("Delete User %s in Sprint %s", id, urlId)
+					return goweb.Respond.WithOK(ctx)
 				}
 			}
-			users.Users = newList
 		}
 	}
-
-	log.Printf("Deleted User %s in Sprint %s", id, urlId)
-
-	return goweb.Respond.WithOK(ctx)
+	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 }
 
 func (us *UsersService) Replace(id string, ctx context.Context) error {
@@ -170,7 +186,6 @@ func (us *UsersService) Replace(id string, ctx context.Context) error {
 			}
 		}
 	}
-
 	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 }
 
@@ -195,4 +210,56 @@ func (us *UsersService) Update(conn *websocket.Conn) {
 			}
 		}
 	}
+}
+
+func (us *UsersService) appointMaster(ctx context.Context) error {
+
+	data, dataErr := ctx.RequestData()
+
+	if dataErr != nil {
+		return goweb.API.RespondWithError(ctx, http.StatusInternalServerError, dataErr.Error())
+	}
+
+	sprintId := ctx.PathValue("sprintId")
+	masterId := ctx.PathValue("userId")
+
+	dataMap := data.(map[string]interface{})
+	successorId := dataMap["Successor"].(string)
+
+	for _, users := range us.AllUsers {
+		if users.SprintId == sprintId && len(users.Users) > 1 {
+			foundOne := false
+			for i, user := range users.Users {
+				if user.Id == masterId {
+					if !user.Master {
+						log.Printf("Forbidden non master trying to appoint successor from %s to %s", masterId, successorId)
+						return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
+					}
+					users.Users[0], users.Users[i] = users.Users[i], users.Users[0]
+					if foundOne {
+						users.Users[0].Master = false
+						users.Users[1].Master = true
+						log.Printf("Transfered Master from %s to %s", users.Users[0].Id, users.Users[1].Id)
+						return goweb.Respond.WithOK(ctx)
+					} else {
+						foundOne = true
+					}
+				} else if user.Id == successorId {
+					users.Users[1], users.Users[i] = users.Users[i], users.Users[1]
+					if foundOne {
+						users.Users[0].Master = false
+						users.Users[1].Master = true
+						log.Printf("Transfered Master from %s to %s", users.Users[0].Id, users.Users[1].Id)
+						return goweb.Respond.WithOK(ctx)
+					} else {
+						foundOne = true
+					}
+				}
+			}
+			log.Printf("Failed to transfer Master from %s to %s", masterId, successorId)
+			return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
+		}
+	}
+	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
+
 }
