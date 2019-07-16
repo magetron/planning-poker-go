@@ -17,16 +17,19 @@ UIPATH=../static-ui
 .PHONY: dev prod docker build-dev build-prod test clean run-dev run
 
 dev: 
-	make test 
-	make build
+	$(MAKE) test 
+	$(MAKE) build
 
 prod:
-	make test 
-	make build-prod
+	$(MAKE) test 
+	$(MAKE) build-prod
 
 docker:
-	make test
-	make build-linux
+	$(MAKE) test
+	mv ui/src/app/services/globals.service.ts ui/src/app/services/globals.service.ts.tmp && \
+	cp ui/src/app/services/globals-docker.service.ts ui/src/app/services/globals.service.ts && \
+	$(MAKE) build-linux && \
+	mv ui/src/app/services/globals.service.ts.tmp ui/src/app/services/globals.service.ts
 
 build-dev:
 	$(GOBUILD) -o $(BINARY_NAME) -v
@@ -63,3 +66,5 @@ run:
 	$(GOBUILD) -o $(BINARY_NAME) -v ./...
 	./$(BINARY_NAME)
 
+#added so that make without target, defaulting to make test && make build works
+build: build-dev run-dev;
