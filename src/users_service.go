@@ -233,11 +233,11 @@ func (us *UsersService) appointMaster(ctx context.Context) error {
 			for _, user := range users.Users {
 				if user.Id == userId {
 					if user.Master {
-						log.Printf("User eligible to set successor cuz its rank is %f", user.Master)
+						log.Printf("User eligible to set successor")
 						user.Master = false
 						isMaster = true
 					} else {
-						log.Printf("User NOT eligible to set successor cuz its rank is %f", user.Master)
+						log.Printf("User NOT eligible to set successor")
 						return goweb.API.RespondWithData(ctx, users.Users)
 					}
 				}
