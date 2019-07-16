@@ -48,6 +48,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
         //console.log('socket received');
         this.users = msg;
         this.internal.updateStats(this.analysisVote());
+        //this.internal.updateUser(this.userRank());
         //console.log("this.stats = ", this.internal.stats._value[0])
       },
       err => console.log(err), // Called if at any point WebSocket API signals some kind of error.
@@ -156,6 +157,17 @@ export class MemberslistComponent extends Cardify implements OnInit {
     //console.log("debug this.userId ", this.user.Id);
     //console.log("debug this.user.Master ", this.user.Master);
   }
+
+  //userRank(): User {
+  //  let id = this.users.map(x => x.Id)
+  //  let rankings = this.users.map(y => y.Master);
+  //  for (let i in id) {
+  //    if (this.user == id[i]){
+  //      this.user.Master = rankings[i];
+  //      return (this.user)
+  //    }
+  //  }
+  //}
 
   crowned (user): string{
     if (user.Master) {

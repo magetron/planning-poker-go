@@ -45,7 +45,7 @@ func (us *UsersService) Create(ctx context.Context) error {
 	user.Id = uuid.New().String()
 	user.Name = dataMap["Name"].(string)
 	user.Vote = -1
-	user.Master = false //(1,2,3 refers to master, admin, user respectively)(admin feature to be implemented)
+	user.Master = false
 
 	foundId := false
 	for _, users := range us.AllUsers {
@@ -146,24 +146,14 @@ func (us *UsersService) DeleteMany(ctx context.Context) error {
 
 func (us *UsersService) Delete(id string, ctx context.Context) error {
 	urlId := ctx.PathValue("sprintId")
+
 	for _, users := range us.AllUsers {
 		if users.SprintId == urlId {
 
-			slice1 := make([]*User, 0)
-			slice2 := make([]*User, 0)
-
 			for i, user := range users.Users {
 				if user.Id == id {
-
-					slice1 = users.Users[0:i]
-					slice2 = users.Users[i+1:]
-
-					//TODO: find joint func for slice
-					for j := range slice2 {
-						slice1 = append(slice1, slice2[j])
-					}
-					users.Users = slice1
-					break
+					users.Users[len(users.Users)-1], users.Users[i] = users.Users[i], users.Users[len(users.Users)-1]
+					users.Users = users.Users[:len(users.Users)-1]
 				}
 			}
 		}
