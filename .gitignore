@@ -15,3 +15,6 @@ src/gc
 
 #PEM
 planningpoker-kp.pem
+
+#Docker Image
+planningpoker.tar
