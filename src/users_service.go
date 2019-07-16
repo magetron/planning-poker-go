@@ -258,7 +258,6 @@ func (us *UsersService) appointMaster(ctx context.Context) error {
 			return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 		}
 	}
-	log.Printf("Failed to transfer Master from %s to %s", masterId, successorId)
 	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 
 }

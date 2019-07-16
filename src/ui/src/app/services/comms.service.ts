@@ -86,7 +86,7 @@ export class CommsService {
       "Successor": successor_id
     }
     const result = this.httpClient.put<SimpleResponse>(
-      `${globals.apiUrl}/sprints/${sprint_id}/users/${user_id}/setAdmin`,
+      `${globals.apiUrl}/sprints/${sprint_id}/users/${user_id}/setadmin`,
        jsonObject, HTTPOPTIONS_NO_BODY);
     return result;
   }
