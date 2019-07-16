@@ -1,8 +1,7 @@
 #!/bin/sh
 cd src
 echo building...
-make test
-make build-linux > /dev/null
+make docker > /dev/null
 cd ..
 echo done
 echo removing previous docker image...
