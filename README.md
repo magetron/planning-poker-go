@@ -2,41 +2,29 @@
 
 Powered by Interns
 
-## Building
+## Instructions
 
-Building the program is as simple as:
+### Deployment
 
-```bash
-make build
-```
-or in Production mode
+To deploy to AWS EC2 instance, run `./dockerize.sh`. Make sure there is `./deploy-docker.sh` on the server side.
 
-```bash
-make build-prod
-```
+TODO :
+* AWS fargate
 
-After building, it's a good idea to test it by
+### Development
 
-```bash
-make test
-```
+For all steps below, execute under `src/` folder.
 
-If you are too lazy, just
+To test the code, run `make test`.
 
-```bash
-make all
-```
+To run code and make front-end changes on the fly, run `make run-dev`.
 
-## Developing
+To ensure static pages are working, run `make build-dev && make run` and test it on your local machine.
 
-To use the program in DEV mode and allow CORS for testing, run
+Once you are satisfied, run `make build-prod` to build for the current platform you are on, or `make build-linux` to build for linux-amd64.
 
-```bash
-make run-dev
-```
+Or if you are too lazy, run `make dev` to test and build the no-production static version of angular, run `make prod` to test and build the production static version of angular. 
 
-Or if you have built the program and simply want to run it, do
-```bash
-make run
-```
+Lastly, before deployment, try `make docker` to see if the docker version of the product is building.
 
+What to do when the folder gets messy and you cannot distinguish what's been built? Try `make clean` and all tmp build files will be gone. 
