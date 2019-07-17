@@ -240,7 +240,7 @@ func (us *UsersService) SetAdmin(ctx context.Context) error {
 	}
 
 	sprintId := ctx.PathValue("sprintId")
-	masterId := ctx.PathValue("userId")
+	userId := ctx.PathValue("userId")
 
 	dataMap := data.(map[string]interface{})
 	successorId := dataMap["Successor"].(string)
@@ -249,7 +249,7 @@ func (us *UsersService) SetAdmin(ctx context.Context) error {
 		if users.SprintId == sprintId && len(users.Users) > 1 {
 			foundOne := false
 			for i, user := range users.Users {
-				if user.Id == masterId {
+				if user.Id == userId {
 					if !user.Admin {
 						log.Printf("Forbidden non master trying to appoint successor from %s to %s", masterId, successorId)
 						return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
@@ -282,3 +282,22 @@ func (us *UsersService) SetAdmin(ctx context.Context) error {
 	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 }
 
+func (us *UsersService) ShowVote(ctx context.Context) error {
+	data, dataErr := ctx.RequestData()
+
+	if dataErr != nil {
+		return goweb.API.RespondWithError(ctx, http.StatusInternalServerError, dataErr.Error())
+	}
+
+	sprintId := ctx.PathValue("sprintId")
+	masterId := ctx.PathValue("userId")
+
+	dataMap := data.(map[string]interface{})
+	voteShown := dataMap["VoteShown"].(string)
+
+	for _, users := range us.AllUsers {
+		if users.SprintId == sprintId && len(users.Users) > 1 {
+
+		}
+	}
+}
