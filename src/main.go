@@ -98,7 +98,7 @@ func mapRoutes() {
 
 	_, _ = goweb.Map("POST", "sprints/[sprintId]/users/[userId]/setadmin", us.SetAdmin)
 
-	_, _ = goweb.Map("POST", "sprints/[sprintId]/users/[userId]/setadmin", us.ShowVote)
+	_, _ = goweb.Map("POST", "sprints/[sprintId]/users/[userId]/showvote", us.ShowVote)
 
 	if !DEV {
 		root := "./static-ui"
