@@ -301,15 +301,15 @@ func (us *UsersService) ShowVote(ctx context.Context) error {
 		if users.SprintId == sprintId && len(users.Users) > 1 {
 			if users.Users[0].Id == userId {
 				users.VotesShown = voteShown
-				log.Println("Changed VoteShown status for sprint %s", sprintId)
+				log.Printf("Changed VoteShown status for sprint %s", sprintId)
 				return goweb.Respond.WithOK(ctx)
 			}
-			log.Println("Forbid non-admin to change VoteShown status for sprint %s", sprintId)
+			log.Printf("Forbid non-admin to change VoteShown status for sprint %s", sprintId)
 			return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 		}
 	}
 	if DEV {
-		log.Println("Sprint %s not found for show vote", sprintId)
+		log.Printf("Sprint %s not found for show vote", sprintId)
 	}
 	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 }

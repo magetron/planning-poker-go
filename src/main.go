@@ -98,6 +98,8 @@ func mapRoutes() {
 
 	_, _ = goweb.Map("POST", "sprints/[sprintId]/users/[userId]/setadmin", us.SetAdmin)
 
+	_, _ = goweb.Map("POST", "sprints/[sprintId]/users/[userId]/setadmin", us.ShowVote)
+
 	if !DEV {
 		root := "./static-ui"
 		fileErr := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
