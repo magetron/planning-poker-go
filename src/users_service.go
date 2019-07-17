@@ -188,7 +188,6 @@ func (us *UsersService) Update(conn *websocket.Conn) {
 			if users.SprintId == string(p) {
 				tmpReturnUserArray := make([]*User, 0)
 				if !users.VotesShown {
-					log.Println("creating tmp array ...")
 					for _, user := range users.Users {
 						tmpReturnUser := user
 						if user.Vote != -1 {
