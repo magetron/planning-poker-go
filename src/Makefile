@@ -67,4 +67,4 @@ run:
 	./$(BINARY_NAME)
 
 #added so that make without target, defaulting to make test && make build works
-build: build-dev run-dev;
+build: run-dev;

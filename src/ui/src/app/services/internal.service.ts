@@ -25,6 +25,7 @@ export class InternalService {
 
   updateUser(user: User) {
     this.user.next(user);
+    localStorage.setItem("user", JSON.stringify(user))
   }
 
   updateSprint(sprint: Sprint) {

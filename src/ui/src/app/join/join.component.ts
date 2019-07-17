@@ -7,6 +7,7 @@ import { CommsService } from '../services/comms.service';
 import { InternalService } from '../services/internal.service';
 import { Sprint } from '../models/sprint';
 import { User } from '../models/user';
+import { AssertionError } from 'assert';
 
 @Component({
   selector: 'app-join',
@@ -38,6 +39,7 @@ export class JoinComponent implements OnInit {
         catchError(err => {
           console.log('Connection error', err);
           //TODO: Handle properly - notify the user, retry?
+          this.router.navigateByUrl(`/new`);
           return throwError(err);
         })
       )
@@ -47,8 +49,10 @@ export class JoinComponent implements OnInit {
             this.sprint.Name = res.d['Name'];
             this.internal.updateSprint(this.sprint);
           } else {
-            //TODO: redirect - invalid Id
+            throw new AssertionError({message: "The server messed up"});
           }
+        } else if (res) { //response indicates the sprintID is invalid
+            console.log("Unexpected responce:" + res);
         }
       })
   }

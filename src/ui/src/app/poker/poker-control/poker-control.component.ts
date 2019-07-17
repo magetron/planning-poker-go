@@ -45,6 +45,23 @@ export class PokerControlComponent implements OnInit {
   ngOnInit() {
     this.sprint_id = this.route.snapshot.paramMap.get('sprint_id');
 
+    //Reload users who accidentally closed their browsers
+    let storage: Object = JSON.parse(localStorage.getItem("user"))
+    if (storage) {
+      this.user = storage as User;
+      this.comms.getUserDetails(this.sprint_id, this.user.Id).subscribe(
+        res =>{
+          if (res && res.s === 200) {
+            console.log("User reloaded");
+            this.internal.updateUser(res.d as User);
+          } else {
+            console.log("This user doesn't exist. Might have been garbage collected");
+            this.router.navigateByUrl(`/join/${this.sprint_id}`);
+          }
+        }
+      )
+    }
+
     this.roundInfoSocket$ = webSocket({
       url: globals.roundInfoSocket,
       serializer: msg => msg, //Don't JSON encode the sprint_id

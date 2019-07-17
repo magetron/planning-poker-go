@@ -165,18 +165,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
      this.users[1].Master) {
       console.log("print this.user", this.users[1]);
       return (this.users[1])
-    } else{
-      console.log("error", this.users[1]);
-    }  
-      /*
-   let id = this.users[1]
-   let rankings = this.users.map(y => y.Master);
-   id.forEach((item, index)=>{
-     if (this.user.Id == item){
-      this.user.Master = rankings[index];
-      return (this.user)
-     }
-    })*/
+    }
     return(this.user) 
   }
 

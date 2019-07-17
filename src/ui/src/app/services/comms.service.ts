@@ -119,8 +119,8 @@ export class CommsService {
     return result;
   }
 
-  getUserDetails (sprint_id: string, user_id: string): Observable<SimpleResponse>{
-    const result = this.httpClient.get<SimpleResponse>(
+  getUserDetails (sprint_id: string, user_id: string): Observable<ComplexResponse>{
+    const result = this.httpClient.get<ComplexResponse>(
       `${globals.apiUrl}/sprints/${sprint_id}/users/${user_id}`, HTTPOPTIONS);
     return result;
   }
