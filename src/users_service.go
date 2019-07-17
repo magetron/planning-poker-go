@@ -60,24 +60,9 @@ func (us *UsersService) Create(ctx context.Context) error {
 		users := new(Users)
 		users.SprintId = urlId
 		users.VotesShown = false
+		user.Admin = true;
 		users.Users = append(make([]*User, 0), user)
 		us.AllUsers = append(us.AllUsers, users)
-	}
-
-	foundAdmin := false
-	for _, users := range us.AllUsers {
-		if users.SprintId == urlId {
-			for _, user := range users.Users {
-				if user.Admin {
-					foundAdmin = true
-					break
-				}
-			}
-		}
-	}
-
-	if !foundAdmin {
-		user.Admin = true
 	}
 
 	log.Printf("New User %s Added to sprintID %s", user.Id, urlId)
@@ -201,9 +186,9 @@ func (us *UsersService) Update(conn *websocket.Conn) {
 		log.Printf("User update websocket received id: %s", string(p))
 		for _, users := range us.AllUsers {
 			if users.SprintId == string(p) {
-				var tmpReturnUserArray []*User
+				tmpReturnUserArray := make([]*User, 0)
 				if !users.VotesShown {
-					tmpReturnUserArray := make([]*User, 0);
+					log.Println("creating tmp array ...")
 					for _, user := range users.Users {
 						tmpReturnUser := user
 						if user.Vote != -1 {
