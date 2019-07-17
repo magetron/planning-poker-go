@@ -131,7 +131,14 @@ export class MemberslistComponent extends Cardify implements OnInit {
     this.showV = false;
     this.btn1text = "Show Vote";
   }
-
+  console.log("showV value", this.showV);
+  this.comms.showVote(this.sprint_id, this.user.Id, this.showV ).subscribe(response => {
+    if (response && response.s === 200) {
+      console.log("Set Vote to be shown?", this.showV);
+    } else {
+      console.log("Set Vote to be shown failed");
+    }
+  })
   }
 
   setNextMaster(successor : User) : void{
