@@ -60,11 +60,12 @@ run-dev:
 	./$(BINARY_NAME) &
 	cd ui; $(NGSERVE)
 
-run:
+run-prod:
 	cd _gc; $(GOBUILD) -o ../gc
 	./gc &
 	$(GOBUILD) -o $(BINARY_NAME) -v ./...
 	./$(BINARY_NAME)
 
-#added so that make without target, defaulting to make test && make build works
-build: build-dev run-dev;
+# Add to let `make` work
+build:
+	$(MAKE) run-dev
