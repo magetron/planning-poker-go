@@ -282,10 +282,10 @@ func (us *UsersService) ShowVote(ctx context.Context) error {
 	voteShown := dataMap["VoteShown"].(bool)
 
 	for _, users := range us.AllUsers {
-		if users.SprintId == sprintId && len(users.Users) > 1 {
+		if users.SprintId == sprintId && len(users.Users) >= 1 {
 			if users.Users[0].Id == userId {
 				users.VotesShown = voteShown
-				log.Printf("Changed VoteShown status for sprint %s", sprintId)
+				log.Printf("Changed VoteShown status for sprint %s to %t", sprintId, voteShown)
 				return goweb.Respond.WithOK(ctx)
 			}
 			log.Printf("Forbid non-admin to change VoteShown status for sprint %s", sprintId)
