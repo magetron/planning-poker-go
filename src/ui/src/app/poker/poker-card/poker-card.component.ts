@@ -45,9 +45,9 @@ export class PokerCardComponent extends Cardify implements OnInit {
 
           let old = document.getElementById(this.user.Vote.toString())
           if (old) {
-            old.classList.remove("selected");
+            old.classList.remove("card-secondary");
           }
-          document.getElementById(point.toString()).classList.add("selected");
+          document.getElementById(point.toString()).classList.add("card-secondary");
           this.user.Vote = point;
           this.internal.updateUser(this.user);
 

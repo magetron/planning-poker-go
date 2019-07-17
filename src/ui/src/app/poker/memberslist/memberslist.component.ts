@@ -49,7 +49,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
         this.users = msg;
         this.internal.updateStats(this.analysisVote());
         this.internal.updateUser(this.updateMe());
-        console.log("this.users = ", msg);
+        //console.log("this.users = ", msg);
       },
       err => console.log(err), // Called if at any point WebSocket API signals some kind of error.
       () => console.log('complete') // Called when connection is closed (for whatever reason).
@@ -73,11 +73,12 @@ export class MemberslistComponent extends Cardify implements OnInit {
     //strip non-votes
     result = result.filter(i => i !== -1 && i !== -2);
 
+    if(result.length === 0) return [0,0,0];
+
     //calculate parameters
-    var avg = parseFloat(this.mean(result).toFixed(2));
+    var avg = this.mean(result);
     var median = this.median(result);
     var mode = this.mode(result);
-    //console.log("Mode, Median, Avg = ", [mode, median, avg]);
     return [mode, median, avg];
   }
 
@@ -90,7 +91,6 @@ export class MemberslistComponent extends Cardify implements OnInit {
   }
 
   median(arr): number {
-    if (arr.length === 0) return 0;
     arr.sort(function(a, b) {
       return a - b;
     });
@@ -141,10 +141,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
     
     if (this.user.Master){
       this.comms.appointSuccessor(this.sprint_id, this.user.Id, successor.Id).subscribe(response => {
-        //console.log("-----------debug: ", user.Id);
         if (response && response.status === 200) {
-          //this.user.Master = response.d["Master"] 
-          //this.internal.updateUser(this.user);
           console.log("Set successor");
           //TODO:update front end this.user via emmit
         } else {
@@ -153,36 +150,20 @@ export class MemberslistComponent extends Cardify implements OnInit {
       })
     }
     console.log("func ended");
-    
-    /*console.log("debug succesor Id ", successor.Id);
-    console.log("debug current user Id ", this.user.Id);
-    console.log("debug is current user Master ?", this.user.Master);
-  */}
+  }
 
   updateMe(): User {
     if (this.users.length >1 &&
-     this.users[1].Id == this.user.Id &&
-     this.users[1].Master) {
-      console.log("print this.user", this.users[1]);
-      return (this.users[1])
-    } else{
-      console.log("error", this.users[1]);
-    }  
-      /*
-   let id = this.users[1]
-   let rankings = this.users.map(y => y.Master);
-   id.forEach((item, index)=>{
-     if (this.user.Id == item){
-      this.user.Master = rankings[index];
-      return (this.user)
-     }
-    })*/
+     this.users[0].Id == this.user.Id &&
+     this.users[0].Master) {
+      return (this.users[0])
+    } 
     return(this.user) 
   }
 
   crowned (user): string{
     if (user.Master) {
-      return ("Master:" + user.Name)
+      return (user.Name + " \uD83D\uDC51")
     } else {
       return (user.Name)
     }

@@ -235,21 +235,21 @@ func (us *UsersService) appointMaster(ctx context.Context) error {
 						log.Printf("Forbidden non master trying to appoint successor from %s to %s", masterId, successorId)
 						return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 					}
-					users.Users[0], users.Users[i] = users.Users[i], users.Users[0]
+					users.Users[1], users.Users[i] = users.Users[i], users.Users[1]
 					if foundOne {
-						users.Users[0].Master = false
-						users.Users[1].Master = true
-						log.Printf("Transfered Master from %s to %s", users.Users[0].Id, users.Users[1].Id)
+						users.Users[1].Master = false
+						users.Users[0].Master = true
+						log.Printf("Transfered Master from %s to %s", users.Users[1].Id, users.Users[0].Id)
 						return goweb.Respond.WithOK(ctx)
 					} else {
 						foundOne = true
 					}
 				} else if user.Id == successorId {
-					users.Users[1], users.Users[i] = users.Users[i], users.Users[1]
+					users.Users[0], users.Users[i] = users.Users[i], users.Users[0]
 					if foundOne {
-						users.Users[0].Master = false
-						users.Users[1].Master = true
-						log.Printf("Transfered Master from %s to %s", users.Users[0].Id, users.Users[1].Id)
+						users.Users[1].Master = false
+						users.Users[0].Master = true
+						log.Printf("Transfered Master from %s to %s", users.Users[1].Id, users.Users[0].Id)
 						return goweb.Respond.WithOK(ctx)
 					} else {
 						foundOne = true
