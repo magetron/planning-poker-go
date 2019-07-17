@@ -186,10 +186,12 @@ func (us *UsersService) Update(conn *websocket.Conn) {
 		log.Printf("User update websocket received id: %s", string(p))
 		for _, users := range us.AllUsers {
 			if users.SprintId == string(p) {
-				tmpReturnUserArray := make([]*User, 0)
+				var tmpReturnUserArray []User
 				if !users.VotesShown {
+					tmpReturnUserArray = make([]User, 0)
 					for _, user := range users.Users {
-						tmpReturnUser := user
+						var tmpReturnUser User
+						tmpReturnUser = *user
 						if user.Vote != -1 {
 							tmpReturnUser.Vote = -3
 						}
