@@ -11,8 +11,8 @@
     <div fxflex="" style="cursor: pointer; flex-direction: column; box-sizing: border-box; display: flex; flex: 1 1 0%;">
       <div fxflex="" style="flex: 1 1 1e-9px; box-sizing: border-box;" style="max-width: 98%">
 
-        <mat-card class="background-secondary">
-            <mat-card-title class="text-primary" fxLayoutAlign="center">
+        <mat-card class="background-warn">
+            <mat-card-title fxLayoutAlign="center">
               <div *ngIf="curStory.Archived; else notArchivedTitle"><h3>Story Title: none </h3></div>
               <ng-template #notArchivedTitle>
                 <h3>Story Title: {{curStory.Name}}</h3>
