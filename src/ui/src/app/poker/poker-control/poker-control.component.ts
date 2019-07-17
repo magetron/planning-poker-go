@@ -1,5 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Inject} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 import { InternalService } from 'src/app/services/internal.service';
 import { User } from 'src/app/models/user';
@@ -19,7 +20,7 @@ export class PokerControlComponent implements OnInit {
 
   @Input() sprint_id: string;
   curStory: Round = {
-    "Name": "default",
+    "Name": "none",
     "Id" : 0,
     "Avg" : 0,
     "Med" : 0,
@@ -34,16 +35,18 @@ export class PokerControlComponent implements OnInit {
   timePassed = 0;
   displayedColumns: string[] = ['ROUNDS', 'RESULT'];
   user: User;
+  baseUrl: string;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private internal: InternalService,
-    private comms: CommsService,
+    private comms: CommsService
   ) {}
 
   ngOnInit() {
     this.sprint_id = this.route.snapshot.paramMap.get('sprint_id');
+    this.baseUrl = globals.baseUrl;
 
     this.roundInfoSocket$ = webSocket({
       url: globals.roundInfoSocket,
@@ -114,9 +117,7 @@ export class PokerControlComponent implements OnInit {
   startTimer(): void {
     if (this.storyList && this.storyList[this.storyList.length - 1].CreationTime) {
       setInterval(() => this.timePassed = new Date().getTime() / 1000 - this.storyList[this.storyList.length - 1].CreationTime, 1000)
-      console.log("Timer started, ID:");
     } else {
-      console.log("Time start failed");
       setTimeout(()=> this.startTimer(), globals.socketRefreshTime);
     }
   }
@@ -137,6 +138,18 @@ export class PokerControlComponent implements OnInit {
           console.log("Initialize vote fail");
         }
     });
+  }
+  
+  HideLastElementinList(title: Round, displayTitle: string): any{
+    if (title.Name == this.curStory.Name && !title.Archived) {
+      return "voting in progress";
+    } else {
+      return title.Final;
+    }
+  }
+
+  beautifyMean(num: number): string{
+    return num.toFixed(2);
   }
 
 }
