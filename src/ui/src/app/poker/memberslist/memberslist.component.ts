@@ -141,12 +141,12 @@ export class MemberslistComponent extends Cardify implements OnInit {
   })
   }
 
-  setNextMaster(successor : User) : void{
+  setNextAdmin(successor : User) : void{
     console.log("debug succesor Id ", successor.Id);
     console.log("debug current user Id ", this.user.Id);
-    console.log("debug is current user Master ?", this.user.Master);
+    console.log("debug is current user Admin ?", this.user.Admin);
     
-    if (this.user.Master){
+    if (this.user.Admin){
       this.comms.appointSuccessor(this.sprint_id, this.user.Id, successor.Id).subscribe(response => {
         if (response && response.status === 200) {
           console.log("Set successor");
@@ -162,18 +162,19 @@ export class MemberslistComponent extends Cardify implements OnInit {
   updateMe(): User {
     if (this.users.length >1 &&
      this.users[0].Id == this.user.Id &&
-     this.users[0].Master) {
+     this.users[0].Admin) {
       return (this.users[0])
     } 
     return(this.user) 
   }
 
   crowned (user): string{
-    if (user.Master) {
-      return (user.Name + " \uD83D\uDC51")
+    if (user.Admin) {
+      return (user.Name +" \uD83D\uDC51")
     } else {
       return (user.Name)
     }
+    console.log("users = ", this.users);
   }
 
 }
