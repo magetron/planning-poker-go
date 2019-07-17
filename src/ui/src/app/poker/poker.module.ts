@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, Inject} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
@@ -14,7 +14,7 @@ import { PokerControlComponent } from './poker-control/poker-control.component';
   declarations: [
     PokerCardComponent,
     MemberslistComponent,
-    PokerControlComponent,
+    PokerControlComponent
   ],
 
   //imports for mega data within other modules

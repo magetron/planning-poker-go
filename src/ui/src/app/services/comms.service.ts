@@ -124,4 +124,13 @@ export class CommsService {
       `${globals.apiUrl}/sprints/${sprint_id}/users/${user_id}`, HTTPOPTIONS);
     return result;
   }
+
+  showVote (sprint_id: string, user_id: string, showVote : boolean): Observable<SimpleResponse>{
+    let jsonObject = {
+      "VoteShown": showVote,
+    }
+    const result = this.httpClient.post<SimpleResponse>(
+      `${globals.apiUrl}/sprints/${sprint_id}/users/${user_id}/showvote`,jsonObject, HTTPOPTIONS_NO_BODY);
+    return result;
+  }
 }

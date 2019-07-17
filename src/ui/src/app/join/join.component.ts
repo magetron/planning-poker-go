@@ -66,7 +66,7 @@ export class JoinComponent implements OnInit {
           if (res && res.s === 200) {
             this.user.Id = res.d['Id'];
             this.user.Name = res.d['Name'];
-            this.user.Master = res.d['Master'];
+            this.user.Admin = res.d['Admin'];
             this.internal.updateUser(this.user);
             this.router.navigateByUrl(`/table/${this.sprint.Id}`);
           } else if (res && res.s === 404) {
@@ -88,7 +88,7 @@ export class JoinComponent implements OnInit {
       Name: "",
       Id: "",
       Vote: -1,
-      Master: false,
+      Admin: false,
     }
     this.sprint = {
       Name: "",

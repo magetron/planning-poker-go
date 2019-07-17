@@ -32,18 +32,18 @@ export class TopBarComponent implements OnInit {
 
   isInvalid() {
     return(false)
-    //return(this.user.Master)
+    //return(this.user.Admin)
     //TODO: set up log out as a new component and update the button everytime a master changes
   }
 
   logOut() {
     this.comms.getUserDetails(this.sprint.Id, this.user.Id).subscribe(response => {
       if (response.s == 200) {
-        this.user.Master = response.d['Master'];
+        this.user.Admin = response.d['Admin'];
         this.internal.updateUser(this.user);
         console.log("user attempt to log out info", this.user)
 
-        if (this.user.Master){
+        if (this.user.Admin){
           console.log("Cannot logout, you havn't set your successor yet!");
         } else {
           this.comms.deleteUser (this.sprint.Id, this.user.Id).subscribe(response => {

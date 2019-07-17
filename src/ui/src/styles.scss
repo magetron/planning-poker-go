@@ -1,4 +1,5 @@
 @import '~@angular/material/theming';
+@import url('https://fonts.googleapis.com/css?family=Muli&display=swap');
 // Plus imports for other components in your app.
 
 // Include the common styles for Angular Material. We include this here so that you only
@@ -6,19 +7,35 @@
 // **Be sure that you only ever include this mixin once!**
 @include mat-core();
 
+$custom-typography: mat-typography-config(
+  $font-family: 'Muli, sans-serif',
+  $headline: mat-typography-level(32px, 48px, 700),
+  $body-1: mat-typography-level(16px, 24px, 500)
+);
+// Override typography CSS classes (e.g., mat-h1, mat-display-1, mat-typography, etc.).
+@include mat-base-typography($custom-typography);
+// Override the typography in the core CSS.
+@include mat-core($custom-typography);
+
+
+$tcl-palette: (50: #e0eff6, 100: #b3d6e9, 200: #80bbdb, 300: #4d9fcc, 400: #268bc1, 500: #0076b6, 600: #006eaf, 700: #0063a6, 800: #00599e, 900: #00468e, A100: #bad7ff, A200: #87b9ff, A400: #549cff, A700: #3b8dff, 
+contrast: ( 50: #000000, 100: #000000, 200: #000000, 300: #000000, 400: #ffffff, 500: #ffffff, 600: #ffffff, 700: #ffffff, 800: #ffffff, 900: #ffffff, A100: #000000, A200: #000000, A400: #000000, A700: #000000, ));
+
 // Define the default theme (same as the example above).
-$ppoker-app-primary: mat-palette($mat-blue, 900);
-$ppoker-app-accent:  mat-palette($mat-purple, 600);
-$ppoker-app-theme:   mat-light-theme($ppoker-app-primary, $ppoker-app-accent);
+//$ppoker-app-primary: mat-palette($mat-blue, 900);
+$ppoker-app-primary: mat-palette($tcl-palette, 600, 800, 400);
+$ppoker-app-accent:  mat-palette($tcl-palette, 400);
+$ppoker-app-warn:  mat-palette($mat-light-blue);
+$ppoker-app-theme:   mat-light-theme($ppoker-app-primary, $ppoker-app-accent, $ppoker-app-warn);
 
 // Include the default theme styles.
 @include angular-material-theme($ppoker-app-theme);
 
 
 // Define an alternate dark theme.
-$dark-primary: mat-palette($mat-blue-grey);
-$dark-accent:  mat-palette($mat-amber, A200, A100, A400);
-$dark-warn:    mat-palette($mat-deep-orange);
+$dark-primary: mat-palette($tcl-palette, 900);
+$dark-accent:  mat-palette($tcl-palette, 400);
+$dark-warn:    mat-palette($tcl-palette, 300);
 $dark-theme:   mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
 
 // Include the alternative theme styles inside of a block with a CSS class. You can make this
@@ -30,13 +47,19 @@ $dark-theme:   mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
 
 
 .background-primary {
-  background: mat-color($mat-blue, 50);
+  background: mat-color($tcl-palette, 50);
 }
 .background-secondary {
-  background: mat-color($mat-purple, 50);
+  background: mat-color($tcl-palette, A100);
 }
+//recomendation block colour
 .background-third {
   background: mat-color($mat-yellow, 50);
+}
+
+.background-warn {
+  background: mat-color($ppoker-app-warn, 300);
+  color: white;
 }
 
 .text-primary {
@@ -44,10 +67,16 @@ $dark-theme:   mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
 }
 
 .button-primary {
-  background: mat-color($mat-purple, 600);
-  color: mat-color($mat-blue, 50);
+  background: mat-color($tcl-palette, 400);
+  color: mat-color($tcl-palette, 50);
 }
 
-.button-secondary {
-  background: mat-color($mat-blue, 50);
+//poker card colour
+.card-primary {
+  background: mat-color($tcl-palette, 50);
+}
+//selected poker card colour
+.card-secondary {
+  background: mat-color($tcl-palette, 700);
+  color: white;
 }

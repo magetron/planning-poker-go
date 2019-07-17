@@ -13,8 +13,9 @@ import (
 )
 
 type Users struct {
-	Users    []*User
-	SprintId string
+	Users    	[]*User
+	SprintId 	string
+	VotesShown 	bool
 }
 
 type UsersService struct {
@@ -45,7 +46,7 @@ func (us *UsersService) Create(ctx context.Context) error {
 	user.Id = uuid.New().String()
 	user.Name = dataMap["Name"].(string)
 	user.Vote = -1
-	user.Master = false
+	user.Admin = false
 
 	foundId := false
 	for _, users := range us.AllUsers {
@@ -58,24 +59,10 @@ func (us *UsersService) Create(ctx context.Context) error {
 	if !foundId {
 		users := new(Users)
 		users.SprintId = urlId
+		users.VotesShown = false
+		user.Admin = true;
 		users.Users = append(make([]*User, 0), user)
 		us.AllUsers = append(us.AllUsers, users)
-	}
-
-	foundMaster := false
-	for _, users := range us.AllUsers {
-		if users.SprintId == urlId {
-			for _, user := range users.Users {
-				if user.Master {
-					foundMaster = true
-					break
-				}
-			}
-		}
-	}
-
-	if !foundMaster {
-		user.Master = true
 	}
 
 	log.Printf("New User %s Added to sprintID %s", user.Id, urlId)
@@ -199,7 +186,25 @@ func (us *UsersService) Update(conn *websocket.Conn) {
 		log.Printf("User update websocket received id: %s", string(p))
 		for _, users := range us.AllUsers {
 			if users.SprintId == string(p) {
-				usersStr, usersErr := json.Marshal(users.Users)
+				var tmpReturnUserArray []User
+				if !users.VotesShown {
+					tmpReturnUserArray = make([]User, 0)
+					for _, user := range users.Users {
+						var tmpReturnUser User
+						tmpReturnUser = *user
+						if user.Vote != -1 {
+							tmpReturnUser.Vote = -3
+						}
+						tmpReturnUserArray = append(tmpReturnUserArray, tmpReturnUser)
+					}
+				}
+				var usersStr []byte
+				var usersErr error
+				if users.VotesShown {
+					usersStr, usersErr = json.Marshal(users.Users)
+				} else {
+					usersStr, usersErr = json.Marshal(tmpReturnUserArray)
+				}
 				if usersErr != nil {
 					log.Println(usersErr)
 				}
@@ -212,7 +217,7 @@ func (us *UsersService) Update(conn *websocket.Conn) {
 	}
 }
 
-func (us *UsersService) appointMaster(ctx context.Context) error {
+func (us *UsersService) SetAdmin(ctx context.Context) error {
 
 	data, dataErr := ctx.RequestData()
 
@@ -221,7 +226,7 @@ func (us *UsersService) appointMaster(ctx context.Context) error {
 	}
 
 	sprintId := ctx.PathValue("sprintId")
-	masterId := ctx.PathValue("userId")
+	userId := ctx.PathValue("userId")
 
 	dataMap := data.(map[string]interface{})
 	successorId := dataMap["Successor"].(string)
@@ -230,36 +235,67 @@ func (us *UsersService) appointMaster(ctx context.Context) error {
 		if users.SprintId == sprintId && len(users.Users) > 1 {
 			foundOne := false
 			for i, user := range users.Users {
-				if user.Id == masterId {
-					if !user.Master {
-						log.Printf("Forbidden non master trying to appoint successor from %s to %s", masterId, successorId)
+				if user.Id == userId {
+					if !user.Admin {
+						log.Printf("Forbidden non-admin trying to appoint successor from %s to %s", userId, successorId)
 						return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 					}
-					users.Users[0], users.Users[i] = users.Users[i], users.Users[0]
+					users.Users[1], users.Users[i] = users.Users[i], users.Users[1]
 					if foundOne {
-						users.Users[0].Master = false
-						users.Users[1].Master = true
-						log.Printf("Transfered Master from %s to %s", users.Users[0].Id, users.Users[1].Id)
+						users.Users[1].Admin = false
+						users.Users[0].Admin = true
+						log.Printf("Transfered admin from %s to %s", users.Users[1].Id, users.Users[0].Id)
 						return goweb.Respond.WithOK(ctx)
 					} else {
 						foundOne = true
 					}
 				} else if user.Id == successorId {
-					users.Users[1], users.Users[i] = users.Users[i], users.Users[1]
+					users.Users[0], users.Users[i] = users.Users[i], users.Users[0]
 					if foundOne {
-						users.Users[0].Master = false
-						users.Users[1].Master = true
-						log.Printf("Transfered Master from %s to %s", users.Users[0].Id, users.Users[1].Id)
+						users.Users[1].Admin = false
+						users.Users[0].Admin = true
+						log.Printf("Transfered admin from %s to %s", users.Users[1].Id, users.Users[0].Id)
 						return goweb.Respond.WithOK(ctx)
 					} else {
 						foundOne = true
 					}
 				}
 			}
-			log.Printf("Failed to transfer Master from %s to %s", masterId, successorId)
+			if DEV {
+				log.Printf("Sprint %s not found for set admin", sprintId)
+			}
 			return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 		}
 	}
 	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
+}
 
+func (us *UsersService) ShowVote(ctx context.Context) error {
+	data, dataErr := ctx.RequestData()
+
+	if dataErr != nil {
+		return goweb.API.RespondWithError(ctx, http.StatusInternalServerError, dataErr.Error())
+	}
+
+	sprintId := ctx.PathValue("sprintId")
+	userId := ctx.PathValue("userId")
+
+	dataMap := data.(map[string]interface{})
+	voteShown := dataMap["VoteShown"].(bool)
+
+	for _, users := range us.AllUsers {
+		if users.SprintId == sprintId && len(users.Users) >= 1 {
+			if users.Users[0].Id == userId {
+				users.VotesShown = voteShown
+				log.Printf("Changed VoteShown status for sprint %s to %t", sprintId, voteShown)
+				return goweb.Respond.WithOK(ctx)
+			}
+			log.Printf("Forbid non-admin to change VoteShown status for sprint %s", sprintId)
+			return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
+		}
+	}
+	if DEV {
+		log.Printf("Sprint %s not found for show vote", sprintId)
+	}
+	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 }
