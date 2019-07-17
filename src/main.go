@@ -18,7 +18,7 @@ const (
 	Address string = ":8080"
 )
 
-var DEV = false
+var DEV = true
 
 var sc = new(SprintsController)
 var rc = new(RoundsController)
@@ -96,7 +96,7 @@ func mapRoutes() {
 
 	_, _ = goweb.Map("POST", "gc", garbageCollector)
 
-	_, _ = goweb.Map("POST", "sprints/[sprintId]/users/[userId]/setadmin", us.appointMaster)
+	_, _ = goweb.Map("POST", "sprints/[sprintId]/users/[userId]/setadmin", us.SetAdmin)
 
 	if !DEV {
 		root := "./static-ui"

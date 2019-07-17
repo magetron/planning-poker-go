@@ -15,6 +15,7 @@ import (
 type Users struct {
 	Users    []*User
 	SprintId string
+	VotesShown bool
 }
 
 type UsersService struct {
@@ -45,7 +46,7 @@ func (us *UsersService) Create(ctx context.Context) error {
 	user.Id = uuid.New().String()
 	user.Name = dataMap["Name"].(string)
 	user.Vote = -1
-	user.Master = false
+	user.Admin = false
 
 	foundId := false
 	for _, users := range us.AllUsers {
@@ -62,20 +63,20 @@ func (us *UsersService) Create(ctx context.Context) error {
 		us.AllUsers = append(us.AllUsers, users)
 	}
 
-	foundMaster := false
+	foundAdmin := false
 	for _, users := range us.AllUsers {
 		if users.SprintId == urlId {
 			for _, user := range users.Users {
-				if user.Master {
-					foundMaster = true
+				if user.Admin {
+					foundAdmin = true
 					break
 				}
 			}
 		}
 	}
 
-	if !foundMaster {
-		user.Master = true
+	if !foundAdmin {
+		user.Admin = true
 	}
 
 	log.Printf("New User %s Added to sprintID %s", user.Id, urlId)
@@ -212,7 +213,7 @@ func (us *UsersService) Update(conn *websocket.Conn) {
 	}
 }
 
-func (us *UsersService) appointMaster(ctx context.Context) error {
+func (us *UsersService) SetAdmin(ctx context.Context) error {
 
 	data, dataErr := ctx.RequestData()
 
@@ -231,14 +232,14 @@ func (us *UsersService) appointMaster(ctx context.Context) error {
 			foundOne := false
 			for i, user := range users.Users {
 				if user.Id == masterId {
-					if !user.Master {
+					if !user.Admin {
 						log.Printf("Forbidden non master trying to appoint successor from %s to %s", masterId, successorId)
 						return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 					}
 					users.Users[0], users.Users[i] = users.Users[i], users.Users[0]
 					if foundOne {
-						users.Users[0].Master = false
-						users.Users[1].Master = true
+						users.Users[0].Admin = false
+						users.Users[1].Admin = true
 						log.Printf("Transfered Master from %s to %s", users.Users[0].Id, users.Users[1].Id)
 						return goweb.Respond.WithOK(ctx)
 					} else {
@@ -247,8 +248,8 @@ func (us *UsersService) appointMaster(ctx context.Context) error {
 				} else if user.Id == successorId {
 					users.Users[1], users.Users[i] = users.Users[i], users.Users[1]
 					if foundOne {
-						users.Users[0].Master = false
-						users.Users[1].Master = true
+						users.Users[0].Admin = false
+						users.Users[1].Admin = true
 						log.Printf("Transfered Master from %s to %s", users.Users[0].Id, users.Users[1].Id)
 						return goweb.Respond.WithOK(ctx)
 					} else {
