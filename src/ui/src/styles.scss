@@ -6,36 +6,8 @@
 // **Be sure that you only ever include this mixin once!**
 @include mat-core();
 
-$tcl-palette: ( 
-50: #e0eff6, 
-100: #b3d6e9, 
-200: #80bbdb, 
-300: #4d9fcc, 
-400: #268bc1, 
-500: #0076b6, 
-600: #006eaf, 
-700: #0063a6, 
-800: #00599e, 
-900: #00468e, 
-A100: #bad7ff, 
-A200: #87b9ff, 
-A400: #549cff, 
-A700: #3b8dff, 
-contrast: ( 50: 
-#000000, 100: 
-#000000, 200: 
-#000000, 300: 
-#000000, 400: 
-#ffffff, 500: 
-#ffffff, 600: 
-#ffffff, 700: 
-#ffffff, 800: 
-#ffffff, 900: 
-#ffffff, A100: 
-#000000, A200: 
-#000000, A400: 
-#000000, A700: 
-#000000, ));
+$tcl-palette: (50: #e0eff6, 100: #b3d6e9, 200: #80bbdb, 300: #4d9fcc, 400: #268bc1, 500: #0076b6, 600: #006eaf, 700: #0063a6, 800: #00599e, 900: #00468e, A100: #bad7ff, A200: #87b9ff, A400: #549cff, A700: #3b8dff, 
+contrast: ( 50: #000000, 100: #000000, 200: #000000, 300: #000000, 400: #ffffff, 500: #ffffff, 600: #ffffff, 700: #ffffff, 800: #ffffff, 900: #ffffff, A100: #000000, A200: #000000, A400: #000000, A700: #000000, ));
 
 // Define the default theme (same as the example above).
 //$ppoker-app-primary: mat-palette($mat-blue, 900);
