@@ -251,14 +251,14 @@ func (us *UsersService) SetAdmin(ctx context.Context) error {
 			for i, user := range users.Users {
 				if user.Id == userId {
 					if !user.Admin {
-						log.Printf("Forbidden non master trying to appoint successor from %s to %s", masterId, successorId)
+						log.Printf("Forbidden non-admin trying to appoint successor from %s to %s", userId, successorId)
 						return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 					}
 					users.Users[1], users.Users[i] = users.Users[i], users.Users[1]
 					if foundOne {
 						users.Users[1].Admin = false
 						users.Users[0].Admin = true
-						log.Printf("Transfered Master from %s to %s", users.Users[1].Id, users.Users[0].Id)
+						log.Printf("Transfered admin from %s to %s", users.Users[1].Id, users.Users[0].Id)
 						return goweb.Respond.WithOK(ctx)
 					} else {
 						foundOne = true
@@ -268,14 +268,16 @@ func (us *UsersService) SetAdmin(ctx context.Context) error {
 					if foundOne {
 						users.Users[1].Admin = false
 						users.Users[0].Admin = true
-						log.Printf("Transfered Master from %s to %s", users.Users[1].Id, users.Users[0].Id)
+						log.Printf("Transfered admin from %s to %s", users.Users[1].Id, users.Users[0].Id)
 						return goweb.Respond.WithOK(ctx)
 					} else {
 						foundOne = true
 					}
 				}
 			}
-			log.Printf("Failed to transfer Master from %s to %s", masterId, successorId)
+			if DEV {
+				log.Printf("Sprint %s not found for set admin", sprintId)
+			}
 			return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 		}
 	}
@@ -290,14 +292,24 @@ func (us *UsersService) ShowVote(ctx context.Context) error {
 	}
 
 	sprintId := ctx.PathValue("sprintId")
-	masterId := ctx.PathValue("userId")
+	userId := ctx.PathValue("userId")
 
 	dataMap := data.(map[string]interface{})
-	voteShown := dataMap["VoteShown"].(string)
+	voteShown := dataMap["VoteShown"].(bool)
 
 	for _, users := range us.AllUsers {
 		if users.SprintId == sprintId && len(users.Users) > 1 {
-
+			if users.Users[0].Id == userId {
+				users.VotesShown = voteShown
+				log.Println("Changed VoteShown status for sprint %s", sprintId)
+				return goweb.Respond.WithOK(ctx)
+			}
+			log.Println("Forbid non-admin to change VoteShown status for sprint %s", sprintId)
+			return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 		}
 	}
+	if DEV {
+		log.Println("Sprint %s not found for show vote", sprintId)
+	}
+	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 }
