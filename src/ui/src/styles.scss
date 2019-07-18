@@ -49,6 +49,7 @@ $dark-theme:   mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
 .background-primary {
   background: mat-color($tcl-palette, 50);
 }
+//timer, join
 .background-secondary {
   background: mat-color($tcl-palette, A100);
 }
@@ -56,9 +57,13 @@ $dark-theme:   mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
 .background-third {
   background: mat-color($mat-yellow, 50);
 }
+//archive round
+.background-forth {
+  background: mat-color($mat-purple, 200);
+}
 
 .background-warn {
-  background: mat-color($ppoker-app-warn, 300);
+  background: mat-color($ppoker-app-primary, 400);
   color: white;
 }
 

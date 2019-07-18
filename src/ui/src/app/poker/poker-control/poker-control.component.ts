@@ -36,6 +36,7 @@ export class PokerControlComponent implements OnInit {
   displayedColumns: string[] = ['ROUNDS', 'RESULT'];
   user: User;
   baseUrl: string;
+  isVoteShown : boolean;
 
   constructor(
     private router: Router,
@@ -93,6 +94,7 @@ export class PokerControlComponent implements OnInit {
     this.refreshSocket();
     this.internal.stats$.subscribe(msg => this.stats = msg);
     this.internal.user$.subscribe(msg => this.user = msg);
+    this.internal.isVoteShown$.subscribe(msg => this.isVoteShown = msg);
   }
 
   addStory (story: string): void {
@@ -125,6 +127,8 @@ export class PokerControlComponent implements OnInit {
   archiveRound(): void{
     this.comms.archiveRound(this.sprint_id, this.curStory.Id, this.curStory.Avg, this.curStory.Med, this.curStory.Final).subscribe(response => {
       if (response && response.status === 200) {
+        this.curStory.Archived = true;
+        this.internal.updateRound(this.curStory);
         console.log("Round archived: ", this.curStory.Id);
       } else {
         console.log("Server communication error");
@@ -141,8 +145,11 @@ export class PokerControlComponent implements OnInit {
   }
   
   HideLastElementinList(title: Round, displayTitle: string): any{
+    if (title.Archived){
+      return title.Final;
+    }
     if (title.Name == this.curStory.Name && !title.Archived) {
-      return "voting in progress";
+      return "voting";
     } else {
       return title.Final;
     }

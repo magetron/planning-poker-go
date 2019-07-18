@@ -17,7 +17,7 @@ export class PokerCardComponent extends Cardify implements OnInit {
   points: number[] = [0, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100, -2]
   @Input() sprint_id: string;
   user: User;
-  //round: Round;
+
 
   constructor(
     private router: Router,
@@ -35,10 +35,18 @@ export class PokerCardComponent extends Cardify implements OnInit {
     if (!this.user || !this.user.Id) {
       this.router.navigate(["join", this.sprint_id])
     }
-    //this.internal.round$.subscribe(msg => this.round = msg);
+    //this.internal.round$.subscribe(msg => {
+    //  if (msg.Archived) {
+    //    var i = document.getElementsByClassName("card-secondary");
+    //    for(var j=0; j < i.length; j++)
+    //    {
+    //      i[j].classList.remove("card-secondary");
+    //    }
+    //  }
+    //});
   }
 
-  vote(point: number){
+  vote(point: number) {
     this.comms.selectCard(this.sprint_id, this.user.Id, point).subscribe((response => {
         if (response.status === 200) {
           console.log("Selection success");
