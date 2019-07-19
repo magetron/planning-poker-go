@@ -48,18 +48,18 @@ export class CommsService {
     }
   }
 
-  getSprintDetails(id: string): Observable<SimpleResponse> {
-    const result = this.httpClient.get<SimpleResponse>(
+  getSprintDetails(id: string): Observable<ComplexResponse> {
+    const result = this.httpClient.get<ComplexResponse>(
       `${globals.apiUrl}/sprints/${id}`, HTTPOPTIONS);
     return result;
   }
 
-  joinSprint(username: string, sprint: Sprint): Observable<SimpleResponse> {
+  joinSprint(username: string, sprint: Sprint): Observable<ComplexResponse> {
     let jsonObject = {
       Name: username,
     }
 
-    const result = this.httpClient.post<SimpleResponse>(
+    const result = this.httpClient.post<ComplexResponse>(
       `${globals.apiUrl}/sprints/${sprint.Id}/users`, jsonObject, HTTPOPTIONS);
     return result;
   }

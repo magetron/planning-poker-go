@@ -4,12 +4,14 @@ import { RouterModule, Routes } from '@angular/router';
 import { NewSprintComponent } from './new-sprint/new-sprint.component';
 import { JoinComponent } from './join/join.component';
 import { PokerControlComponent } from './poker/poker-control/poker-control.component';
-
+import { AuthGuard } from './_guards/auth.guard';
 
 const routes: Routes = [
   { path: 'new', component: NewSprintComponent },
   { path: 'join/:sprint_id', component: JoinComponent },
-  { path: 'table/:sprint_id', component: PokerControlComponent },
+  { path: 'table/:sprint_id',
+    component: PokerControlComponent,
+    canActivate: [AuthGuard] },
   //{ path: 'session', component: },
   { path: '',   redirectTo: '/new', pathMatch: 'full' },
   { path: 'index', redirectTo: '/new' },

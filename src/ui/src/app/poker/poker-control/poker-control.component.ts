@@ -49,17 +49,17 @@ export class PokerControlComponent implements OnInit {
     this.sprint_id = this.route.snapshot.paramMap.get('sprint_id');
 
     //Reload users who accidentally closed their browsers
-    let storage: Object = JSON.parse(localStorage.getItem("user"))
+    // let storage: Object = JSON.parse(localStorage.getItem("user"))
 
-    if (storage) {
-      this.user = storage as User;
-      this.comms.getUserDetails(this.sprint_id, this.user.Id).subscribe(
-        res => {
-          if (res && res.s === 200) {
-            console.log("User reloaded");
-            this.internal.updateUser(res.d as User);
+    // if (storage) { //FIXME:
+    //   this.user = storage as User;
+    //   this.comms.getUserDetails(this.sprint_id, this.user.Id).subscribe(
+    //     res => {
+    //       if (res && res.s === 200) {
+    //         console.log(`User ${this.user.Id} reloaded`);
+    //         this.internal.updateUser(res.d as User);
 
-            //TODO: move this and the equivalent function in /join to the top bar?
+    //         //TODO: move this and the equivalent function in /join to the top bar?
             this.comms.getSprintDetails(this.sprint_id)
             .pipe(
               catchError(err => {
@@ -77,16 +77,16 @@ export class PokerControlComponent implements OnInit {
                   throw new AssertionError({message: "The server messed up"});
                 }
               } else if (res) { //response indicates the sprintID is invalid
-                  console.log("Unexpected responce:" + res);
+                  console.log("Unexpected response:" + res);
               }
             })
-          } else {
-            console.log("This user doesn't exist. Might have been garbage collected");
-            this.router.navigateByUrl(`/join/${this.sprint_id}`);
-          }
-        }
-      )
-    }
+    //       } else {
+    //         console.log("This user doesn't exist. Might have been garbage collected");
+    //         this.router.navigateByUrl(`/join/${this.sprint_id}`);
+    //       }
+    //     }
+    //   )
+    // }
 
     this.roundInfoSocket$ = webSocket({
       url: globals.roundInfoSocket,
