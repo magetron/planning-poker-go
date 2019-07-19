@@ -31,10 +31,10 @@ export class PokerCardComponent extends Cardify implements OnInit {
     this.internal.user$.subscribe(
       res => this.user = res
     )
-    //Kick undefined users to rejoin, for example when reloading page
-    if (!this.user || !this.user.Id) {
-      this.router.navigate(["join", this.sprint_id])
-    }
+    // //Kick undefined users to rejoin, for example when reloading page
+    // if (!this.user || !this.user.Id) {
+    //   this.router.navigate(["join", this.sprint_id])
+    // }
     //this.internal.round$.subscribe(msg => this.round = msg);
   }
 

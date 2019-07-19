@@ -50,6 +50,7 @@ export class TopBarComponent implements OnInit {
             if (response == null) {
               console.log("User logged out");
               localStorage.removeItem("user");
+              //FIXME: remove from localStorage
               this.router.navigateByUrl(`/new`);
             } else {
               console.log("User log out failed");

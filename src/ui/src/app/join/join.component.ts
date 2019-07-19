@@ -32,7 +32,6 @@ export class JoinComponent implements OnInit {
   ngOnInit() {
     this.intialize();
     this.sprint.Id = this.route.snapshot.paramMap.get('sprint_id');
-    //TODO: get sprint title from backend
     //if you get a sprint title, set the sprint
     this.comms.getSprintDetails(this.sprint.Id)
       .pipe(

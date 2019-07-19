@@ -1,5 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { AssertionError } from 'assert';
 
 import { InternalService } from 'src/app/services/internal.service';
 import { User } from 'src/app/models/user';
@@ -47,13 +50,36 @@ export class PokerControlComponent implements OnInit {
 
     //Reload users who accidentally closed their browsers
     let storage: Object = JSON.parse(localStorage.getItem("user"))
+
     if (storage) {
       this.user = storage as User;
       this.comms.getUserDetails(this.sprint_id, this.user.Id).subscribe(
-        res =>{
+        res => {
           if (res && res.s === 200) {
             console.log("User reloaded");
             this.internal.updateUser(res.d as User);
+
+            //TODO: move this and the equivalent function in /join to the top bar?
+            this.comms.getSprintDetails(this.sprint_id)
+            .pipe(
+              catchError(err => {
+                console.log('Connection error', err);
+                //TODO: Handle properly - notify the user, retry?
+                this.router.navigateByUrl(`/join/${this.sprint_id}`);
+                return throwError(err);
+              })
+            )
+            .subscribe(res => {
+              if (res && res.s === 200) {
+                if (res.d['Id'] === this.sprint_id) {
+                  this.internal.updateSprint(res.d as Sprint);
+                } else {
+                  throw new AssertionError({message: "The server messed up"});
+                }
+              } else if (res) { //response indicates the sprintID is invalid
+                  console.log("Unexpected responce:" + res);
+              }
+            })
           } else {
             console.log("This user doesn't exist. Might have been garbage collected");
             this.router.navigateByUrl(`/join/${this.sprint_id}`);
