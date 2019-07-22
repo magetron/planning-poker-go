@@ -49,6 +49,8 @@ export class TopBarComponent implements OnInit {
           this.comms.deleteUser (this.sprint.Id, this.user.Id).subscribe(response => {
             if (response == null) {
               console.log("User logged out");
+              localStorage.removeItem("user");
+              //FIXME: remove from localStorage
               this.router.navigateByUrl(`/new`);
             } else {
               console.log("User log out failed");
@@ -57,7 +59,7 @@ export class TopBarComponent implements OnInit {
         }
 
       } else {
-        console.log("Error");
+        console.log("Network failed while trying to log out");
       }
     });
   }

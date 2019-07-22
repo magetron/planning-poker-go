@@ -11,7 +11,7 @@ import { Round } from '../models/round';
 
 export class InternalService {
 
-  private user = new BehaviorSubject<User>({Name: "", Id: "", Vote: -1, Admin: false});
+  private user = new BehaviorSubject<User>(null);
   private sprint = new BehaviorSubject<Sprint>({Name: "", Id: ""});
   private stats = new BehaviorSubject<number[]>([0,0,0]);
   private round = new BehaviorSubject<Round>({Name: "default",Id : 0,Avg : 0,Med: 0,Final: 0,Archived : false,CreationTime : 0,});
@@ -44,5 +44,23 @@ export class InternalService {
   showVote(isVoteShown: boolean) {
     this.isVoteShown.next(isVoteShown);
   }
+
+  logInUser(user) {
+    this.updateUser(user);
+    localStorage.setItem("user", JSON.stringify(user))
+  }
+
+  isUserAllowed() {
+    let user = localStorage.getItem("user");
+    if (user != null) {
+      this.updateUser(JSON.parse(user) as User)
+      return true;
+    } else {
+      return false
+    }
+    return localStorage.getItem("user") != null; 
+  }
+
+
 
 }

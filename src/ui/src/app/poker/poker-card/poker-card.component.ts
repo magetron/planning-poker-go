@@ -31,19 +31,11 @@ export class PokerCardComponent extends Cardify implements OnInit {
     this.internal.user$.subscribe(
       res => this.user = res
     )
-    //Kick undefined users to rejoin, for example when reloading page
-    if (!this.user || !this.user.Id) {
-      this.router.navigate(["join", this.sprint_id])
-    }
-    //this.internal.round$.subscribe(msg => {
-    //  if (msg.Archived) {
-    //    var i = document.getElementsByClassName("card-secondary");
-    //    for(var j=0; j < i.length; j++)
-    //    {
-    //      i[j].classList.remove("card-secondary");
-    //    }
-    //  }
-    //});
+    // //Kick undefined users to rejoin, for example when reloading page
+    // if (!this.user || !this.user.Id) {
+    //   this.router.navigate(["join", this.sprint_id])
+    // }
+    //this.internal.round$.subscribe(msg => this.round = msg);
   }
 
   vote(point: number) {

@@ -14,6 +14,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule, MatInputModule, MatButtonModule, MatCardModule, MatToolbarModule, MatIconModule } from '@angular/material';
 import { TopBarComponent } from './top-bar/top-bar.component';
 import { FlexLayoutModule } from '@angular/flex-layout'
+import { AuthGuard } from './_guards/auth.guard';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,7 @@ import { FlexLayoutModule } from '@angular/flex-layout'
     NewSprintComponent,
     ShareComponent,
     JoinComponent,
-    TopBarComponent
+    TopBarComponent,
   ],
   imports: [
     BrowserModule,
@@ -38,7 +39,7 @@ import { FlexLayoutModule } from '@angular/flex-layout'
     PokerModule,
     FlexLayoutModule
   ],
-  providers: [ CommsService ],
+  providers: [ CommsService, AuthGuard ],
   bootstrap: [ AppComponent ]
 })
 

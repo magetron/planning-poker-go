@@ -8,9 +8,7 @@
   <div fxFlex fxLayoutAlign="end">
     <span margin-left=10em>{{user?.Name}}</span>
   </div>
-  <ng-template [ngIf]="user?.Id">
-  <div fxFlex fxLayoutAlign="end">
+  <div fxFlex fxLayoutAlign="end" *ngIf="user && user.Name !== ''">
       <button mat-raised-button [disabled]="isInvalid()" (click)="logOut()">Logout</button>
   </div>
-  </ng-template>
 </mat-toolbar>
