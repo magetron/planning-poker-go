@@ -20,7 +20,7 @@ export class AuthGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot){
     const sprintId = route.params.sprint_id;
 
-    if(this.internal.isUserAllowed()) {
+    if(this.internal.reloadOrKickUser()) {
       return true;
     } else {
       console.log(sprintId);

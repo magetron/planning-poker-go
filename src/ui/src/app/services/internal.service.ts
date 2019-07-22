@@ -52,7 +52,7 @@ export class InternalService {
     localStorage.setItem("user", JSON.stringify(user))
   }
 
-  isUserAllowed() {
+  reloadOrKickUser() {
     let user = localStorage.getItem("user");
     if (user != null) {
       this.updateUser(JSON.parse(user) as User)
@@ -60,7 +60,6 @@ export class InternalService {
     } else {
       return false
     }
-    return localStorage.getItem("user") != null; 
   }
 
   logoutAllUsers(logoutAll: boolean) {
