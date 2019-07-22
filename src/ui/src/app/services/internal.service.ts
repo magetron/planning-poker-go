@@ -45,6 +45,13 @@ export class InternalService {
   }
 
   isUserAllowed() {
+    let user = localStorage.getItem("user");
+    if (user != null) {
+      this.updateUser(JSON.parse(user) as User)
+      return true;
+    } else {
+      return false
+    }
     return localStorage.getItem("user") != null; 
   }
 
