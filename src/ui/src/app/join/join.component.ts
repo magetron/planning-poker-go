@@ -7,6 +7,7 @@ import { CommsService } from '../services/comms.service';
 import { InternalService } from '../services/internal.service';
 import { Sprint } from '../models/sprint';
 import { User } from '../models/user';
+import { AssertionError } from 'assert';
 
 @Component({
   selector: 'app-join',
@@ -31,13 +32,13 @@ export class JoinComponent implements OnInit {
   ngOnInit() {
     this.intialize();
     this.sprint.Id = this.route.snapshot.paramMap.get('sprint_id');
-    //TODO: get sprint title from backend
     //if you get a sprint title, set the sprint
     this.comms.getSprintDetails(this.sprint.Id)
       .pipe(
         catchError(err => {
           console.log('Connection error', err);
           //TODO: Handle properly - notify the user, retry?
+          this.router.navigateByUrl(`/new`);
           return throwError(err);
         })
       )
@@ -45,10 +46,12 @@ export class JoinComponent implements OnInit {
         if (res && res.s === 200) {
           if (res.d['Id'] === this.sprint.Id) {
             this.sprint.Name = res.d['Name'];
-            this.internal.updateSprint(this.sprint);
+            this.internal.updateSprint(res.d as Sprint);
           } else {
-            //TODO: redirect - invalid Id
+            throw new AssertionError({message: "The server messed up"});
           }
+        } else if (res) { //response indicates the sprintID is invalid
+            console.log("Unexpected responce:" + res);
         }
       })
   }
@@ -64,10 +67,8 @@ export class JoinComponent implements OnInit {
       ).subscribe(
         res => {
           if (res && res.s === 200) {
-            this.user.Id = res.d['Id'];
-            this.user.Name = res.d['Name'];
-            this.user.Admin = res.d['Admin'];
-            this.internal.updateUser(this.user);
+//            this.user = res.d as User;
+            this.internal.logInUser(res.d as User);
             this.router.navigateByUrl(`/table/${this.sprint.Id}`);
           } else if (res && res.s === 404) {
             console.log("Sprint not found");
@@ -84,6 +85,7 @@ export class JoinComponent implements OnInit {
 
   intialize(): void {
     console.log("intialize func is being called")
+    /*
     this.user = {
       Name: "",
       Id: "",
@@ -93,6 +95,6 @@ export class JoinComponent implements OnInit {
     this.sprint = {
       Name: "",
       Id: "",
-    }
+    }*/
   }
 }

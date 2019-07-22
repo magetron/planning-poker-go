@@ -1,6 +1,9 @@
 import { Component, OnInit, Input, Inject} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { AssertionError } from 'assert';
 
 import { InternalService } from 'src/app/services/internal.service';
 import { User } from 'src/app/models/user';
@@ -48,6 +51,28 @@ export class PokerControlComponent implements OnInit {
   ngOnInit() {
     this.sprint_id = this.route.snapshot.paramMap.get('sprint_id');
     this.baseUrl = globals.baseUrl;
+
+    this.comms.getSprintDetails(this.sprint_id)
+    .pipe(
+      catchError(err => {
+        console.log('Connection error', err);
+        //TODO: Handle properly - notify the user, retry?
+        this.router.navigateByUrl(`/join/${this.sprint_id}`);
+        return throwError(err);
+      })
+    )
+    .subscribe(res => {
+      if (res && res.s === 200) {
+        if (res.d['Id'] === this.sprint_id) {
+          this.internal.updateSprint(res.d as Sprint);
+        } else {
+          throw new AssertionError({message: "The server messed up"});
+        }
+      } else if (res) { //response indicates the sprintID is invalid
+          console.log("Unexpected response:" + res);
+      }
+    })
+
 
     this.roundInfoSocket$ = webSocket({
       url: globals.roundInfoSocket,
