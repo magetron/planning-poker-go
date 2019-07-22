@@ -91,10 +91,10 @@ export class JoinComponent implements OnInit {
       Id: "",
       Vote: -1,
       Admin: false,
-    }
+    }*/
     this.sprint = {
       Name: "",
       Id: "",
-    }*/
+    }
   }
 }
