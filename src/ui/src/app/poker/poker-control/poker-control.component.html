@@ -81,7 +81,7 @@
               </mat-card>
             </div>
 
-
+            <ng-template [ngIf]="user.Admin">
                 <div fxflex="" style="flex: 1 1 0%; box-sizing: border-box;">
                   <mat-card class="background-third" style="max-width: 90%">
                     <mat-card-content>
@@ -96,7 +96,7 @@
                     </mat-card-actions>
                   </mat-card>
                 </div>
-
+              </ng-template>
 
           </div>
         </div>

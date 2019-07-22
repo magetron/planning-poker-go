@@ -183,7 +183,11 @@ func (us *UsersService) Update(conn *websocket.Conn) {
 			log.Println(err)
 			return
 		}
-		log.Printf("User update websocket received id: %s", string(p))
+
+		if DEV {
+			log.Printf("User update websocket received id: %s", string(p))
+		}
+
 		for _, users := range us.AllUsers {
 			if users.SprintId == string(p) {
 				var tmpReturnUserArray []User
@@ -218,7 +222,6 @@ func (us *UsersService) Update(conn *websocket.Conn) {
 }
 
 func (us *UsersService) SetAdmin(ctx context.Context) error {
-
 	data, dataErr := ctx.RequestData()
 
 	if dataErr != nil {
@@ -231,42 +234,32 @@ func (us *UsersService) SetAdmin(ctx context.Context) error {
 	dataMap := data.(map[string]interface{})
 	successorId := dataMap["Successor"].(string)
 
+	autoSet := successorId == ""
+
 	for _, users := range us.AllUsers {
-		if users.SprintId == sprintId && len(users.Users) > 1 {
-			foundOne := false
-			for i, user := range users.Users {
-				if user.Id == userId {
-					if !user.Admin {
-						log.Printf("Forbidden non-admin trying to appoint successor from %s to %s", userId, successorId)
-						return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
-					}
-					users.Users[1], users.Users[i] = users.Users[i], users.Users[1]
-					if foundOne {
-						users.Users[1].Admin = false
-						users.Users[0].Admin = true
-						log.Printf("Transfered admin from %s to %s", users.Users[1].Id, users.Users[0].Id)
-						return goweb.Respond.WithOK(ctx)
-					} else {
-						foundOne = true
-					}
-				} else if user.Id == successorId {
-					users.Users[0], users.Users[i] = users.Users[i], users.Users[0]
-					if foundOne {
-						users.Users[1].Admin = false
-						users.Users[0].Admin = true
-						log.Printf("Transfered admin from %s to %s", users.Users[1].Id, users.Users[0].Id)
-						return goweb.Respond.WithOK(ctx)
-					} else {
-						foundOne = true
-					}
+		if users.SprintId == sprintId && len(users.Users) >= 1 {
+			if users.Users[0].Id != userId {
+				log.Printf("Forbidden non-admin trying to appoint successor from %s to %s", userId, successorId)
+				return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
+			}
+			for index, user := range users.Users {
+				if successorId == user.Id || (autoSet && index != 0) {
+					users.Users[index].Admin = true
+					users.Users[0].Admin = false
+					users.Users[0], users.Users[index] = users.Users[index], users.Users[0]
+					log.Printf("Transfered admin from %s to %s", users.Users[index].Id, users.Users[0].Id)
+					return goweb.Respond.WithOK(ctx)
 				}
 			}
-			if DEV {
-				log.Printf("Sprint %s not found for set admin", sprintId)
-			}
+			log.Printf("Transfer admin failed due to successor %s not found", successorId)
 			return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 		}
 	}
+
+	if DEV {
+		log.Printf("Sprint %s not found for set admin", sprintId)
+	}
+
 	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 }
 

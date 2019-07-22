@@ -1,6 +1,5 @@
 <div fxLayout="row" fxLayoutAlign="space-around stretch">
-  <button mat-raised-button class="card-primary" id={{point}}
-  (click)="vote(point)" *ngFor="let point of points">
+  <button mat-raised-button class="card-primary" (click)="vote(point)" id={{point}} *ngFor="let point of points">
     <h1>
         <span>{{cardify(point, true)}}</span>
     </h1>

@@ -133,6 +133,14 @@ export class PokerControlComponent implements OnInit {
         console.log("Server communication error");
       }
     });
+
+    this.comms.showVote(this.sprint_id, this.user.Id, false ).subscribe(response => {
+      if (response && response.s === 200) {
+        console.log("Set Vote to be shown?", false);
+      } else {
+        console.log("Set Vote to be shown failed");
+      }
+    })
   }
 
   refreshSocket(): void {
@@ -172,8 +180,7 @@ export class PokerControlComponent implements OnInit {
   HideLastElementinList(title: Round, displayTitle: string): any{
     if (title.Archived){
       return title.Final;
-    }
-    if (title.Name == this.curStory.Name && !title.Archived) {
+    } else if (title.Name == this.curStory.Name) {
       return "voting";
     } else {
       return title.Final;

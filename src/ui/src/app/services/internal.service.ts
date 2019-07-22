@@ -16,12 +16,14 @@ export class InternalService {
   private stats = new BehaviorSubject<number[]>([0,0,0]);
   private round = new BehaviorSubject<Round>({Name: "default",Id : 0,Avg : 0,Med: 0,Final: 0,Archived : false,CreationTime : 0,});
   private isVoteShown = new BehaviorSubject<boolean>(false);
+  private logoutAll = new BehaviorSubject<boolean>(false);
 
   user$ = this.user.asObservable();
   sprint$ = this.sprint.asObservable();
   stats$ = this.stats.asObservable();
   round$ = this.round.asObservable();
   isVoteShown$ = this.isVoteShown.asObservable();
+  logoutAll$ = this.logoutAll.asObservable();
 
   constructor() { }
 
@@ -61,6 +63,8 @@ export class InternalService {
     return localStorage.getItem("user") != null; 
   }
 
-
+  logoutAllUsers(logoutAll: boolean) {
+    this.logoutAll.next(logoutAll);
+  }
 
 }

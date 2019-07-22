@@ -144,21 +144,17 @@ export class MemberslistComponent extends Cardify implements OnInit {
   }
 
   setNextAdmin(successor : User) : void{
-    console.log("debug succesor Id ", successor.Id);
-    console.log("debug current user Id ", this.user.Id);
-    console.log("debug is current user Admin ?", this.user.Admin);
-    
     if (this.user.Admin){
       this.comms.appointSuccessor(this.sprint_id, this.user.Id, successor.Id).subscribe(response => {
         if (response && response.status === 200) {
           console.log("Set successor");
+          this.internal.updateUser(this.user);
           //TODO:update front end this.user via emmit
         } else {
           console.log("Set successor failed");
         }
       })
     }
-    console.log("func ended");
   }
 
   updateMe(): User {

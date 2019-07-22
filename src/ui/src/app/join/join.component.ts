@@ -18,7 +18,6 @@ import { AssertionError } from 'assert';
 export class JoinComponent implements OnInit {
 
   sprint: Sprint;
-
   username: string;
   user: User;
 
