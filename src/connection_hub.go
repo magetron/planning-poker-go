@@ -2,13 +2,6 @@ package main
 
 import "github.com/gorilla/websocket"
 
-type Client struct {
-	Name string
-	Hub *ConnHub
-	Conn *websocket.Conn
-	Send chan []byte
-}
-
 type ConnHub struct {
 	Clients map[*Client]string
 	Broadcast chan []byte

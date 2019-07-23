@@ -46,10 +46,10 @@ func mapRoutes() {
 	_, _ = goweb.Map("userinfo", func(ctx context.Context) error {
 		r := ctx.HttpRequest()
 		w := ctx.HttpResponseWriter()
-		wsupgrader.CheckOrigin = func(r *http.Request) bool {
+		wsUpgrader.CheckOrigin = func(r *http.Request) bool {
 			return true
 		}
-		ws, err := wsupgrader.Upgrade(w, r, nil)
+		ws, err := wsUpgrader.Upgrade(w, r, nil)
 		if err != nil {
 			log.Println(err)
 		}
