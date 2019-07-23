@@ -9,7 +9,6 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/gorilla/websocket"
 	"github.com/stretchr/goweb"
 	"github.com/stretchr/goweb/context"
 )
@@ -47,10 +46,10 @@ func mapRoutes() {
 	_, _ = goweb.Map("userinfo", func(ctx context.Context) error {
 		r := ctx.HttpRequest()
 		w := ctx.HttpResponseWriter()
-		upgrader.CheckOrigin = func(r *http.Request) bool {
+		wsupgrader.CheckOrigin = func(r *http.Request) bool {
 			return true
 		}
-		ws, err := upgrader.Upgrade(w, r, nil)
+		ws, err := wsupgrader.Upgrade(w, r, nil)
 		if err != nil {
 			log.Println(err)
 		}
@@ -62,10 +61,10 @@ func mapRoutes() {
 	_, _ = goweb.Map("roundinfo", func(ctx context.Context) error {
 		r := ctx.HttpRequest()
 		w := ctx.HttpResponseWriter()
-		upgrader.CheckOrigin = func(r *http.Request) bool {
+		wsupgrader.CheckOrigin = func(r *http.Request) bool {
 			return true
 		}
-		ws, err := upgrader.Upgrade(w, r, nil)
+		ws, err := wsupgrader.Upgrade(w, r, nil)
 		if err != nil {
 			log.Println(err)
 		}
@@ -77,10 +76,10 @@ func mapRoutes() {
 	_, _ = goweb.Map("coffeeinfo", func(ctx context.Context) error {
 		r := ctx.HttpRequest()
 		w := ctx.HttpResponseWriter()
-		upgrader.CheckOrigin = func(r *http.Request) bool {
+		wsupgrader.CheckOrigin = func(r *http.Request) bool {
 			return true
 		}
-		ws, err := upgrader.Upgrade(w, r, nil)
+		ws, err := wsupgrader.Upgrade(w, r, nil)
 		if err != nil {
 			log.Println(err)
 		}
