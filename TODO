@@ -1,0 +1,27 @@
+Powered by Interns
+
+
+Next Steps:
+
+* Stable / usable
+* JIRA Integration in Dev process
+* Only can vote when hidden
+* Angular testing
+* ALB / Fargate / ECS
+
+Elim 
+re-hide votes for new rounds
+layout of archive rounds / recommendations
+Custom Archive Results - User Input
+responsive / mobile UI
+
+Przemek
+rejoin / quit
+Show statistics as cards
+responsive / mobile UI
+
+Patrick
+hide recommendations until show 	
+Push websocket
+Automated CI for each commit - if possible
+Coffee break
