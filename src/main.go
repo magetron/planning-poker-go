@@ -44,11 +44,6 @@ func mapRoutes() {
 	_ = goweb.MapController("sprints/[sprintId]/rounds", rc)
 	_ = goweb.MapController("sprints/[sprintId]/users", us)
 
-	upgrader := websocket.Upgrader{
-		ReadBufferSize:  1024,
-		WriteBufferSize: 1024,
-	}
-
 	_, _ = goweb.Map("userinfo", func(ctx context.Context) error {
 		r := ctx.HttpRequest()
 		w := ctx.HttpResponseWriter()
