@@ -22,6 +22,7 @@ var DEV = true
 var sc = new(SprintsController)
 var rc = new(RoundsController)
 var us = new(UsersService)
+var hc = new(HubController)
 
 func mapRoutes() {
 
@@ -43,7 +44,7 @@ func mapRoutes() {
 	_ = goweb.MapController("sprints/[sprintId]/rounds", rc)
 	_ = goweb.MapController("sprints/[sprintId]/users", us)
 
-	_, _ = goweb.Map("info/[sprintId]", hubHandler)
+	_, _ = goweb.Map("info/[sprintId]", hc.handleHubs)
 
 	/*_, _ = goweb.Map("userinfo", func(ctx context.Context) error {
 		r := ctx.HttpRequest()
