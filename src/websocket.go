@@ -102,7 +102,7 @@ func (c *Client) writePump() {
 	}
 }
 
-func wsHandler (hub *ConnHub, ctx context.Context) error {
+func wsHandler (sprintId string, hub *ConnHub, ctx context.Context) error {
 	r := ctx.HttpRequest()
 	w := ctx.HttpResponseWriter()
 	conn, err := wsUpgrader.Upgrade(w, r, nil)
@@ -110,9 +110,8 @@ func wsHandler (hub *ConnHub, ctx context.Context) error {
 		log.Println(err)
 	}
 
-	id := ctx.PathValue("sprintId")
 	client := &Client{
-		Id: id,
+		Id: sprintId,
 		Hub: hub,
 		Conn: conn,
 		Send: make(chan []byte, 256),
@@ -124,7 +123,3 @@ func wsHandler (hub *ConnHub, ctx context.Context) error {
 
 	return err
 }
-
-
-
-func hubHandler
