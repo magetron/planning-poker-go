@@ -22,7 +22,7 @@ var DEV = true
 var sc = new(SprintsController)
 var rc = new(RoundsController)
 var us = new(UsersService)
-var hc = new(HubController)
+var hc = new(HubsController)
 
 func mapRoutes() {
 

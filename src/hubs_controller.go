@@ -4,11 +4,11 @@ import (
 	"github.com/stretchr/goweb/context"
 )
 
-type HubController struct {
+type HubsController struct {
 	Hubs []*ConnHub
 }
 
-func (hc *HubController) handleHubs (ctx context.Context) error {
+func (hc *HubsController) handleHubs (ctx context.Context) error {
 	sprintId := ctx.PathValue("sprintId");
 	for _, hub := range hc.Hubs {
 		if hub.Id == sprintId {
