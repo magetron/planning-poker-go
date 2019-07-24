@@ -100,7 +100,7 @@ func (c *Client) writePump() {
 
 			w, err := c.Conn.NextWriter(websocket.TextMessage)
 			if err != nil {
-				log.Fatal(err)
+				log.Print(err)
 			}
 			_, _ = w.Write(message)
 
@@ -127,7 +127,7 @@ func wsHandler (sprintId string, hub *ConnHub, ctx context.Context) error {
 	w := ctx.HttpResponseWriter()
 	conn, err := wsUpgrader.Upgrade(w, r, nil)
 	if err != nil {
-		log.Println(err)
+		log.Print(err)
 	}
 
 	client := &Client{
