@@ -12,9 +12,9 @@ import (
 )
 
 const (
-	writeWait = 10 * time.Second
-	pingPeroid = (pongWait * 9) / 10
-	pongWait = 60 * time.Second
+	writeWait      = 10 * time.Second
+	pingPeriod     = (pongWait * 9) / 10
+	pongWait       = 60 * time.Second
 	maxMessageSize = 512
 )
 
@@ -77,20 +77,11 @@ func (c *Client) readPump() {
 				}
 			}
 		}
-		/*_, message, err := c.Conn.ReadMessage()
-		if err != nil {
-			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				log.Printf("error: %v", err)
-			}
-			break
-		}
-		message = bytes.TrimSpace(bytes.Replace(message, []byte{'\n'}, []byte{' '}, -1))
-		c.Hub.Broadcast <- message*/
 	}
 }
 
 func (c *Client) writePump() {
-	ticker := time.NewTicker(pingPeroid)
+	ticker := time.NewTicker(pingPeriod)
 	defer func() {
 		ticker.Stop()
 		err := c.Conn.Close()
