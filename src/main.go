@@ -46,51 +46,6 @@ func mapRoutes() {
 
 	_, _ = goweb.Map("info/[sprintId]", hc.handleHubs)
 
-	/*_, _ = goweb.Map("userinfo", func(ctx context.Context) error {
-		r := ctx.HttpRequest()
-		w := ctx.HttpResponseWriter()
-		wsUpgrader.CheckOrigin = func(r *http.Request) bool {
-			return true
-		}
-		ws, err := wsUpgrader.Upgrade(w, r, nil)
-		if err != nil {
-			log.Println(err)
-		}
-		log.Println("WebSocket userinfo/ Client Connected")
-		us.Update(ws)
-		return ws.Close()
-	})
-
-	_, _ = goweb.Map("roundinfo", func(ctx context.Context) error {
-		r := ctx.HttpRequest()
-		w := ctx.HttpResponseWriter()
-		wsUpgrader.CheckOrigin = func(r *http.Request) bool {
-			return true
-		}
-		ws, err := wsUpgrader.Upgrade(w, r, nil)
-		if err != nil {
-			log.Println(err)
-		}
-		log.Println("WebSocket roundinfo/ Client Connected")
-		rc.Update(ws)
-		return ws.Close()
-	})
-
-	_, _ = goweb.Map("coffeeinfo", func(ctx context.Context) error {
-		r := ctx.HttpRequest()
-		w := ctx.HttpResponseWriter()
-		wsUpgrader.CheckOrigin = func(r *http.Request) bool {
-			return true
-		}
-		ws, err := wsUpgrader.Upgrade(w, r, nil)
-		if err != nil {
-			log.Println(err)
-		}
-		log.Println("WebSocket coffeeinfo/ Client Connected")
-		rc.Update(ws)
-		return ws.Close()
-	})*/
-
 	_, _ = goweb.Map("POST", "gc", garbageCollector)
 
 	_, _ = goweb.Map("POST", "sprints/[sprintId]/users/[userId]/setadmin", us.SetAdmin)
