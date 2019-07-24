@@ -9,7 +9,6 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/gorilla/websocket"
 	"github.com/stretchr/goweb"
 	"github.com/stretchr/goweb/context"
 )
@@ -23,6 +22,7 @@ var DEV = true
 var sc = new(SprintsController)
 var rc = new(RoundsController)
 var us = new(UsersService)
+var hc = new(HubsController)
 
 func mapRoutes() {
 
@@ -44,55 +44,7 @@ func mapRoutes() {
 	_ = goweb.MapController("sprints/[sprintId]/rounds", rc)
 	_ = goweb.MapController("sprints/[sprintId]/users", us)
 
-	upgrader := websocket.Upgrader{
-		ReadBufferSize:  1024,
-		WriteBufferSize: 1024,
-	}
-
-	_, _ = goweb.Map("userinfo", func(ctx context.Context) error {
-		r := ctx.HttpRequest()
-		w := ctx.HttpResponseWriter()
-		upgrader.CheckOrigin = func(r *http.Request) bool {
-			return true
-		}
-		ws, err := upgrader.Upgrade(w, r, nil)
-		if err != nil {
-			log.Println(err)
-		}
-		log.Println("WebSocket userinfo/ Client Connected")
-		us.Update(ws)
-		return ws.Close()
-	})
-
-	_, _ = goweb.Map("roundinfo", func(ctx context.Context) error {
-		r := ctx.HttpRequest()
-		w := ctx.HttpResponseWriter()
-		upgrader.CheckOrigin = func(r *http.Request) bool {
-			return true
-		}
-		ws, err := upgrader.Upgrade(w, r, nil)
-		if err != nil {
-			log.Println(err)
-		}
-		log.Println("WebSocket roundinfo/ Client Connected")
-		rc.Update(ws)
-		return ws.Close()
-	})
-
-	_, _ = goweb.Map("coffeeinfo", func(ctx context.Context) error {
-		r := ctx.HttpRequest()
-		w := ctx.HttpResponseWriter()
-		upgrader.CheckOrigin = func(r *http.Request) bool {
-			return true
-		}
-		ws, err := upgrader.Upgrade(w, r, nil)
-		if err != nil {
-			log.Println(err)
-		}
-		log.Println("WebSocket coffeeinfo/ Client Connected")
-		rc.Update(ws)
-		return ws.Close()
-	})
+	_, _ = goweb.Map("info/[sprintId]", hc.handleHubs)
 
 	_, _ = goweb.Map("POST", "gc", garbageCollector)
 
