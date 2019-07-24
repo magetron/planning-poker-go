@@ -1,16 +1,16 @@
 <mat-card class="background-secondary">
   <mat-card-header>
     <mat-card-title class="text-primary">
-      A session has been created for {{share.name}}.
+      A session has been created for {{share.Name}}.
     </mat-card-title>
     <mat-card-subtitle>
       Invite others to join your Planning Poker session:
-      <a [routerLink]="['/join', share.id]">
-        <p> {{baseUrl}}/join/{{share.id}} </p>
+      <a [routerLink]="['/join', share.Id]">
+        <p> {{baseUrl}}/join/{{share.Id}} </p>
       </a>
     </mat-card-subtitle>
   </mat-card-header>
   <mat-card-actions fxLayoutAlign="end">
-    <button (click)="copylink(baseUrl + '/join/' + share.id)" mat-flat-button color="accent"> COPY </button>
+    <button (click)="copylink(baseUrl + '/join/' + share.Id)" mat-flat-button color="accent"> COPY </button>
   </mat-card-actions>
 </mat-card>

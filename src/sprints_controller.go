@@ -1,8 +1,10 @@
 package main
 
 import (
+	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/stretchr/goweb"
 	"github.com/stretchr/goweb/context"
@@ -35,6 +37,7 @@ func (sc *SprintsController) Create(ctx context.Context) error {
 	newid, _ := sid.Generate()
 	sprint.Id = newid
 	sprint.Name = dataMap["Name"].(string)
+	sprint.CreationTime = time.Now()
 
 	sc.Sprints = append(sc.Sprints, sprint)
 	log.Printf("New Sprint with SprintId %s", sprint.Id)
@@ -87,4 +90,29 @@ func (sc *SprintsController) Delete(id string, ctx context.Context) error {
 	log.Printf("Deleted Sprint %s", id)
 
 	return goweb.Respond.WithOK(ctx)
+}
+
+func (sc *SprintsController) Update (conn websocket.Conn) {
+	for {
+		messageType, p, err := conn.ReadMessage()
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		log.Printf("Sprint coffee websocket received id: %s", string(p))
+		for _, sprint := range sc.Sprints {
+			if sprint.Id == string(p) {
+				statusStr := ""
+				if time.Now().Sub(sprint.CreationTime).Seconds() > 15 {
+					statusStr = "true"
+				} else {
+					statusStr = "false"
+				}
+				if err := conn.WriteMessage(messageType, []byte(statusStr)); err != nil {
+					log.Println(err)
+					return
+				}
+			}
+		}
+	}
 }

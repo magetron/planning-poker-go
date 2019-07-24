@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs'; 
+import { Observable } from 'rxjs';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
 import * as globals from './globals.service';
@@ -48,19 +48,19 @@ export class CommsService {
     }
   }
 
-  getSprintDetails(id: string): Observable<SimpleResponse> {
-    const result = this.httpClient.get<SimpleResponse>(
+  getSprintDetails(id: string): Observable<ComplexResponse> {
+    const result = this.httpClient.get<ComplexResponse>(
       `${globals.apiUrl}/sprints/${id}`, HTTPOPTIONS);
     return result;
   }
 
-  joinSprint(username: string, sprint: Sprint): Observable<SimpleResponse> {
+  joinSprint(username: string, sprint: Sprint): Observable<ComplexResponse> {
     let jsonObject = {
       Name: username,
     }
 
-    const result = this.httpClient.post<SimpleResponse>(
-      `${globals.apiUrl}/sprints/${sprint.id}/users`, jsonObject, HTTPOPTIONS);
+    const result = this.httpClient.post<ComplexResponse>(
+      `${globals.apiUrl}/sprints/${sprint.Id}/users`, jsonObject, HTTPOPTIONS);
     return result;
   }
 
@@ -81,6 +81,16 @@ export class CommsService {
     return result;
   }
 
+  appointSuccessor(sprint_id: string, user_id: string, successor_id:string): Observable<any> {
+    let jsonObject = {
+      "Successor": successor_id
+    }
+    const result = this.httpClient.post<SimpleResponse>(
+      `${globals.apiUrl}/sprints/${sprint_id}/users/${user_id}/setadmin`,
+       jsonObject, HTTPOPTIONS_NO_BODY);
+    return result;
+  }
+
   addStory (sprint_id: string, sprint_story: string): Observable<any>{
     let jsonObject = {
       "Name": sprint_story,
@@ -89,5 +99,38 @@ export class CommsService {
       `${globals.apiUrl}/sprints/${sprint_id}/rounds`,
        jsonObject, HTTPOPTIONS_NO_BODY);
     return result;
+  }
+
+  archiveRound (sprint_id: string, round_no:number, avg: number, med:number, fin:number): Observable<any>{
+    let jsonObject = {
+      "Average": avg,
+      "Median": med,
+      "Final": fin,
     }
+    const result = this.httpClient.put<SimpleResponse>(
+      `${globals.apiUrl}/sprints/${sprint_id}/rounds/${round_no}`,
+       jsonObject, HTTPOPTIONS_NO_BODY);
+    return result;
+  }
+
+  deleteUser (sprint_id: string, user_id: string): Observable<any>{
+    const result = this.httpClient.delete<SimpleResponse>(
+      `${globals.apiUrl}/sprints/${sprint_id}/users/${user_id}`,HTTPOPTIONS);
+    return result;
+  }
+
+  getUserDetails (sprint_id: string, user_id: string): Observable<ComplexResponse>{
+    const result = this.httpClient.get<ComplexResponse>(
+      `${globals.apiUrl}/sprints/${sprint_id}/users/${user_id}`, HTTPOPTIONS);
+    return result;
+  }
+
+  showVote (sprint_id: string, user_id: string, showVote : boolean): Observable<SimpleResponse>{
+    let jsonObject = {
+      "VoteShown": showVote,
+    }
+    const result = this.httpClient.post<SimpleResponse>(
+      `${globals.apiUrl}/sprints/${sprint_id}/users/${user_id}/showvote`,jsonObject, HTTPOPTIONS_NO_BODY);
+    return result;
+  }
 }

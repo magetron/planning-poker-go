@@ -1,9 +1,9 @@
-import { NgModule } from '@angular/core';
+import { NgModule, Inject} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { MatTableModule, MatButtonModule, MatInputModule,  MatFormFieldModule, MatCardModule} from '@angular/material';
+import { MatListModule, MatTableModule, MatButtonModule, MatInputModule,  MatFormFieldModule, MatCardModule,  MatToolbarModule} from '@angular/material';
 
 //import page 3 components here
 import { PokerCardComponent } from './poker-card/poker-card.component';
@@ -14,7 +14,7 @@ import { PokerControlComponent } from './poker-control/poker-control.component';
   declarations: [
     PokerCardComponent,
     MemberslistComponent,
-    PokerControlComponent,
+    PokerControlComponent
   ],
 
   //imports for mega data within other modules
@@ -22,11 +22,13 @@ import { PokerControlComponent } from './poker-control/poker-control.component';
     CommonModule,
     BrowserModule,
     FlexLayoutModule,
+    MatListModule,
     MatCardModule,
     MatTableModule,
     MatButtonModule,
     MatInputModule,
     MatFormFieldModule,
+    MatToolbarModule,
     FormsModule
   ],
 

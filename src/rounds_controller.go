@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/stretchr/goweb"
 	"github.com/stretchr/goweb/context"
@@ -45,7 +46,9 @@ func (rc *RoundsController) Create(ctx context.Context) error {
 	round.Name = dataMap["Name"].(string)
 	round.Avg = 0
 	round.Med = 0
+	round.Final = 0
 	round.Archived = false
+	round.CreationTime = time.Now().Unix()
 
 	foundId := false
 	for _, rs := range rc.AllRounds {
@@ -136,9 +139,9 @@ func (rc *RoundsController) DeleteMany(ctx context.Context) error {
 
 }
 
-func (rc *RoundsController) Delete (id string, ctx context.Context) error {
+func (rc *RoundsController) Replace (id string, ctx context.Context) error {
 	voteData, voteErr := ctx.RequestData()
-
+	
 	if voteErr != nil {
 		return goweb.API.RespondWithError(ctx, http.StatusInternalServerError, voteErr.Error())
 	}
@@ -157,6 +160,7 @@ func (rc *RoundsController) Delete (id string, ctx context.Context) error {
 	voteMap := voteData.(map[string]interface{})
 	voteAvg := voteMap["Average"].(float64)
 	voteMed := voteMap["Median"].(float64)
+	voteFin := voteMap["Final"].(float64)
 
 	for _, rs := range rc.AllRounds {
 		if rs.SprintId == urlId {
@@ -164,14 +168,15 @@ func (rc *RoundsController) Delete (id string, ctx context.Context) error {
 				if r.Id == roundId {
 					r.Avg = voteAvg
 					r.Med = voteMed
+					r.Final = voteFin
 					r.Archived = true
+					log.Printf("Round %d in Sprint %s is archived.", r.Id, rs.SprintId)
+					return goweb.API.RespondWithData(ctx, r)
 				}
 			}
 		}
 	}
-
-	return goweb.Respond.WithOK(ctx)
-
+	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 }
 
 func (rc *RoundsController) Update(conn *websocket.Conn) {
@@ -181,7 +186,10 @@ func (rc *RoundsController) Update(conn *websocket.Conn) {
 			log.Println(err)
 			return
 		}
-		log.Printf("User update websocket received id: %s", string(p))
+		if DEV {
+			log.Printf("Round update websocket received id: %s", string(p))
+		}
+
 		for _, rounds := range rc.AllRounds {
 			if rounds.SprintId == string(p) {
 				roundsStr, roundsErr := json.Marshal(rounds.Rounds)

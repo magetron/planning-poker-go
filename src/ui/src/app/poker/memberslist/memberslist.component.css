@@ -5,3 +5,10 @@
 .mat-cell {
   padding: 8px 8px 8px 0;
 }
+
+.hideV{
+  background-color: #FFD700;
+}
+.showV{
+  background-color: #F08080;
+}

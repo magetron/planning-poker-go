@@ -4,10 +4,17 @@ static-ui/
 .directory
 
 #running go build would create this
-src/src
+src/planningpoker
+src/gc
 
 #VS code
 .vscode
 
 #IDEA
 .idea
+
+#PEM
+planningpoker-kp.pem
+
+#Docker Image
+planningpoker.tar
