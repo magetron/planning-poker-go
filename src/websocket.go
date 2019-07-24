@@ -1,14 +1,14 @@
 package main
 
 import (
-	"bytes"
+	"encoding/json"
+	_ "encoding/json"
 	"log"
 	"net/http"
 	"time"
-	_ "encoding/json"
 
-	"github.com/stretchr/goweb/context"
 	"github.com/gorilla/websocket"
+	"github.com/stretchr/goweb/context"
 )
 
 const (
@@ -50,12 +50,42 @@ func (c *Client) readPump() {
 		_, message, err := c.Conn.ReadMessage()
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+				log.Printf("connection drop with error %v", err)
+			}
+			break
+		}
+		sprintId := c.Hub.Id
+		if string(message) == "update" {
+			for _, users := range us.AllUsers {
+				if sprintId == users.SprintId {
+					newMessage, jsonErr := json.Marshal(users)
+					if jsonErr != nil {
+						log.Println(jsonErr)
+					}
+					c.Hub.Broadcast <- newMessage
+					break
+				}
+			}
+			for _, rounds := range rc.AllRounds {
+				if sprintId == rounds.SprintId {
+					newMessage, jsonErr := json.Marshal(rounds)
+					if jsonErr != nil {
+						log.Println(jsonErr)
+					}
+					c.Hub.Broadcast <- newMessage
+					break
+				}
+			}
+		}
+		/*_, message, err := c.Conn.ReadMessage()
+		if err != nil {
+			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				log.Printf("error: %v", err)
 			}
 			break
 		}
 		message = bytes.TrimSpace(bytes.Replace(message, []byte{'\n'}, []byte{' '}, -1))
-		c.Hub.Broadcast <- message
+		c.Hub.Broadcast <- message*/
 	}
 }
 
