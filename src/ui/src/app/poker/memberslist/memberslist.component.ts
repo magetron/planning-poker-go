@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { InternalService } from 'src/app/services/internal.service';
 import { CommsService } from 'src/app/services/comms.service';
@@ -25,6 +26,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
   displayedColumns: string[] = ['NAME', 'VOTE'];
 
   constructor(
+    private router: Router,
     private comms: CommsService,
     private internal: InternalService) {
     super();
@@ -71,9 +73,9 @@ export class MemberslistComponent extends Cardify implements OnInit {
     //result is an array of votes
     let result = this.users.map(i => i.Vote);
     //strip non-votes
-    result = result.filter(i => i !== -1 && i !== -2);
+    result = result.filter(i => ![-1, -2, -3].includes(i));
 
-    if(result.length === 0) return [0,0,0];
+    if(result.length === 0) return [0, 0, 0];
 
     //calculate parameters
     var avg = this.mean(result);
@@ -124,7 +126,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
     var state = document.getElementById("btn1").classList.toggle("showV");
     document.getElementById("btn1").classList.toggle("hideV")
 
-    if (state){
+    if (state) {
       this.showV = true;
       this.internal.showVote(this.showV)
       this.btn1text = "Hide Vote";
@@ -133,14 +135,14 @@ export class MemberslistComponent extends Cardify implements OnInit {
       this.internal.showVote(this.showV)
       this.btn1text = "Show Vote";
     }
-    console.log("showV value", this.showV);
+    console.log("showV value", this.showV);/*
     this.comms.showVote(this.sprint_id, this.user.Id, this.showV ).subscribe(response => {
       if (response && response.s === 200) {
         console.log("Set Vote to be shown?", this.showV);
       } else {
         console.log("Set Vote to be shown failed");
       }
-    })
+    })*/
   }
 
   setNextAdmin(successor : User) : void{
@@ -162,17 +164,16 @@ export class MemberslistComponent extends Cardify implements OnInit {
      this.users[0].Id == this.user.Id &&
      this.users[0].Admin) {
       return (this.users[0])
-    } 
-    return(this.user) 
+    }
+    return this.user;    
   }
 
-  crowned (user): string{
+  crowned (user: User): string {
     if (user.Admin) {
       return (user.Name +" \uD83D\uDC51")
     } else {
       return (user.Name)
     }
-    console.log("users = ", this.users);
+    //console.log("users = ", this.users);
   }
-
 }
