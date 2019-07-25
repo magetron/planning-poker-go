@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRoute, ActivatedRouteSnapshot} from '@angular/router';
 import { Router } from '@angular/router'
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 import { CommsService } from "../services/comms.service";
 import { InternalService } from "../services/internal.service";
@@ -19,11 +19,11 @@ export class AuthGuard implements CanActivate {
      private route: ActivatedRoute) { 
      }
 
-  canActivate(route: ActivatedRouteSnapshot)/*: Observable<boolean>*/ {
+  canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
     const sprintId = route.params.sprint_id;
 
     if (this.internal.reloadOrKickUser()) {
-      /* //How else do I verify if this user is in this sprint??
+       //How else do I verify if this user is in this sprint??
       this.comms.getSprintUsers(sprintId).subscribe(msg => {
           if (msg && msg.s == 200) {
             return this.doIBelongHere(msg.d as User[], sprintId);
@@ -32,10 +32,10 @@ export class AuthGuard implements CanActivate {
             return false;
           }
         })
-        */
-       return true
+        
+       //return of(true)
     } else {
-      return false
+      return of(false)
     }     
   }
 
@@ -57,6 +57,6 @@ export class AuthGuard implements CanActivate {
     console.info("Goodbye sprint" + sprintId + ". I hardly knew you")
     this.router.navigateByUrl(`/join/${sprintId}`)
 
-    return(false) 
+    return false 
   }  
 }
