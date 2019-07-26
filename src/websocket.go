@@ -58,11 +58,29 @@ func (c *Client) readPump() {
 			newMessage := []byte("[")
 			for _, users := range us.AllUsers {
 				if sprintId == users.SprintId {
-					jsonStr, jsonErr := json.Marshal(users)
-					if jsonErr != nil {
-						log.Println(jsonErr)
+					var tmpReturnUserArray []User
+					if !users.VotesShown {
+						tmpReturnUserArray = make([]User, 0)
+						for _, user := range users.Users {
+							var tmpReturnUser User
+							tmpReturnUser = *user
+							if user.Vote != -1 {
+								tmpReturnUser.Vote = -3
+							}
+							tmpReturnUserArray = append(tmpReturnUserArray, tmpReturnUser)
+						}
 					}
-					newMessage = append(newMessage, jsonStr...)
+					var usersStr []byte
+					var usersErr error
+					if users.VotesShown {
+						usersStr, usersErr = json.Marshal(users.Users)
+					} else {
+						usersStr, usersErr = json.Marshal(tmpReturnUserArray)
+					}
+					if usersErr != nil {
+						log.Println(usersErr)
+					}
+					newMessage = append(newMessage, usersStr...)
 					break
 				}
 			}
