@@ -7,6 +7,7 @@ import { Sprint } from 'src/app/models/sprint';
 import { Cardify } from '../../models/cardify.component';
 import { webSocket, WebSocketSubject } from "rxjs/webSocket";
 import * as globals from "../../services/globals.service";
+import { WebsocketService } from 'src/app/services/websocket.service';
 
 @Component({
   selector: 'app-memberslist',
@@ -19,53 +20,66 @@ export class MemberslistComponent extends Cardify implements OnInit {
   users: User[];
   user: User;
   @Input() sprint_id: string;
-  voteSocket$: WebSocketSubject<any>;
+  //voteSocket$: WebSocketSubject<any>;
+  //infoSocket$: WebSocketSubject<any>;
+  messages: any[] = [];
+
   showV: boolean = false;
   btn1text: string;
   displayedColumns: string[] = ['NAME', 'VOTE'];
 
   constructor(
+    private webSocket: WebsocketService,
     private comms: CommsService,
     private internal: InternalService) {
     super();
   }
 
   ngOnInit() {
-    this.voteSocket$ = webSocket({
-      url: globals.voteSocket,
-      serializer: msg => msg, //Don't JSON encode the sprint_id
-      deserializer: ({ data }) => {
-        //console.log(data);
-        let j = JSON.parse(data) as User[];
-        return j;
-      },
-      binaryType: "blob",
-    });
+    this.webSocket.connect(this.sprint_id).subscribe(
+      messages => {
+        this.messages.push(messages);
+        this.users = messages.Users;
+        console.log("list of users", messages.Users);
+      }
+    );
+    // this.voteSocket$ = webSocket({
+    //   url: globals.voteSocket,
+    //   serializer: msg => msg, //Don't JSON encode the sprint_id
+    //   deserializer: ({ data }) => {
+    //     //console.log(data);
+    //     let j = JSON.parse(data) as User[];
+    //     return j;
+    //   },
+    //   binaryType: "blob",
+    // });
 
     //TODO: catch server unavailable
-    this.voteSocket$.subscribe(
-      msg => { // Called whenever there is a message from the server.
-        //console.log('socket received');
-        this.users = msg;
-        this.internal.updateStats(this.analysisVote());
-        this.internal.updateUser(this.updateMe());
-        //console.log("this.users = ", msg);
-      },
-      err => console.log(err), // Called if at any point WebSocket API signals some kind of error.
-      () => console.log('complete') // Called when connection is closed (for whatever reason).
-    );
+    // this.voteSocket$.subscribe(
+    //   msg => { // Called whenever there is a message from the server.
+    //     //console.log('socket received');
+    //     this.users = msg;
+    //     this.internal.updateStats(this.analysisVote());
+    //     this.internal.updateUser(this.updateMe());
+    //     //console.log("this.users = ", msg);
+    //   },
+    //   err => console.log(err), // Called if at any point WebSocket API signals some kind of error.
+    //   () => console.log('complete') // Called when connection is closed (for whatever reason).
+    // );
 
-    //Start talking ot the socket
-    this.refreshSocket();
+    this.socketBroadcast();
     this.btn1text = "Show Vote";
     this.internal.user$.subscribe(msg => this.user = msg);
   }
 
-  refreshSocket(): void {
-    //console.log("Pulling data for sprint " + this.sprint_id);
-    this.voteSocket$.next(this.sprint_id);
-    setTimeout(() => this.refreshSocket(), globals.socketRefreshTime);
+  socketBroadcast() {
+    this.webSocket.send("update");
+    console.log("message", this.messages)
   }
+
+  // ngOnDestroy() {
+  //   this.destroyed$.next(this.sprint_id);
+  // }
 
   analysisVote(): Array<number> {
     //result is an array of votes

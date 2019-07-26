@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InternalService } from 'src/app/services/internal.service';
+import { WebsocketService } from 'src/app/services/websocket.service';
 import { User } from 'src/app/models/user';
 //import { Round } from 'src/app/models/round';
 import { CommsService } from 'src/app/services/comms.service';
@@ -25,6 +26,7 @@ export class PokerCardComponent extends Cardify implements OnInit {
     private route: ActivatedRoute,
     private internal: InternalService,
     private comms: CommsService,
+    private webSocket: WebsocketService,
   ) { super(); }
 
   ngOnInit() {
@@ -32,33 +34,24 @@ export class PokerCardComponent extends Cardify implements OnInit {
     this.internal.user$.subscribe(
       res => this.user = res
     )
-    //Kick undefined users to rejoin, for example when reloading page
+
     if (!this.user || !this.user.Id) {
       this.router.navigate(["join", this.sprint_id])
     }
-    /*this.internal.round$.subscribe(msg => {
-      if (msg.Archived) {
-        console.log("msg.archived received")
-        this.enableCard = true;
-        var i = document.getElementsByClassName("card-secondary");
-        for(var j=0; j < i.length; j++)
-        {
-          i[j].classList.remove("card-secondary");
-        }
-      } else {
-        this.enableCard = false;
-      }
-    });*/
+  }
+
+  socketBroadcast() {
+    this.webSocket.send("update");
+    console.log("poker card update");
   }
 
   vote(point: number) {
     this.comms.selectCard(this.sprint_id, this.user.Id, point).subscribe((response => {
         if (response.status === 200) {
           console.log("Selection success");
-
+          this.socketBroadcast();
           let old = document.getElementsByClassName("card-secondary")
           console.log("Selection success", old);
-          //let old = document.getElementById(this.user.Vote.toString())
           if (old[0]) {
             old[0].classList.remove("card-secondary");
           }
