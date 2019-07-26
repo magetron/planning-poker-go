@@ -5,6 +5,7 @@ import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
 import * as globals from './globals.service';
 import { Sprint } from '../models/sprint';
+import { User } from '../models/user';
 
 const HTTPOPTIONS = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -23,6 +24,11 @@ export interface SimpleResponse {
 export interface ComplexResponse {
   s: number;
   d: object;
+}
+
+export interface UserResponse {
+  s: number;
+  d: User[];
 }
 
 @Injectable({
@@ -64,8 +70,8 @@ export class CommsService {
     return result;
   }
 
-  getSprintUsers(sprint_id: string) : Observable<ComplexResponse>{
-    const result = this.httpClient.get<ComplexResponse>(
+  getSprintUsers(sprint_id: string) : Observable<UserResponse>{
+    const result = this.httpClient.get<UserResponse>(
       `${globals.apiUrl}/sprints/${sprint_id}/users`, HTTPOPTIONS);
     return result;
   }

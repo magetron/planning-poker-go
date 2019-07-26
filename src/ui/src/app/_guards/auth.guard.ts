@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRoute, ActivatedRouteSnapshot} from '@angular/router';
 import { Router } from '@angular/router'
 import { Observable, of, merge } from 'rxjs';
-import { catchError, tap, flatMap, mergeMap, map } from 'rxjs/operators';
+import { catchError, tap, flatMap, mergeMap, map, take, first } from 'rxjs/operators';
 import { forkJoin } from 'rxjs/index';
 
 import { CommsService } from "../services/comms.service";
@@ -15,28 +15,57 @@ import { User } from "../models/user";
 
 export class AuthGuard implements CanActivate {
 
+  success: boolean = false;
+
   constructor(private internal: InternalService,
      private comms: CommsService,
      private router: Router,
-     private route: ActivatedRoute) { 
+     public route: ActivatedRoute) { 
      }
 
   canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
     const sprintId = route.params.sprint_id;
+    /*
+    const myUser: User = JSON.parse(localStorage.getItem('user'));
+    return this.checkLogin(sprintId, myUser)
+      
+    }
+    
+    public checkUser: boolean;
+    checkLogin(sprintId, myUser): Observable<boolean> {
 
+      this.comms.getSprintUsers(sprintId).pipe(
+        take(1),
+        map(users => {
+        console.log(users);
+
+        (users.d && !!users.d.find(user => {
+          return user.Id === myUser.Id;
+        }))
+        if (this.checkUser){
+          return true
+        } else {
+          return false;
+        }
+
+      }))
+
+    }
+
+
+*/
     if (this.internal.reloadOrKickUser()) {
       
       const test$ = forkJoin(
-        this.comms.getSprintUsers(sprintId),
-        this.internal.user$
+        this.comms.getSprintUsers(sprintId).pipe(first()),
+        this.internal.user$.pipe(first())
+        //of(localStorage.getItem("user"))
       )
-      console.info("Verifying user")
-      
+
       return test$.pipe(map( res => {
           console.info("Subscription resolved")
-          /*
-          Legend: res[0].d = users, res[1] = user
-          */
+
+          //Legend: res[0].d = users, res[1] = user
 
           if (res[0] && res[0].s == 200) {
             for (var i of res[0].d as User[]) {
@@ -45,51 +74,13 @@ export class AuthGuard implements CanActivate {
               }
             }
           }
+          
           this.kickMeToJoin(sprintId)
           return false
         })
       )
-      /*
-      this.comms.getSprintUsers(sprintId).subscribe(msg => {
-          if (msg && msg.s == 200) {
-            return this.doIBelongHere(msg.d as User[], sprintId)
-          } else { //no responce - kick
-            this.router.navigateByUrl(`/join/${sprintId}`)
-            return false
-          }
-        })
-        */
-       //return of(true)
-    } else {
-      this.kickMeToJoin(sprintId)
-      return of(false)
-    }     
+    }
   }
-
-/*
-  doIBelongHere(users: User[], sprintId: string): Observable<boolean> {
-    console.info("Do I belong here?")
-
-    let user: User
-    this.internal.user$.pipe(
-      catchError(err => {
-        this.kickMeToJoin(sprintId)
-        return null
-      })
-    ).subscribe(msg => {
-      user = msg as User
-
-      for (var i of users) {
-        if (i.Id === user.Id) {
-          return true
-        }
-      }
-
-      this.kickMeToJoin(sprintId)
-      return false
-    },
-    )
-  }*/
 
   kickMeToJoin(sprintId: string): void {
     // Current user not a member of this sprint
