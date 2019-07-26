@@ -26,9 +26,9 @@ export class WebsocketService {
       deserializer: ({ data }) => {
         console.log("data", data);
         let j = JSON.parse(data);
-        this.internal.updateUsers(j.Users);
-        if (j.Rounds){
-          this.internal.updateRounds(j.Rounds);
+        this.internal.updateUsers(j[0].Users);
+        if (j[1].Rounds){
+          this.internal.updateRounds(j[1].Rounds);
         }
         return j;
       },

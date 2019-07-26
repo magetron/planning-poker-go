@@ -42,7 +42,7 @@ export class PokerControlComponent implements OnInit {
   user: User;
   baseUrl: string;
   isVoteShown : boolean;
-  subscriber : WebSocketSubject<any>;
+  subscriber
 
   constructor(
     private router: Router,
@@ -78,70 +78,7 @@ export class PokerControlComponent implements OnInit {
     })
 
     this.subscriber = this.webSocket.connect(this.sprint_id).subscribe();
-    // this.webSocket.connect(this.sprint_id).subscribe(
-    //   messages => {
-    //     if (messages.Round) {
-    //       this.storyList = messages.Rounds;
-    //       this.curStory = this.storyList[this.storyList.length - 1];
-    //       if (this.curStory.Archived){
-    //         this.comms.selectCard(this.sprint_id, this.user.Id, -1 ).subscribe(response => {
-    //             if (response.status === 200) {
-    //             } else {
-    //             }
-    //         });
-    //       } else {
-    //         this.curStory.Avg = this.stats[2];
-    //         this.curStory.Med = this.stats[1];
-    //         this.curStory.Final = this.stats[1];
-    //       }
-    //       console.log("list of rounds", messages.Rounds);
-    //     }
-    //   }
-    // );
-
-    // this.roundInfoSocket$ = webSocket({
-    //   url: globals.roundInfoSocket,
-    //   serializer: msg => msg, //Don't JSON encode the sprint_id
-    //   deserializer: ({data}) => {
-    //     //console.log(data);
-    //     return JSON.parse(data);
-    //   },
-    //   openObserver: {
-    //     next: () => {
-    //       this.startTimer(); //TODO: replace with always counting maybe?
-    //     }
-    //   },
-    //   binaryType: "blob",
-    // });
-
-    //TODO: catch server unavailable
-    // this.roundInfoSocket$.subscribe(
-    //   msg => { // Called whenever there is a message from the server.
-    //     //console.log('socket received');
-    //     this.storyList = msg;
-    //     //console.log("storyList: ",msg," ", this.storyList[this.storyList.length - 1]);
-    //     this.curStory = this.storyList[this.storyList.length - 1];
-
-    //     if (this.curStory.Archived){
-    //       this.comms.selectCard(this.sprint_id, this.user.Id, -1 ).subscribe(response => {
-    //           if (response.status === 200) {
-    //             //console.log("Initialize vote");
-    //           } else {
-    //             //console.log("Initialize vote fail");
-    //           }
-    //       });
-    //     } else {
-    //       this.curStory.Avg = this.stats[2];
-    //       this.curStory.Med = this.stats[1];
-    //       this.curStory.Final = this.stats[1];
-    //     }
-    //   },
-    //   err => console.log(err), // Called if at any point WebSocket API signals some kind of error.
-    //   () => console.log('complete') // Called when connection is closed (for whatever reason).
-    // );
-
-    //Start talking ot the socket
-    //this.refreshSocket();
+    
     this.internal.rounds$.subscribe(msg => {
       this.storyList = msg
       this.curStory = this.storyList[this.storyList.length - 1]
