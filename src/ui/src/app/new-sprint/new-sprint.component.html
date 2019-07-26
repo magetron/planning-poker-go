@@ -1,11 +1,11 @@
 <div class=container>
+  <h1 fxLayoutAlign="space-around stretch" class="text-primary"> Welcome to Planning Poker </h1>
   <mat-card class="background-primary">
     <mat-card-header>
       <mat-card-title class="text-primary">
-        Welcome to Planning Poker
+        Create a new session
       </mat-card-title>
       <mat-card-subtitle>
-        Create a new session
       </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
@@ -24,7 +24,6 @@
     </mat-card-actions>
   </mat-card>
 
-  <!-- {{sprint | json}} -->
   <div *ngIf="sprint?.Id">
     <app-share [share]="sprint">
     </app-share>

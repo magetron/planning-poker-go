@@ -17,6 +17,8 @@ export class InternalService {
   private round = new BehaviorSubject<Round>({Name: "default",Id : 0,Avg : 0,Med: 0,Final: 0,Archived : false,CreationTime : 0,});
   private isVoteShown = new BehaviorSubject<boolean>(false);
   private logoutAll = new BehaviorSubject<boolean>(false);
+  private users = new BehaviorSubject<User[]>(null);
+  private rounds = new BehaviorSubject<Round[]>([{Name: "default",Id : 0,Avg : 0,Med: 0,Final: 0,Archived : false,CreationTime : 0,}]);
 
   user$ = this.user.asObservable();
   sprint$ = this.sprint.asObservable();
@@ -24,6 +26,8 @@ export class InternalService {
   round$ = this.round.asObservable();
   isVoteShown$ = this.isVoteShown.asObservable();
   logoutAll$ = this.logoutAll.asObservable();
+  users$ = this.users.asObservable();
+  rounds$ = this.rounds.asObservable();
 
   constructor() { }
 
@@ -65,6 +69,14 @@ export class InternalService {
 
   logoutAllUsers(logoutAll: boolean) {
     this.logoutAll.next(logoutAll);
+  }
+
+  updateUsers(users: User[]){
+    this.users.next(users);
+  }
+
+  updateRounds(rounds: Round[]){
+    this.rounds.next(rounds);
   }
 
 }

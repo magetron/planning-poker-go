@@ -12,6 +12,7 @@ import { Round } from '../../models/round';
 import { CommsService } from 'src/app/services/comms.service';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import * as globals from '../../services/globals.service';
+import { WebsocketService } from 'src/app/services/websocket.service';
 
 @Component({
   selector: 'app-poker-control',
@@ -33,19 +34,22 @@ export class PokerControlComponent implements OnInit {
   };
   nextStory: string = "";
   storyList: Round[];
-  roundInfoSocket$: WebSocketSubject<any>;
+  //roundInfoSocket$: WebSocketSubject<any>;
+  //infoSocket$: WebSocketSubject<any>;
   stats: number[];
   timePassed = 0;
   displayedColumns: string[] = ['ROUNDS', 'RESULT'];
   user: User;
   baseUrl: string;
   isVoteShown : boolean;
+  subscriber
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private internal: InternalService,
-    private comms: CommsService
+    private comms: CommsService,
+    private webSocket: WebsocketService
   ) {}
 
   ngOnInit() {
@@ -68,58 +72,25 @@ export class PokerControlComponent implements OnInit {
         } else {
           throw new AssertionError({message: "The server messed up"});
         }
-      } else if (res) { //response indicates the sprintID is invalid
+      } else if (res) {
           console.log("Unexpected response:" + res);
       }
     })
 
-
-    this.roundInfoSocket$ = webSocket({
-      url: globals.roundInfoSocket,
-      serializer: msg => msg, //Don't JSON encode the sprint_id
-      deserializer: ({data}) => {
-        //console.log(data);
-        return JSON.parse(data);
-      },
-      openObserver: {
-        next: () => {
-          this.startTimer(); //TODO: replace with always counting maybe?
-        }
-      },
-      binaryType: "blob",
-    });
-
-    //TODO: catch server unavailable
-    this.roundInfoSocket$.subscribe(
-      msg => { // Called whenever there is a message from the server.
-        //console.log('socket received');
-        this.storyList = msg;
-        //console.log("storyList: ",msg," ", this.storyList[this.storyList.length - 1]);
-        this.curStory = this.storyList[this.storyList.length - 1];
-
-        if (this.curStory.Archived){
-          this.comms.selectCard(this.sprint_id, this.user.Id, -1 ).subscribe(response => {
-              if (response.status === 200) {
-                //console.log("Initialize vote");
-              } else {
-                //console.log("Initialize vote fail");
-              }
-          });
-        } else {
-          this.curStory.Avg = this.stats[2];
-          this.curStory.Med = this.stats[1];
-          this.curStory.Final = this.stats[1];
-        }
-      },
-      err => console.log(err), // Called if at any point WebSocket API signals some kind of error.
-      () => console.log('complete') // Called when connection is closed (for whatever reason).
+    this.subscriber = this.webSocket.connect(this.sprint_id).subscribe();
+    
+    this.internal.rounds$.subscribe(msg => {
+      this.storyList = msg
+      this.curStory = this.storyList[this.storyList.length - 1]
+      }
     );
-
-    //Start talking ot the socket
-    this.refreshSocket();
     this.internal.stats$.subscribe(msg => this.stats = msg);
     this.internal.user$.subscribe(msg => this.user = msg);
     this.internal.isVoteShown$.subscribe(msg => this.isVoteShown = msg);
+  }
+
+  socketBroadcast() {
+    this.webSocket.send("update");
   }
 
   addStory (story: string): void {
@@ -140,13 +111,8 @@ export class PokerControlComponent implements OnInit {
       } else {
         console.log("Set Vote to be shown failed");
       }
-    })
-  }
-
-  refreshSocket(): void {
-    //console.log("Pulling data for sprint " + this.sprint_id);
-    this.roundInfoSocket$.next(this.sprint_id);
-    setTimeout(() => this.refreshSocket(), globals.socketRefreshTime);
+    });
+    this.socketBroadcast();
   }
 
   startTimer(): void {
@@ -175,6 +141,8 @@ export class PokerControlComponent implements OnInit {
           console.log("Initialize vote fail");
         }
     });
+
+    this.socketBroadcast();
   }
   
   HideLastElementinList(title: Round, displayTitle: string): any{
