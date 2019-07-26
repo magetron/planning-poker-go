@@ -55,26 +55,29 @@ func (c *Client) readPump() {
 		}
 		sprintId := c.Hub.Id
 		if string(message) == "update" {
+			newMessage := []byte("[")
 			for _, users := range us.AllUsers {
 				if sprintId == users.SprintId {
-					newMessage, jsonErr := json.Marshal(users)
+					jsonStr, jsonErr := json.Marshal(users)
 					if jsonErr != nil {
 						log.Println(jsonErr)
 					}
-					c.Hub.Broadcast <- newMessage
+					newMessage = append(newMessage, jsonStr...)
 					break
 				}
 			}
 			for _, rounds := range rc.AllRounds {
 				if sprintId == rounds.SprintId {
-					newMessage, jsonErr := json.Marshal(rounds)
+					jsonStr, jsonErr := json.Marshal(rounds)
 					if jsonErr != nil {
 						log.Println(jsonErr)
 					}
-					c.Hub.Broadcast <- newMessage
+					newMessage = append(newMessage, byte(','))
+					newMessage = append(newMessage, jsonStr...)
 					break
 				}
 			}
+			newMessage = append(newMessage, byte(']'))
 		}
 	}
 }
