@@ -46,6 +46,11 @@ export class JoinComponent implements OnInit {
           if (res.d['Id'] === this.sprint.Id) {
             this.sprint.Name = res.d['Name'];
             this.internal.updateSprint(res.d as Sprint);
+
+            if (this.internal.reloadOrKickUser()) {
+              this.router.navigateByUrl(`/table/${this.sprint.Id}`);
+            }
+
           } else {
             throw new AssertionError({message: "The server messed up"});
           }
@@ -66,7 +71,6 @@ export class JoinComponent implements OnInit {
       ).subscribe(
         res => {
           if (res && res.s === 200) {
-//            this.user = res.d as User;
             this.internal.logInUser(res.d as User);
             this.router.navigateByUrl(`/table/${this.sprint.Id}`);
           } else if (res && res.s === 404) {
@@ -84,13 +88,6 @@ export class JoinComponent implements OnInit {
 
   intialize(): void {
     console.log("intialize func is being called")
-    /*
-    this.user = {
-      Name: "",
-      Id: "",
-      Vote: -1,
-      Admin: false,
-    }*/
     this.sprint = {
       Name: "",
       Id: "",

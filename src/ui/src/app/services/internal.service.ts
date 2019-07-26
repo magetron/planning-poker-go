@@ -14,9 +14,11 @@ export class InternalService {
   private user = new BehaviorSubject<User>(null);
   private sprint = new BehaviorSubject<Sprint>({Name: "", Id: ""});
   private stats = new BehaviorSubject<number[]>([0,0,0]);
-  private round = new BehaviorSubject<Round>({Name: "default",Id : 0,Avg : 0,Med: 0,Final: 0,Archived : false,CreationTime : 0,});
+  private round = new BehaviorSubject<Round>({Name: "default", Id : 0, Avg : 0, Med: 0, Final: 0, Archived : false, CreationTime : 0,});
   private isVoteShown = new BehaviorSubject<boolean>(false);
   private logoutAll = new BehaviorSubject<boolean>(false);
+  private users = new BehaviorSubject<User[]>(null);
+  private rounds = new BehaviorSubject<Round[]>([{Name: "default",Id : 0,Avg : 0,Med: 0,Final: 0,Archived : false,CreationTime : 0,}]);
 
   user$ = this.user.asObservable();
   sprint$ = this.sprint.asObservable();
@@ -24,6 +26,8 @@ export class InternalService {
   round$ = this.round.asObservable();
   isVoteShown$ = this.isVoteShown.asObservable();
   logoutAll$ = this.logoutAll.asObservable();
+  users$ = this.users.asObservable();
+  rounds$ = this.rounds.asObservable();
 
   constructor() { }
 
@@ -47,12 +51,12 @@ export class InternalService {
     this.isVoteShown.next(isVoteShown);
   }
 
-  logInUser(user) {
+  logInUser(user: User) {
     this.updateUser(user);
     localStorage.setItem("user", JSON.stringify(user))
   }
 
-  isUserAllowed() {
+  reloadOrKickUser(): boolean {
     let user = localStorage.getItem("user");
     if (user != null) {
       this.updateUser(JSON.parse(user) as User)
@@ -60,11 +64,17 @@ export class InternalService {
     } else {
       return false
     }
-    return localStorage.getItem("user") != null; 
   }
-
   logoutAllUsers(logoutAll: boolean) {
     this.logoutAll.next(logoutAll);
+  }
+
+  updateUsers(users: User[]){
+    this.users.next(users);
+  }
+
+  updateRounds(rounds: Round[]){
+    this.rounds.next(rounds);
   }
 
 }

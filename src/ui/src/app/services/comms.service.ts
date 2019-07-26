@@ -5,6 +5,7 @@ import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
 import * as globals from './globals.service';
 import { Sprint } from '../models/sprint';
+import { User } from '../models/user';
 
 const HTTPOPTIONS = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -23,6 +24,15 @@ export interface SimpleResponse {
 export interface ComplexResponse {
   s: number;
   d: object;
+}
+
+export interface StatusResponse {
+  status: number;
+}
+
+export interface UserResponse {
+  s: number;
+  d: User[];
 }
 
 @Injectable({
@@ -64,8 +74,8 @@ export class CommsService {
     return result;
   }
 
-  getSprintUsers(sprint_id: string) : Observable<ComplexResponse>{
-    const result = this.httpClient.get<ComplexResponse>(
+  getSprintUsers(sprint_id: string) : Observable<UserResponse>{
+    const result = this.httpClient.get<UserResponse>(
       `${globals.apiUrl}/sprints/${sprint_id}/users`, HTTPOPTIONS);
     return result;
   }
@@ -125,12 +135,12 @@ export class CommsService {
     return result;
   }
 
-  showVote (sprint_id: string, user_id: string, showVote : boolean): Observable<SimpleResponse>{
+  showVote (sprint_id: string, user_id: string, showVote : boolean): Observable<StatusResponse>{
     let jsonObject = {
       "VoteShown": showVote,
     }
-    const result = this.httpClient.post<SimpleResponse>(
-      `${globals.apiUrl}/sprints/${sprint_id}/users/${user_id}/showvote`,jsonObject, HTTPOPTIONS_NO_BODY);
+    const result = this.httpClient.post<StatusResponse>(
+      `${globals.apiUrl}/sprints/${sprint_id}/users/${user_id}/showvote`, jsonObject, HTTPOPTIONS_NO_BODY);
     return result;
   }
 }

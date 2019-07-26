@@ -1,11 +1,8 @@
 package main
 
 import (
-	"encoding/json"
 	"log"
 	"net/http"
-
-	"github.com/gorilla/websocket"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/goweb"
@@ -176,50 +173,6 @@ func (us *UsersService) Replace(id string, ctx context.Context) error {
 	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 }
 
-func (us *UsersService) Update(conn *websocket.Conn) {
-	for {
-		messageType, p, err := conn.ReadMessage()
-		if err != nil {
-			log.Println(err)
-			return
-		}
-
-		if DEV {
-			log.Printf("User update websocket received id: %s", string(p))
-		}
-
-		for _, users := range us.AllUsers {
-			if users.SprintId == string(p) {
-				var tmpReturnUserArray []User
-				if !users.VotesShown {
-					tmpReturnUserArray = make([]User, 0)
-					for _, user := range users.Users {
-						var tmpReturnUser User
-						tmpReturnUser = *user
-						if user.Vote != -1 {
-							tmpReturnUser.Vote = -3
-						}
-						tmpReturnUserArray = append(tmpReturnUserArray, tmpReturnUser)
-					}
-				}
-				var usersStr []byte
-				var usersErr error
-				if users.VotesShown {
-					usersStr, usersErr = json.Marshal(users.Users)
-				} else {
-					usersStr, usersErr = json.Marshal(tmpReturnUserArray)
-				}
-				if usersErr != nil {
-					log.Println(usersErr)
-				}
-				if err := conn.WriteMessage(messageType, usersStr); err != nil {
-					log.Println(err)
-					return
-				}
-			}
-		}
-	}
-}
 
 func (us *UsersService) SetAdmin(ctx context.Context) error {
 	data, dataErr := ctx.RequestData()

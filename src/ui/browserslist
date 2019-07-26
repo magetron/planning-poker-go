@@ -8,5 +8,6 @@
 > 0.5%
 last 2 versions
 Firefox ESR
+FirefoxAndroid >65
 not dead
 not IE 9-11 # For IE 9-11 support, remove 'not'.

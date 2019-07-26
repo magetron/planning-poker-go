@@ -1,4 +1,4 @@
-# Planning Poker in Go
+# Planning Poker in Go ![badge](https://codebuild.eu-west-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoicDhZeURYRDRiMlVscExLZGliSitwMlhMRHZkZDVzd1lmb3NzU2hpS0R0Nk5MSmpDblY5RkNwOFdXZFdKOWZraXlVdGhvZVVNQ2RESDczK0RWRC8yMjJ3PSIsIml2UGFyYW1ldGVyU3BlYyI6InBFaElZK1BYWG80UERUbngiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)
 
 Powered by Interns
 
