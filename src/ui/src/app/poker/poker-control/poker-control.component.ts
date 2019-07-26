@@ -23,7 +23,7 @@ import { WebsocketService } from 'src/app/services/websocket.service';
 export class PokerControlComponent implements OnInit {
 
   @Input() sprint_id: string;
-  curStory: Round = {
+  round: Round = {
     "Name": "none",
     "Id" : 0,
     "Avg" : 0,
@@ -33,9 +33,7 @@ export class PokerControlComponent implements OnInit {
     "CreationTime" : 0,
   };
   nextStory: string = "";
-  storyList: Round[];
-  //roundInfoSocket$: WebSocketSubject<any>;
-  //infoSocket$: WebSocketSubject<any>;
+  rounds: Round[];
   stats: number[];
   timePassed = 0;
   displayedColumns: string[] = ['ROUNDS', 'RESULT'];
@@ -80,13 +78,14 @@ export class PokerControlComponent implements OnInit {
     this.subscriber = this.webSocket.connect(this.sprint_id).subscribe();
     
     this.internal.rounds$.subscribe(msg => {
-      this.storyList = msg
-      this.curStory = this.storyList[this.storyList.length - 1]
+      this.rounds = msg
+      this.round = this.rounds[this.rounds.length - 1]
       }
     );
     this.internal.stats$.subscribe(msg => this.stats = msg);
     this.internal.user$.subscribe(msg => this.user = msg);
     this.internal.isVoteShown$.subscribe(msg => this.isVoteShown = msg);
+    this.startTimer();
   }
 
   socketBroadcast() {
@@ -101,8 +100,7 @@ export class PokerControlComponent implements OnInit {
       this.comms.showVote(this.sprint_id, this.user.Id, false ).pipe(first())
       ).subscribe(response => {
       if (response[0] && response[0].status === 200) {
-        //console.log("Story submitted, Sprint-id:", this.sprint_id);
-        this.curStory.Name = story;
+        this.round.Name = story;
         this.nextStory = "";
       } else {
         console.log("Server communication error");
@@ -117,19 +115,20 @@ export class PokerControlComponent implements OnInit {
   }
 
   startTimer(): void {
-    if (this.storyList && this.storyList[this.storyList.length - 1].CreationTime) {
-      setInterval(() => this.timePassed = new Date().getTime() / 1000 - this.storyList[this.storyList.length - 1].CreationTime, 1000)
+    if (this.rounds && this.rounds[this.rounds.length - 1].CreationTime) {
+      setInterval(() => this.timePassed = new Date().getTime() / 1000 - this.rounds[this.rounds.length - 1].CreationTime, 1000)
     } else {
-      setTimeout(()=> this.startTimer(), globals.socketRefreshTime);
+      setTimeout(()=> this.startTimer(), 1000);
+      //Timer is updated every 1000ms.
     }
   }
 
   archiveRound(): void{
-    this.comms.archiveRound(this.sprint_id, this.curStory.Id, this.curStory.Avg, this.curStory.Med, this.curStory.Final).subscribe(response => {
+    this.comms.archiveRound(this.sprint_id, this.round.Id, this.round.Avg, this.round.Med, this.round.Final).subscribe(response => {
       if (response && response.status === 200) {
-        this.curStory.Archived = true;
-        this.internal.updateRound(this.curStory);
-        console.log("Round archived: ", this.curStory.Id);
+        this.round.Archived = true;
+        this.internal.updateRound(this.round);
+        console.log("Round archived: ", this.round.Id);
       } else {
         console.log("Server communication error");
       }
@@ -149,7 +148,7 @@ export class PokerControlComponent implements OnInit {
   HideLastElementinList(title: Round, displayTitle: string): any{
     if (title.Archived){
       return title.Final;
-    } else if (title.Name == this.curStory.Name) {
+    } else if (title.Name == this.round.Name) {
       return "voting";
     } else {
       return title.Final;

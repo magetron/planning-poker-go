@@ -20,9 +20,6 @@ export class MemberslistComponent extends Cardify implements OnInit {
   users: User[];
   user: User;
   @Input() sprint_id: string;
-  //voteSocket$: WebSocketSubject<any>;
-  //infoSocket$: WebSocketSubject<any>;
-  messages: any[] = [];
 
   showV: boolean = false;
   btn1text: string;
@@ -39,23 +36,25 @@ export class MemberslistComponent extends Cardify implements OnInit {
     this.socketBroadcast();
     this.btn1text = "Show Vote";
     this.internal.user$.subscribe(msg => this.user = msg);
-    this.internal.users$.subscribe(msg => this.users = msg);
+    this.internal.users$.subscribe(msg => {
+      this.users = msg;
+      if(this.users){
+        this.internal.updateStats(this.analysisVote());
+      }
+    });
   }
 
   socketBroadcast() {
     this.webSocket.send("update");
-    console.log("message", this.messages)
   }
 
   analysisVote(): Array<number> {
-    //result is an array of votes
     let result = this.users.map(i => i.Vote);
-    //strip non-votes
-    result = result.filter(i => i !== -1 && i !== -2);
+
+    result = result.filter(i => i !== -1 && i !== -2 && i != -3);
 
     if(result.length === 0) return [0,0,0];
 
-    //calculate parameters
     var avg = this.mean(result);
     var median = this.median(result);
     var mode = this.mode(result);
@@ -117,7 +116,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
     this.comms.showVote(this.sprint_id, this.user.Id, this.showV ).subscribe((response => {
       if (response.status === 200) {
         this.socketBroadcast();
-        console.log("Set Vote to be shown?", this.showV);
+        //console.log("Set Vote to be shown?", this.showV);
       } else {
         console.log("Set Vote to be shown failed");
       }
@@ -131,7 +130,6 @@ export class MemberslistComponent extends Cardify implements OnInit {
         if (response && response.status === 200) {
           console.log("Set successor");
           this.internal.updateUser(this.user);
-          //TODO:update front end this.user via emmit
           this.socketBroadcast();
         } else {
           console.log("Set successor failed");
@@ -155,7 +153,6 @@ export class MemberslistComponent extends Cardify implements OnInit {
     } else {
       return (user.Name)
     }
-    console.log("users = ", this.users);
   }
 
 }

@@ -24,9 +24,8 @@ export class WebsocketService {
       url: globals.infoSocket + sprint_id,
       serializer: msg => msg,
       deserializer: ({ data }) => {
-        console.log("data", data);
         let j = JSON.parse(data);
-        this.internal.updateUsers(j[0].Users);
+        this.internal.updateUsers(j[0]);
         if (j.length == 2 && j[1].Rounds){
           this.internal.updateRounds(j[1].Rounds);
         }

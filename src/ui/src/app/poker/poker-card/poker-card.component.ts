@@ -45,16 +45,13 @@ export class PokerCardComponent extends Cardify implements OnInit {
 
   socketBroadcast() {
     this.webSocket.send("update");
-    console.log("poker card update");
   }
 
   vote(point: number) {
     this.comms.selectCard(this.sprint_id, this.user.Id, point).subscribe((response => {
         if (response.status === 200) {
-          console.log("Selection success");
           this.socketBroadcast();
           let old = document.getElementsByClassName("card-secondary")
-          console.log("Selection success", old);
           if (old[0]) {
             old[0].classList.remove("card-secondary");
           }
