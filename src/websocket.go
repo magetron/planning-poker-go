@@ -78,6 +78,7 @@ func (c *Client) readPump() {
 				}
 			}
 			newMessage = append(newMessage, byte(']'))
+			c.Hub.Broadcast <- newMessage
 		}
 	}
 }
