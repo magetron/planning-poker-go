@@ -27,7 +27,7 @@ export class WebsocketService {
         console.log("data", data);
         let j = JSON.parse(data);
         this.internal.updateUsers(j[0].Users);
-        if (j[1].Rounds){
+        if (j.length == 2 && j[1].Rounds){
           this.internal.updateRounds(j[1].Rounds);
         }
         return j;

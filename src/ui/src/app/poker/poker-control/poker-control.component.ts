@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, Inject} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import { throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { throwError, forkJoin } from 'rxjs';
+import { catchError, first } from 'rxjs/operators';
 import { AssertionError } from 'assert';
 
 import { InternalService } from 'src/app/services/internal.service';
@@ -95,24 +95,25 @@ export class PokerControlComponent implements OnInit {
 
   addStory (story: string): void {
     this.startTimer();
-    this.comms.addStory(this.sprint_id, story).subscribe(response => {
-      if (response && response.status === 200) {
+
+    forkJoin(
+      this.comms.addStory(this.sprint_id, story).pipe(first()),
+      this.comms.showVote(this.sprint_id, this.user.Id, false ).pipe(first())
+      ).subscribe(response => {
+      if (response[0] && response[0].status === 200) {
         //console.log("Story submitted, Sprint-id:", this.sprint_id);
         this.curStory.Name = story;
         this.nextStory = "";
       } else {
         console.log("Server communication error");
       }
-    });
-
-    this.comms.showVote(this.sprint_id, this.user.Id, false ).subscribe(response => {
-      if (response && response.s === 200) {
+      if (response[1] && response[1].status === 200) {
         console.log("Set Vote to be shown?", false);
+        this.socketBroadcast();
       } else {
         console.log("Set Vote to be shown failed");
       }
     });
-    this.socketBroadcast();
   }
 
   startTimer(): void {

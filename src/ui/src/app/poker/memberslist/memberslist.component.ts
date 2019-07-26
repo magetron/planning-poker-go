@@ -114,30 +114,30 @@ export class MemberslistComponent extends Cardify implements OnInit {
       this.btn1text = "Show Vote";
     }
     console.log("showV value", this.showV);
-    this.comms.showVote(this.sprint_id, this.user.Id, this.showV ).subscribe(response => {
-      if (response && response.s === 200) {
+    this.comms.showVote(this.sprint_id, this.user.Id, this.showV ).subscribe((response => {
+      if (response.status === 200) {
+        this.socketBroadcast();
         console.log("Set Vote to be shown?", this.showV);
       } else {
         console.log("Set Vote to be shown failed");
       }
-    })
-
-    this.socketBroadcast();
+    }))
   }
 
   setNextAdmin(successor : User) : void{
     if (this.user.Admin){
       this.comms.appointSuccessor(this.sprint_id, this.user.Id, successor.Id).subscribe(response => {
+        console.info(response);
         if (response && response.status === 200) {
           console.log("Set successor");
           this.internal.updateUser(this.user);
           //TODO:update front end this.user via emmit
+          this.socketBroadcast();
         } else {
           console.log("Set successor failed");
         }
       })
     }
-    this.socketBroadcast();
   }
 
   updateMe(): User {
