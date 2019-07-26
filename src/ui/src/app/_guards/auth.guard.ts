@@ -53,6 +53,9 @@ export class AuthGuard implements CanActivate {
           }
         })
       )
+    } else {
+      this.router.navigateByUrl(`/join/${sprintId}`) 
+      return of(false)
     }
   }
 }
