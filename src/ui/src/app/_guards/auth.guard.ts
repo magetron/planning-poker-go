@@ -25,68 +25,34 @@ export class AuthGuard implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
     const sprintId = route.params.sprint_id;
-    /*
-    const myUser: User = JSON.parse(localStorage.getItem('user'));
-    return this.checkLogin(sprintId, myUser)
-      
-    }
     
-    public checkUser: boolean;
-    checkLogin(sprintId, myUser): Observable<boolean> {
-
-      this.comms.getSprintUsers(sprintId).pipe(
-        take(1),
-        map(users => {
-        console.log(users);
-
-        (users.d && !!users.d.find(user => {
-          return user.Id === myUser.Id;
-        }))
-        if (this.checkUser){
-          return true
-        } else {
-          return false;
-        }
-
-      }))
-
-    }
-
-
-*/
     if (this.internal.reloadOrKickUser()) {
       
-      const test$ = forkJoin(
+      const parallel$ = forkJoin(
         this.comms.getSprintUsers(sprintId).pipe(first()),
         this.internal.user$.pipe(first())
-        //of(localStorage.getItem("user"))
       )
 
-      return test$.pipe(map( res => {
-          console.info("Subscription resolved")
+      return parallel$.pipe(map( res => {
+          // res[0].d = users in the sprint(loaded from server),
+          // res[1] = user loaded from local storage
 
-          //Legend: res[0].d = users, res[1] = user
+          if (res[0] && res[0].s == 200 && //got response with status 200
+             res[0].d && //there is a list of users in the response
+             res[0].d.find(user => user.Id === res[1].Id)
+          ) {
+            return true
+          } else {
+            localStorage.removeItem("user")
+            this.internal.updateUser(null)
+            console.info("Goodbye sprint" + sprintId + ". I hardly knew you")
 
-          if (res[0] && res[0].s == 200) {
-            for (var i of res[0].d as User[]) {
-              if (i.Id === res[1].Id) {
-                return true
-              }
-            }
+            //Explicit navigation instead of returning a UrlTree because UrlTree breaks navigation history(https://github.com/angular/angular/issues/27148)
+            this.router.navigateByUrl(`/join/${sprintId}`) 
+            return false
           }
-          
-          this.kickMeToJoin(sprintId)
-          return false
         })
       )
     }
   }
-
-  kickMeToJoin(sprintId: string): void {
-    // Current user not a member of this sprint
-    localStorage.removeItem("user")
-    console.info("Goodbye sprint" + sprintId + ". I hardly knew you")
-    this.router.navigateByUrl(`/join/${sprintId}`)
-  }
-
 }
