@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject, Observable } from 'rxjs';
 //import { switchMap,retryWhen,delay } from 'rxjs/operators';
 import { webSocket, WebSocketSubject } from "rxjs/webSocket";
 import * as globals from './globals.service';
@@ -9,6 +8,8 @@ import { InternalService } from './internal.service';
 @Injectable({
   providedIn: 'root'
 })
+
+
 export class WebsocketService {
 
   infoSocket$: WebSocketSubject<any>;
