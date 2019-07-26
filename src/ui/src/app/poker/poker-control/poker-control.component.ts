@@ -42,6 +42,7 @@ export class PokerControlComponent implements OnInit {
   user: User;
   baseUrl: string;
   isVoteShown : boolean;
+  subscriber : WebSocketSubject<any>;
 
   constructor(
     private router: Router,
@@ -76,26 +77,27 @@ export class PokerControlComponent implements OnInit {
       }
     })
 
-    this.webSocket.connect(this.sprint_id).subscribe(
-      messages => {
-        if (messages.Round) {
-          this.storyList = messages.Rounds;
-          this.curStory = this.storyList[this.storyList.length - 1];
-          if (this.curStory.Archived){
-            this.comms.selectCard(this.sprint_id, this.user.Id, -1 ).subscribe(response => {
-                if (response.status === 200) {
-                } else {
-                }
-            });
-          } else {
-            this.curStory.Avg = this.stats[2];
-            this.curStory.Med = this.stats[1];
-            this.curStory.Final = this.stats[1];
-          }
-          console.log("list of rounds", messages.Rounds);
-        }
-      }
-    );
+    this.subscriber = this.webSocket.connect(this.sprint_id).subscribe();
+    // this.webSocket.connect(this.sprint_id).subscribe(
+    //   messages => {
+    //     if (messages.Round) {
+    //       this.storyList = messages.Rounds;
+    //       this.curStory = this.storyList[this.storyList.length - 1];
+    //       if (this.curStory.Archived){
+    //         this.comms.selectCard(this.sprint_id, this.user.Id, -1 ).subscribe(response => {
+    //             if (response.status === 200) {
+    //             } else {
+    //             }
+    //         });
+    //       } else {
+    //         this.curStory.Avg = this.stats[2];
+    //         this.curStory.Med = this.stats[1];
+    //         this.curStory.Final = this.stats[1];
+    //       }
+    //       console.log("list of rounds", messages.Rounds);
+    //     }
+    //   }
+    // );
 
     // this.roundInfoSocket$ = webSocket({
     //   url: globals.roundInfoSocket,
@@ -140,6 +142,11 @@ export class PokerControlComponent implements OnInit {
 
     //Start talking ot the socket
     //this.refreshSocket();
+    this.internal.rounds$.subscribe(msg => {
+      this.storyList = msg
+      this.curStory = this.storyList[this.storyList.length - 1]
+      }
+    );
     this.internal.stats$.subscribe(msg => this.stats = msg);
     this.internal.user$.subscribe(msg => this.user = msg);
     this.internal.isVoteShown$.subscribe(msg => this.isVoteShown = msg);

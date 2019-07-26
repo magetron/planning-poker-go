@@ -36,13 +36,13 @@ export class MemberslistComponent extends Cardify implements OnInit {
   }
 
   ngOnInit() {
-    this.webSocket.connect(this.sprint_id).subscribe(
-      messages => {
-        this.messages.push(messages);
-        this.users = messages.Users;
-        console.log("list of users", messages.Users);
-      }
-    );
+    // this.webSocket.connect(this.sprint_id).subscribe(
+    //   messages => {
+    //     this.messages.push(messages);
+    //     this.users = messages.Users;
+    //     console.log("list of users", messages.Users);
+    //   }
+    // );
     // this.voteSocket$ = webSocket({
     //   url: globals.voteSocket,
     //   serializer: msg => msg, //Don't JSON encode the sprint_id
@@ -70,6 +70,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
     this.socketBroadcast();
     this.btn1text = "Show Vote";
     this.internal.user$.subscribe(msg => this.user = msg);
+    this.internal.users$.subscribe(msg => this.users = msg);
   }
 
   socketBroadcast() {
