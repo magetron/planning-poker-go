@@ -55,26 +55,48 @@ func (c *Client) readPump() {
 		}
 		sprintId := c.Hub.Id
 		if string(message) == "update" {
+			newMessage := []byte("[")
 			for _, users := range us.AllUsers {
 				if sprintId == users.SprintId {
-					newMessage, jsonErr := json.Marshal(users)
-					if jsonErr != nil {
-						log.Println(jsonErr)
+					var tmpReturnUserArray []User
+					if !users.VotesShown {
+						tmpReturnUserArray = make([]User, 0)
+						for _, user := range users.Users {
+							var tmpReturnUser User
+							tmpReturnUser = *user
+							if user.Vote != -1 {
+								tmpReturnUser.Vote = -3
+							}
+							tmpReturnUserArray = append(tmpReturnUserArray, tmpReturnUser)
+						}
 					}
-					c.Hub.Broadcast <- newMessage
+					var usersStr []byte
+					var usersErr error
+					if users.VotesShown {
+						usersStr, usersErr = json.Marshal(users.Users)
+					} else {
+						usersStr, usersErr = json.Marshal(tmpReturnUserArray)
+					}
+					if usersErr != nil {
+						log.Println(usersErr)
+					}
+					newMessage = append(newMessage, usersStr...)
 					break
 				}
 			}
 			for _, rounds := range rc.AllRounds {
 				if sprintId == rounds.SprintId {
-					newMessage, jsonErr := json.Marshal(rounds)
+					jsonStr, jsonErr := json.Marshal(rounds)
 					if jsonErr != nil {
 						log.Println(jsonErr)
 					}
-					c.Hub.Broadcast <- newMessage
+					newMessage = append(newMessage, byte(','))
+					newMessage = append(newMessage, jsonStr...)
 					break
 				}
 			}
+			newMessage = append(newMessage, byte(']'))
+			c.Hub.Broadcast <- newMessage
 		}
 	}
 }

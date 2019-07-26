@@ -8,6 +8,7 @@ import { Sprint } from 'src/app/models/sprint';
 import { Cardify } from '../../models/cardify.component';
 import { webSocket, WebSocketSubject } from "rxjs/webSocket";
 import * as globals from "../../services/globals.service";
+import { WebsocketService } from 'src/app/services/websocket.service';
 
 @Component({
   selector: 'app-memberslist',
@@ -20,64 +21,50 @@ export class MemberslistComponent extends Cardify implements OnInit {
   users: User[];
   user: User;
   @Input() sprint_id: string;
-  voteSocket$: WebSocketSubject<any>;
+
   showV: boolean = false;
   btn1text: string;
   displayedColumns: string[] = ['NAME', 'VOTE'];
 
   constructor(
+<<<<<<< HEAD
     private router: Router,
+=======
+    private webSocket: WebsocketService,
+>>>>>>> fix/json
     private comms: CommsService,
     private internal: InternalService) {
     super();
   }
 
   ngOnInit() {
-    this.voteSocket$ = webSocket({
-      url: globals.voteSocket,
-      serializer: msg => msg, //Don't JSON encode the sprint_id
-      deserializer: ({ data }) => {
-        //console.log(data);
-        let j = JSON.parse(data) as User[];
-        return j;
-      },
-      binaryType: "blob",
-    });
-
-    //TODO: catch server unavailable
-    this.voteSocket$.subscribe(
-      msg => { // Called whenever there is a message from the server.
-        //console.log('socket received');
-        this.users = msg;
-        this.internal.updateStats(this.analysisVote());
-        this.internal.updateUser(this.updateMe());
-        //console.log("this.users = ", msg);
-      },
-      err => console.log(err), // Called if at any point WebSocket API signals some kind of error.
-      () => console.log('complete') // Called when connection is closed (for whatever reason).
-    );
-
-    //Start talking ot the socket
-    this.refreshSocket();
+    this.socketBroadcast();
     this.btn1text = "Show Vote";
     this.internal.user$.subscribe(msg => this.user = msg);
+    this.internal.users$.subscribe(msg => {
+      this.users = msg;
+      if(this.users){
+        this.internal.updateStats(this.analysisVote());
+      }
+    });
   }
 
-  refreshSocket(): void {
-    //console.log("Pulling data for sprint " + this.sprint_id);
-    this.voteSocket$.next(this.sprint_id);
-    setTimeout(() => this.refreshSocket(), globals.socketRefreshTime);
+  socketBroadcast() {
+    this.webSocket.send("update");
   }
 
   analysisVote(): Array<number> {
-    //result is an array of votes
     let result = this.users.map(i => i.Vote);
+<<<<<<< HEAD
     //strip non-votes
     result = result.filter(i => ![-1, -2, -3].includes(i));
+=======
+
+    result = result.filter(i => i !== -1 && i !== -2 && i != -3);
+>>>>>>> fix/json
 
     if(result.length === 0) return [0, 0, 0];
 
-    //calculate parameters
     var avg = this.mean(result);
     var median = this.median(result);
     var mode = this.mode(result);
@@ -135,6 +122,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
       this.internal.showVote(this.showV)
       this.btn1text = "Show Vote";
     }
+<<<<<<< HEAD
     console.log("showV value", this.showV);/*
     this.comms.showVote(this.sprint_id, this.user.Id, this.showV ).subscribe(response => {
       if (response && response.s === 200) {
@@ -143,15 +131,27 @@ export class MemberslistComponent extends Cardify implements OnInit {
         console.log("Set Vote to be shown failed");
       }
     })*/
+=======
+    console.log("showV value", this.showV);
+    this.comms.showVote(this.sprint_id, this.user.Id, this.showV ).subscribe((response => {
+      if (response.status === 200) {
+        this.socketBroadcast();
+        //console.log("Set Vote to be shown?", this.showV);
+      } else {
+        console.log("Set Vote to be shown failed");
+      }
+    }))
+>>>>>>> fix/json
   }
 
   setNextAdmin(successor : User) : void{
     if (this.user.Admin){
       this.comms.appointSuccessor(this.sprint_id, this.user.Id, successor.Id).subscribe(response => {
+        console.info(response);
         if (response && response.status === 200) {
           console.log("Set successor");
           this.internal.updateUser(this.user);
-          //TODO:update front end this.user via emmit
+          this.socketBroadcast();
         } else {
           console.log("Set successor failed");
         }
@@ -174,6 +174,9 @@ export class MemberslistComponent extends Cardify implements OnInit {
     } else {
       return (user.Name)
     }
+<<<<<<< HEAD
     //console.log("users = ", this.users);
+=======
+>>>>>>> fix/json
   }
 }
