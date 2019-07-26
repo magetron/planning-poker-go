@@ -9,6 +9,6 @@
     <span margin-left=10em>{{user?.Name}}</span>
   </div>
   <div fxFlex fxLayoutAlign="end" *ngIf="user && user.Name !== ''">
-      <button mat-raised-button [disabled]="isInvalid()" (click)="logOut()">Logout</button>
+      <button mat-raised-button (click)="logOut()">Logout</button>
   </div>
 </mat-toolbar>

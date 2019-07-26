@@ -58,6 +58,7 @@ export class PokerControlComponent implements OnInit {
         console.log('Connection error', err);
         //TODO: Handle properly - notify the user, retry?
         this.router.navigateByUrl(`/join/${this.sprint_id}`);
+        //TODO: delete user from local storage?
         return throwError(err);
       })
     )
@@ -133,14 +134,14 @@ export class PokerControlComponent implements OnInit {
         console.log("Server communication error");
       }
     });
-
+/*
     this.comms.showVote(this.sprint_id, this.user.Id, false ).subscribe(response => {
       if (response && response.s === 200) {
         console.log("Set Vote to be shown?", false);
       } else {
         console.log("Set Vote to be shown failed");
       }
-    })
+    })*/
   }
 
   refreshSocket(): void {
@@ -177,7 +178,7 @@ export class PokerControlComponent implements OnInit {
     });
   }
   
-  HideLastElementinList(title: Round, displayTitle: string): any{
+  hideLastElementinList(title: Round, displayTitle: string): any{
     if (title.Archived){
       return title.Final;
     } else if (title.Name == this.curStory.Name) {

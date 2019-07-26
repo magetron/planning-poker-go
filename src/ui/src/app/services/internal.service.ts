@@ -14,7 +14,7 @@ export class InternalService {
   private user = new BehaviorSubject<User>(null);
   private sprint = new BehaviorSubject<Sprint>({Name: "", Id: ""});
   private stats = new BehaviorSubject<number[]>([0,0,0]);
-  private round = new BehaviorSubject<Round>({Name: "default",Id : 0,Avg : 0,Med: 0,Final: 0,Archived : false,CreationTime : 0,});
+  private round = new BehaviorSubject<Round>({Name: "default", Id : 0, Avg : 0, Med: 0, Final: 0, Archived : false, CreationTime : 0,});
   private isVoteShown = new BehaviorSubject<boolean>(false);
   private logoutAll = new BehaviorSubject<boolean>(false);
 
@@ -47,12 +47,12 @@ export class InternalService {
     this.isVoteShown.next(isVoteShown);
   }
 
-  logInUser(user) {
+  logInUser(user: User) {
     this.updateUser(user);
     localStorage.setItem("user", JSON.stringify(user))
   }
 
-  isUserAllowed() {
+  reloadOrKickUser(): boolean {
     let user = localStorage.getItem("user");
     if (user != null) {
       this.updateUser(JSON.parse(user) as User)
@@ -60,11 +60,10 @@ export class InternalService {
     } else {
       return false
     }
-    return localStorage.getItem("user") != null; 
   }
-
+/*
   logoutAllUsers(logoutAll: boolean) {
     this.logoutAll.next(logoutAll);
   }
-
+*/
 }
