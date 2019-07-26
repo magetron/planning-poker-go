@@ -27,11 +27,8 @@ export class MemberslistComponent extends Cardify implements OnInit {
   displayedColumns: string[] = ['NAME', 'VOTE'];
 
   constructor(
-<<<<<<< HEAD
     private router: Router,
-=======
     private webSocket: WebsocketService,
->>>>>>> fix/json
     private comms: CommsService,
     private internal: InternalService) {
     super();
@@ -55,13 +52,9 @@ export class MemberslistComponent extends Cardify implements OnInit {
 
   analysisVote(): Array<number> {
     let result = this.users.map(i => i.Vote);
-<<<<<<< HEAD
+
     //strip non-votes
     result = result.filter(i => ![-1, -2, -3].includes(i));
-=======
-
-    result = result.filter(i => i !== -1 && i !== -2 && i != -3);
->>>>>>> fix/json
 
     if(result.length === 0) return [0, 0, 0];
 
@@ -122,16 +115,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
       this.internal.showVote(this.showV)
       this.btn1text = "Show Vote";
     }
-<<<<<<< HEAD
-    console.log("showV value", this.showV);/*
-    this.comms.showVote(this.sprint_id, this.user.Id, this.showV ).subscribe(response => {
-      if (response && response.s === 200) {
-        console.log("Set Vote to be shown?", this.showV);
-      } else {
-        console.log("Set Vote to be shown failed");
-      }
-    })*/
-=======
+
     console.log("showV value", this.showV);
     this.comms.showVote(this.sprint_id, this.user.Id, this.showV ).subscribe((response => {
       if (response.status === 200) {
@@ -141,7 +125,6 @@ export class MemberslistComponent extends Cardify implements OnInit {
         console.log("Set Vote to be shown failed");
       }
     }))
->>>>>>> fix/json
   }
 
   setNextAdmin(successor : User) : void{
@@ -174,9 +157,5 @@ export class MemberslistComponent extends Cardify implements OnInit {
     } else {
       return (user.Name)
     }
-<<<<<<< HEAD
-    //console.log("users = ", this.users);
-=======
->>>>>>> fix/json
   }
 }

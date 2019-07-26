@@ -28,6 +28,8 @@ export interface ComplexResponse {
 
 export interface StatusResponse {
   status: number;
+}
+
 export interface UserResponse {
   s: number;
   d: User[];
