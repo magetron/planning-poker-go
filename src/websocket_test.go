@@ -85,6 +85,25 @@ func TestUpdate(t *testing.T) {
 		userId2 = response.Output[12:48]
 	})
 
+	creationTime := ""
+	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
+		newReqBody, newReqBodyErr := json.Marshal(map[string]string{
+			"Name": "Task 1",
+		})
+		if newReqBodyErr != nil {
+			log.Fatal(newReqBodyErr)
+		}
+		newReq, newErr := http.NewRequest("POST", "sprints/"+sprintId+"/rounds/", bytes.NewBuffer(newReqBody))
+		if newErr != nil {
+			log.Fatal(newErr)
+		}
+		newReq.Header.Set("Content-Type", "application/json")
+		return newReq
+	}), func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		creationTime = response.Output[87:97]
+		log.Print(creationTime)
+	})
+
 	url := "ws" + strings.Trim(server.URL, "http") + "/info/" + sprintId
 
 	ws, _, err := websocket.DefaultDialer.Dial(url, nil)
@@ -97,6 +116,6 @@ func TestUpdate(t *testing.T) {
 		t.Fatalf("%v", err)
 	}
 	_, p, err := ws.ReadMessage()
-	assert.Equal(t, `[[{"Id":"`+userId1+`","Name":"New User 1","Vote":-1,"Admin":true},{"Id":"`+userId2+`","Name":"New User 2","Vote":-1,"Admin":false}]]`, string(p), "Websocket should be Two Users object.")
+	assert.Equal(t, `[[{"Id":"`+userId1+`","Name":"New User 1","Vote":-1,"Admin":true},{"Id":"`+userId2+`","Name":"New User 2","Vote":-1,"Admin":false}],{"Rounds":[{"Id":1,"Name":"Task 1","Med":0,"Avg":0,"Final":0,"Archived":false,"CreationTime":` + creationTime + `}],"SprintId":"` + sprintId + `"}]`, string(p), "Websocket should be Two Users object.")
 
 }
