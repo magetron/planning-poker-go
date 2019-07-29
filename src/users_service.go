@@ -250,7 +250,7 @@ func (us *UsersService) Update(id string, ctx context.Context) error {
 	for _, users := range us.AllUsers {
 		if users.SprintId == id {
 			for _, user := range users.Users {
-				user.Vote = 0
+				user.Vote = -1
 			}
 			return goweb.Respond.WithOK(ctx)
 		}
