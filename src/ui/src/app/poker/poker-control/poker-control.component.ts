@@ -86,7 +86,6 @@ export class PokerControlComponent implements OnInit {
 
     this.internal.stats$.subscribe(msg => {
       this.stats = msg
-      console.info(msg)
     });
     this.internal.user$.subscribe(msg => this.user = msg);
     this.internal.isVoteShown$.subscribe(msg => this.isVoteShown = msg);
@@ -130,7 +129,7 @@ export class PokerControlComponent implements OnInit {
 
   archiveRound(): void {
     this.comms.archiveRound(this.sprint_id, this.round.Id, this.stats[2],
-       this.stats[1], (this.stats[2] + this.stats[1])/2).subscribe(response => {
+       this.stats[1], this.stats[3]).subscribe(response => {
       if (response && response.status === 200) {
         this.rounds[this.rounds.length - 1].Archived = true;
         this.internal.updateRounds(this.rounds);

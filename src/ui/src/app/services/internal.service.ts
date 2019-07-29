@@ -14,7 +14,7 @@ export class InternalService {
 
   private user = new BehaviorSubject<User>(null);
   private sprint = new BehaviorSubject<Sprint>({Name: "", Id: ""});
-  private stats = new BehaviorSubject<number[]>([0,0,0]); //Mode, Median Average
+  private stats = new BehaviorSubject<number[]>([0,0,0,0]); //Mode, Median Average, Final
   private isVoteShown = new BehaviorSubject<boolean>(false);
   private logoutAll = new BehaviorSubject<boolean>(false);
   private users = new BehaviorSubject<User[]>(null);

@@ -40,15 +40,10 @@ export class MemberslistComponent extends Cardify implements OnInit {
     this.socketBroadcast();
     this.btn1text = "Show Vote";
     this.internal.user$.subscribe(msg => this.user = msg)
-    // this.internal.round$.subscribe(msg => this.round = msg)
     this.internal.users$.subscribe(msg => {
       this.users = msg;
       if (this.users) {
         let stats = this.analysisVote()
-        // this.round.Avg = stats[2]
-        // this.round.Med = stats[1]
-        // this.round.Final = (stats[2] + stats[1])/2
-        // this.internal.updateRound(this.round)
         this.internal.updateStats(stats)
         this.internal.updateUser(this.updateMe())
       }
@@ -65,12 +60,13 @@ export class MemberslistComponent extends Cardify implements OnInit {
     //strip non-votes
     result = result.filter(i => ![-1, -2, -3].includes(i));
 
-    if (result.length === 0) return [0, 0, 0];
+    if (result.length === 0) return [0, 0, 0, 0];
 
     var avg = this.mean(result);
     var median = this.median(result);
     var mode = this.mode(result);
-    return [mode, median, avg];
+    let final = (median + avg)/2
+    return [mode, median, avg, final];
   }
 
   mean(arr: number[]): number {
