@@ -40,15 +40,15 @@ export class MemberslistComponent extends Cardify implements OnInit {
     this.socketBroadcast();
     this.btn1text = "Show Vote";
     this.internal.user$.subscribe(msg => this.user = msg)
-    this.internal.round$.subscribe(msg => this.round = msg)
+    // this.internal.round$.subscribe(msg => this.round = msg)
     this.internal.users$.subscribe(msg => {
       this.users = msg;
       if (this.users) {
         let stats = this.analysisVote()
-        this.round.Avg = stats[2]
-        this.round.Med = stats[1]
-        this.round.Final = (stats[2] + stats[1])/2
-        this.internal.updateRound(this.round)
+        // this.round.Avg = stats[2]
+        // this.round.Med = stats[1]
+        // this.round.Final = (stats[2] + stats[1])/2
+        // this.internal.updateRound(this.round)
         this.internal.updateStats(stats)
         this.internal.updateUser(this.updateMe())
       }

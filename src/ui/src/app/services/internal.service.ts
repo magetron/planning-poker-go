@@ -15,7 +15,6 @@ export class InternalService {
   private user = new BehaviorSubject<User>(null);
   private sprint = new BehaviorSubject<Sprint>({Name: "", Id: ""});
   private stats = new BehaviorSubject<number[]>([0,0,0]); //Mode, Median Average
-  private round = new BehaviorSubject<Round>({Name: "default", Id : 0, Avg : 0, Med: 0, Final: 0, Archived : false, CreationTime : 0,});
   private isVoteShown = new BehaviorSubject<boolean>(false);
   private logoutAll = new BehaviorSubject<boolean>(false);
   private users = new BehaviorSubject<User[]>(null);
@@ -24,7 +23,6 @@ export class InternalService {
   user$ = this.user.asObservable();
   sprint$ = this.sprint.asObservable();
   stats$ = this.stats.asObservable();
-  round$ = this.round.asObservable();
   isVoteShown$ = this.isVoteShown.asObservable();
   logoutAll$ = this.logoutAll.asObservable();
   users$ = this.users.asObservable();
@@ -42,16 +40,6 @@ export class InternalService {
 
   updateStats(stats: number[]) {
     this.stats.next(stats);
-    // this.round$.pipe(first()).subscribe(res => {
-    //   res.Avg = stats[2]
-    //   res.Med = stats[1]
-    //   res.Final = (stats[2] + stats[1])/2
-    //   this.updateRound(res)
-    // })
-  }
-
-  updateRound(round: Round) {
-    this.round.next(round);
   }
 
   showVote(isVoteShown: boolean) {
@@ -76,11 +64,11 @@ export class InternalService {
     this.logoutAll.next(logoutAll);
   }
 
-  updateUsers(users: User[]){
+  updateUsers(users: User[]) {
     this.users.next(users);
   }
 
-  updateRounds(rounds: Round[]){
+  updateRounds(rounds: Round[]) {
     this.rounds.next(rounds);
   }
 

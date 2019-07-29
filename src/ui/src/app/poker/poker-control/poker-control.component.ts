@@ -132,8 +132,8 @@ export class PokerControlComponent implements OnInit {
     this.comms.archiveRound(this.sprint_id, this.round.Id, this.stats[2],
        this.stats[1], (this.stats[2] + this.stats[1])/2).subscribe(response => {
       if (response && response.status === 200) {
-        this.round.Archived = true;
-        this.internal.updateRound(this.round);
+        this.rounds[this.rounds.length - 1].Archived = true;
+        this.internal.updateRounds(this.rounds);
         this.socketBroadcast()
         console.log("Round archived: ", this.round.Id);
       } else {
