@@ -82,8 +82,12 @@ export class PokerControlComponent implements OnInit {
       this.rounds = msg
       this.round = this.rounds[this.rounds.length - 1]
       }
-    );
-    this.internal.stats$.subscribe(msg => this.stats = msg);
+    )
+
+    this.internal.stats$.subscribe(msg => {
+      this.stats = msg
+      console.info(msg)
+    });
     this.internal.user$.subscribe(msg => this.user = msg);
     this.internal.isVoteShown$.subscribe(msg => this.isVoteShown = msg);
     this.startTimer();
@@ -124,11 +128,13 @@ export class PokerControlComponent implements OnInit {
     }
   }
 
-  archiveRound(): void{
-    this.comms.archiveRound(this.sprint_id, this.round.Id, this.round.Avg, this.round.Med, this.round.Final).subscribe(response => {
+  archiveRound(): void {
+    this.comms.archiveRound(this.sprint_id, this.round.Id, this.stats[2],
+       this.stats[1], (this.stats[2] + this.stats[1])/2).subscribe(response => {
       if (response && response.status === 200) {
         this.round.Archived = true;
         this.internal.updateRound(this.round);
+        this.socketBroadcast()
         console.log("Round archived: ", this.round.Id);
       } else {
         console.log("Server communication error");

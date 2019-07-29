@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { first } from 'rxjs/operators';
 
 import { User} from '../models/user';
 import { Sprint } from '../models/sprint';
@@ -13,7 +14,7 @@ export class InternalService {
 
   private user = new BehaviorSubject<User>(null);
   private sprint = new BehaviorSubject<Sprint>({Name: "", Id: ""});
-  private stats = new BehaviorSubject<number[]>([0,0,0]);
+  private stats = new BehaviorSubject<number[]>([0,0,0]); //Mode, Median Average
   private round = new BehaviorSubject<Round>({Name: "default", Id : 0, Avg : 0, Med: 0, Final: 0, Archived : false, CreationTime : 0,});
   private isVoteShown = new BehaviorSubject<boolean>(false);
   private logoutAll = new BehaviorSubject<boolean>(false);
@@ -41,6 +42,12 @@ export class InternalService {
 
   updateStats(stats: number[]) {
     this.stats.next(stats);
+    // this.round$.pipe(first()).subscribe(res => {
+    //   res.Avg = stats[2]
+    //   res.Med = stats[1]
+    //   res.Final = (stats[2] + stats[1])/2
+    //   this.updateRound(res)
+    // })
   }
 
   updateRound(round: Round) {

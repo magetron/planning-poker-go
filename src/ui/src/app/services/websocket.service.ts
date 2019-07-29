@@ -29,6 +29,7 @@ export class WebsocketService {
         this.internal.updateUsers(j[0]);
         if (j.length == 2 && j[1].Rounds){
           this.internal.updateRounds(j[1].Rounds);
+          console.log(j[1].Rounds)
         }
         return j;
       },
