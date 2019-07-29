@@ -119,3 +119,49 @@ func TestUpdate(t *testing.T) {
 	assert.Equal(t, `[[{"Id":"`+userId1+`","Name":"New User 1","Vote":-1,"Admin":true},{"Id":"`+userId2+`","Name":"New User 2","Vote":-1,"Admin":false}],{"Rounds":[{"Id":1,"Name":"Task 1","Med":0,"Avg":0,"Final":0,"Archived":false,"CreationTime":` + creationTime + `}],"SprintId":"` + sprintId + `"}]`, string(p), "Websocket should be Two Users object.")
 
 }
+
+func TestConnHub (t *testing.T) {
+	codecService := goweb.DefaultHttpHandler().CodecService()
+	handler := handlers.NewHttpHandler(codecService)
+	goweb.SetDefaultHttpHandler(handler)
+	mapRoutes()
+	server := httptest.NewServer(goweb.DefaultHttpHandler())
+	defer server.Close()
+
+	sprintId1 := ""
+	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
+		newReqBody, newReqBodyErr := json.Marshal(map[string]string{
+			"Name": "New Sprint 1",
+		})
+		if newReqBodyErr != nil {
+			log.Fatal(newReqBodyErr)
+		}
+		newReq, newErr := http.NewRequest("POST", "sprints/", bytes.NewBuffer(newReqBody))
+		if newErr != nil {
+			log.Fatal(newErr)
+		}
+		newReq.Header.Set("Content-Type", "application/json")
+		return newReq
+	}), func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		sprintId1 = response.Output[6:15]
+	})
+
+	sprintId2 := ""
+	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
+		newReqBody, newReqBodyErr := json.Marshal(map[string]string{
+			"Name": "New Sprint 2",
+		})
+		if newReqBodyErr != nil {
+			log.Fatal(newReqBodyErr)
+		}
+		newReq, newErr := http.NewRequest("POST", "sprints/", bytes.NewBuffer(newReqBody))
+		if newErr != nil {
+			log.Fatal(newErr)
+		}
+		newReq.Header.Set("Content-Type", "application/json")
+		return newReq
+	}), func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		sprintId2 = response.Output[6:15]
+	})
+
+}
