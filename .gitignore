@@ -18,3 +18,6 @@ planningpoker-kp.pem
 
 #Docker Image
 planningpoker.tar
+
+#compiled Go executable
+/planningpoker

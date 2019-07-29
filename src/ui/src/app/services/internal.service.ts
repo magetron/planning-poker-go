@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { first } from 'rxjs/operators';
 
 import { User} from '../models/user';
 import { Sprint } from '../models/sprint';
@@ -13,8 +14,7 @@ export class InternalService {
 
   private user = new BehaviorSubject<User>(null);
   private sprint = new BehaviorSubject<Sprint>({Name: "", Id: ""});
-  private stats = new BehaviorSubject<number[]>([0,0,0]);
-  private round = new BehaviorSubject<Round>({Name: "default", Id : 0, Avg : 0, Med: 0, Final: 0, Archived : false, CreationTime : 0,});
+  private stats = new BehaviorSubject<number[]>([0,0,0,0]); //Mode, Median Average, Final
   private isVoteShown = new BehaviorSubject<boolean>(false);
   private logoutAll = new BehaviorSubject<boolean>(false);
   private users = new BehaviorSubject<User[]>(null);
@@ -23,7 +23,6 @@ export class InternalService {
   user$ = this.user.asObservable();
   sprint$ = this.sprint.asObservable();
   stats$ = this.stats.asObservable();
-  round$ = this.round.asObservable();
   isVoteShown$ = this.isVoteShown.asObservable();
   logoutAll$ = this.logoutAll.asObservable();
   users$ = this.users.asObservable();
@@ -41,10 +40,6 @@ export class InternalService {
 
   updateStats(stats: number[]) {
     this.stats.next(stats);
-  }
-
-  updateRound(round: Round) {
-    this.round.next(round);
   }
 
   showVote(isVoteShown: boolean) {
@@ -69,11 +64,11 @@ export class InternalService {
     this.logoutAll.next(logoutAll);
   }
 
-  updateUsers(users: User[]){
+  updateUsers(users: User[]) {
     this.users.next(users);
   }
 
-  updateRounds(rounds: Round[]){
+  updateRounds(rounds: Round[]) {
     this.rounds.next(rounds);
   }
 
