@@ -5,6 +5,7 @@ import { InternalService } from 'src/app/services/internal.service';
 import { CommsService } from 'src/app/services/comms.service';
 import { User } from 'src/app/models/user';
 import { Sprint } from 'src/app/models/sprint';
+import { Round } from 'src/app/models/round';
 import { Cardify } from '../../models/cardify.component';
 import { webSocket, WebSocketSubject } from "rxjs/webSocket";
 import * as globals from "../../services/globals.service";
@@ -20,6 +21,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
 
   users: User[];
   user: User;
+  round: Round;
   @Input() sprint_id: string;
 
   showV: boolean = false;
@@ -28,7 +30,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
 
   constructor(
     private router: Router,
-    private webSocket: WebsocketService,
+    private socket: WebsocketService,
     private comms: CommsService,
     private internal: InternalService) {
     super();
@@ -37,17 +39,19 @@ export class MemberslistComponent extends Cardify implements OnInit {
   ngOnInit() {
     this.socketBroadcast();
     this.btn1text = "Show Vote";
-    this.internal.user$.subscribe(msg => this.user = msg);
+    this.internal.user$.subscribe(msg => this.user = msg)
     this.internal.users$.subscribe(msg => {
       this.users = msg;
-      if(this.users){
-        this.internal.updateStats(this.analysisVote());
+      if (this.users) {
+        let stats = this.analysisVote()
+        this.internal.updateStats(stats)
+        this.internal.updateUser(this.updateMe())
       }
     });
   }
 
   socketBroadcast() {
-    this.webSocket.send("update");
+    this.socket.send("update");
   }
 
   analysisVote(): Array<number> {
@@ -56,23 +60,24 @@ export class MemberslistComponent extends Cardify implements OnInit {
     //strip non-votes
     result = result.filter(i => ![-1, -2, -3].includes(i));
 
-    if(result.length === 0) return [0, 0, 0];
+    if (result.length === 0) return [0, 0, 0, 0];
 
     var avg = this.mean(result);
     var median = this.median(result);
     var mode = this.mode(result);
-    return [mode, median, avg];
+    let final = (median + avg)/2
+    return [mode, median, avg, final];
   }
 
-  mean(arr): number {
-    var i, sum = 0;
-    for (i = 0; i < arr.length; i++) {
-      sum += arr[i];
+  mean(arr: number[]): number {
+    let sum = 0;
+    for (let i of arr) {
+      sum += i;
     }
     return sum / arr.length;
   }
 
-  median(arr): number {
+  median(arr: number[]): number {
     arr.sort(function(a, b) {
       return a - b;
     });
@@ -84,7 +89,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
     }
   }
 
-  mode(arr): number {
+  mode(arr: number[]): number {
     var modes = [], count = [], i, number, maxIndex = 0;
 
     for (i = 0; i < arr.length; i += 1) {
@@ -103,8 +108,9 @@ export class MemberslistComponent extends Cardify implements OnInit {
   }
 
   showVoteFunc(): void {
-    var state = document.getElementById("btn1").classList.toggle("showV");
-    document.getElementById("btn1").classList.toggle("hideV")
+    let btn = document.getElementById("btn1")
+    let state = btn.classList.toggle("showV")
+    btn.classList.toggle("hideV")
 
     if (state) {
       this.showV = true;
@@ -116,7 +122,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
       this.btn1text = "Show Vote";
     }
 
-    console.log("showV value", this.showV);
+    //console.log("showV value", this.showV);
     this.comms.showVote(this.sprint_id, this.user.Id, this.showV ).subscribe((response => {
       if (response.status === 200) {
         this.socketBroadcast();
@@ -152,10 +158,6 @@ export class MemberslistComponent extends Cardify implements OnInit {
   }
 
   crowned (user: User): string {
-    if (user.Admin) {
-      return (user.Name +" \uD83D\uDC51")
-    } else {
-      return (user.Name)
-    }
+    return(user.Admin ? user.Name +" \uD83D\uDC51" : user.Name)
   }
 }

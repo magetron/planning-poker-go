@@ -111,7 +111,7 @@ export class CommsService {
     return result;
   }
 
-  archiveRound (sprint_id: string, round_no:number, avg: number, med:number, fin:number): Observable<any>{
+  archiveRound (sprint_id: string, round_no: number, avg: number, med: number, fin: number): Observable<any>{
     let jsonObject = {
       "Average": avg,
       "Median": med,
