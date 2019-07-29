@@ -87,7 +87,7 @@ export class JoinComponent implements OnInit {
   }
 
   intialize(): void {
-    console.log("intialize func is being called")
+    //console.log("intialize func is being called")
     this.sprint = {
       Name: "",
       Id: "",

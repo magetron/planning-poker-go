@@ -29,6 +29,7 @@ docker:
 	mv ui/src/app/services/globals.service.ts ui/src/app/services/globals.service.ts.tmp && \
 	cp ui/src/app/services/globals-docker.service.ts ui/src/app/services/globals.service.ts && \
 	$(MAKE) build-linux && \
+	mv ui/src/app/services/globals.service.ts.tmp ui/src/app/services/globals.service.ts || \
 	mv ui/src/app/services/globals.service.ts.tmp ui/src/app/services/globals.service.ts
 
 build-dev:
