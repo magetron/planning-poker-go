@@ -14,7 +14,7 @@ import { PokerControlComponent } from '../poker/poker-control/poker-control.comp
 import { PokerCardComponent } from '../poker/poker-card/poker-card.component';
 import { MemberslistComponent } from '../poker/memberslist/memberslist.component';
 
-fdescribe('NewSprintComponent', () => {
+describe('NewSprintComponent', () => {
   let newSprintComponent: NewSprintComponent;
   let joinComponent: JoinComponent;
   let newSprintFixture: ComponentFixture<NewSprintComponent>;
@@ -57,16 +57,16 @@ fdescribe('NewSprintComponent', () => {
     newSprintFixture.detectChanges();
   });
 
-  fit('should create', async(() => {
+  it('should create', async(() => {
     expect(newSprintComponent).toBeTruthy();
   }));
 
-  fit("should have title 'Welcome to Planning Poker' in h1 tag", async(() => {
+  it("should have title 'Welcome to Planning Poker' in h1 tag", async(() => {
     const title = newSprintFixture.debugElement.nativeElement;
     expect(title.querySelector('h1').textContent).toContain('Welcome to Planning Poker');
   }));
 
-  fit("should have title 'Create a new session' in mat-card", async(() => {
+  it("should have title 'Create a new session' in mat-card", async(() => {
     const title = newSprintFixture.debugElement.nativeElement.querySelector('mat-card-title');
     expect(title.textContent).toBe(' Create a new session ');
   }));
