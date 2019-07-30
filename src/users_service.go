@@ -40,6 +40,10 @@ func (us *UsersService) Create(ctx context.Context) error {
 
 	dataMap := data.(map[string]interface{})
 
+	if us.AllUsers == nil {
+		us.AllUsers = make(map[string]*Users)
+	}
+
 	user := new(User)
 	user.Id = uuid.New().String()
 	user.Name = dataMap["Name"].(string)
@@ -53,7 +57,8 @@ func (us *UsersService) Create(ctx context.Context) error {
 		users.SprintId = urlId
 		users.VotesShown = false
 		users.AdminId = user.Id
-		user.Admin = true;
+		user.Admin = true
+		users.Users = make(map[string]*User)
 		users.Users[user.Id] = user
 		us.AllUsers[urlId] = users
 	} else {
@@ -81,7 +86,7 @@ func (us *UsersService) ReadMany(ctx context.Context) error {
 		log.Printf("Accessed all Users Information in Sprint %s", urlId)
 	}
 
-	return goweb.API.RespondWithStatus(ctx, http.StatusNotFound)
+	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 
 }
 
@@ -120,7 +125,7 @@ func (us *UsersService) Delete(id string, ctx context.Context) error {
 
 	delete(us.AllUsers[urlId].Users, id)
 
-	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
+	return goweb.Respond.WithStatus(ctx, http.StatusOK)
 }
 
 func (us *UsersService) Replace(id string, ctx context.Context) error {
