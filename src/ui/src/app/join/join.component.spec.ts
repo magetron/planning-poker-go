@@ -7,7 +7,13 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCardModule, MatFormFieldModule, MatIconModule, MatListModule, MatTableModule, MatButtonModule, MatInputModule,  MatToolbarModule } from '@angular/material';
 
-import { InternalService } from '../services/internal.service'
+import { CommsService } from '../services/comms.service'
+import * as globals from '../services/globals.service';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Sprint } from '../models/sprint';
+import { User } from '../models/user';
 
 import { JoinComponent } from './join.component';
 import { NewSprintComponent } from '../new-sprint/new-sprint.component';
@@ -17,17 +23,17 @@ import { PokerCardComponent } from '../poker/poker-card/poker-card.component';
 import { MemberslistComponent } from '../poker/memberslist/memberslist.component';
 
 
-fdescribe('JoinComponent', () => {
+describe('JoinComponent', () => {
   let joinComponent: JoinComponent;
   let fixture: ComponentFixture<JoinComponent>;
 
   let httpTestingController: HttpTestingController;
-  let internalService: InternalService;
+  let commsService : CommsService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       providers: [
-        InternalService,
+        CommsService,
       ],
       declarations: [
         NewSprintComponent,
@@ -35,7 +41,8 @@ fdescribe('JoinComponent', () => {
         JoinComponent,
         PokerControlComponent,
         PokerCardComponent,
-        MemberslistComponent
+        MemberslistComponent,
+        Observable
       ],
       imports: [ 
         FormsModule,
@@ -50,33 +57,47 @@ fdescribe('JoinComponent', () => {
         MatTableModule, 
         MatButtonModule, 
         MatInputModule,  
-        MatToolbarModule 
+        MatToolbarModule,
+        Injectable,
+        HttpClient, 
+        HttpHeaders
       ]
     })
     .compileComponents().then(() => {
-      fixture = TestBed.createComponent(JoinComponent);
-      joinComponent = fixture.componentInstance;
-      fixture.detectChanges();
+      // fixture = TestBed.createComponent(JoinComponent);
+      // joinComponent = fixture.componentInstance;
+      // fixture.detectChanges();
+      httpTestingController = TestBed.get(HttpTestingController);
+      commsService = TestBed.get(commsService);
     });
   }));
 
   beforeEach(() => {
-    httpTestingController = TestBed.get(HttpTestingController);
-    internalService = TestBed.get(InternalService);
-    fixture = TestBed.createComponent(JoinComponent);
-    joinComponent = fixture.componentInstance;
-    fixture.detectChanges();
+    commsService.createSprint("Sprint1").subscribe((data: any) => {
+      expect(data.name).toBe('Sprint1');
+      fixture = TestBed.createComponent(JoinComponent);
+      joinComponent = fixture.componentInstance;
+      fixture.detectChanges();
+    });
   });
 
   afterEach(() => {
     httpTestingController.verify();
   });
 
-  fit('internal serviec should be created', () => {
-    expect(internalService).toBeTruthy();
-  });
+  // it('internal service should be created', () => {
+  //   expect(internalService).toBeTruthy();
+  // });
 
-  it('should create', () => {
-    expect(joinComponent).toBeTruthy();
+  // it('should create', () => {
+  //   expect(joinComponent).toBeTruthy();
+  // });
+
+  it('should create a sprint', () => {
+    // commsService.createSprint("Sprint1").subscribe((data: any) => {
+    //   expect(data.name).toBe('Sprint1');
+    // });
+    //const req = httpTestingController.expectOne(`${globals.apiUrl}/sprints`);
+    //expect(req.request.method).toBe('POST','GET');
   });
 });
