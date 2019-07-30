@@ -32,8 +32,13 @@ func (sc *SprintsController) Create(ctx context.Context) error {
 
 	dataMap := data.(map[string]interface{})
 
+	if sc.Sprints == nil {
+		sc.Sprints = make(map[string]*Sprint)
+	}
+
 	sprint := new(Sprint)
 	newId, _ := sid.Generate()
+	sprint.Id = newId
 	sprint.Name = dataMap["Name"].(string)
 	sprint.CreationTime = time.Now()
 
