@@ -112,29 +112,3 @@ func main() {
 	log.Fatalf("Error in Server: %s", server.Serve(listener))
 
 }
-
-func garbageCollector(ctx context.Context) error {
-	log.Print("Collecting Garbage...")
-	for i, s := range sc.Sprints {
-		if time.Now().Sub(s.CreationTime).Hours() > 12 {
-			for irs, rs := range rc.AllRounds {
-				if rs.SprintId == s.Id {
-					rc.AllRounds[len(rc.AllRounds)-1], rc.AllRounds[irs] = rc.AllRounds[irs], rc.AllRounds[len(rc.AllRounds)-1]
-					rc.AllRounds = rc.AllRounds[:len(rc.AllRounds)-1]
-					break
-				}
-			}
-			for iu, u := range us.AllUsers {
-				if u.SprintId == s.Id {
-					us.AllUsers[len(us.AllUsers)-1], us.AllUsers[iu] = us.AllUsers[iu], us.AllUsers[len(us.AllUsers)-1]
-					us.AllUsers = us.AllUsers[:len(us.AllUsers)-1]
-					break
-				}
-			}
-			sc.Sprints[len(sc.Sprints)-1], sc.Sprints[i] = sc.Sprints[i], sc.Sprints[len(sc.Sprints)-1]
-			sc.Sprints = sc.Sprints[:len(sc.Sprints)-1]
-			break
-		}
-	}
-	return nil
-}
