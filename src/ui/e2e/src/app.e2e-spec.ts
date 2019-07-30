@@ -1,17 +1,32 @@
 import { AppPage } from './app.po';
 import { browser, logging } from 'protractor';
 
-describe('workspace-project App', () => {
+describe('/new page', async () => {
   let page: AppPage;
 
   beforeEach(() => {
     page = new AppPage();
   });
 
-  it('should display welcome message', () => {
+  it('top bar is visible', () => {
     page.navigateTo();
-    expect(page.getTitleText()).toEqual('Welcome to ui!');
+    expect(page.getTopBarLeft()).toEqual('Planning Poker');
   });
+
+  //ends up with "pending"
+  xit('sprint name should be empty', async () => {
+    await page.navigateTo();
+    console.log('page loaded')
+    const sprintName = await page.getSprintNameFromTopBar();
+    console.log('sprintname', sprintName)
+    expect(sprintName).toBeFalsy();
+  })
+
+  //ends up with "pending"
+  xit('username should be empty', () => {
+    page.navigateTo();
+    expect(page.getUserNameFromTopBar()).toBeUndefined()
+  })
 
   afterEach(async () => {
     // Assert that there are no errors emitted from the browser

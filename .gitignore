@@ -1,6 +1,10 @@
+# macOS
 .DS_Store
+
 *.code-workspace
 static-ui/
+
+# KDE
 .directory
 
 #running go build would create this
