@@ -99,7 +99,7 @@ func TestSprintCycle(t *testing.T) {
 
 	goweb.Test(t, "GET sprints/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for querying all Sprints.")
-		assert.Equal(t, `{"d":[],"s":200}`, response.Output, "Response will be empty after deleting sprints.")
+		assert.Equal(t, `{"d":{},"s":200}`, response.Output, "Response will be empty after deleting sprints.")
 	})
 
 }
@@ -227,7 +227,7 @@ func TestEmptyUser(t *testing.T) {
 	})
 
 	goweb.Test(t, "GET sprints/"+sprintId+"/users/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
-		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for querying all Users.")
+		assert.Equal(t, http.StatusNotFound, response.StatusCode, "Status code should be Not Found for querying all Users.")
 	})
 }
 
@@ -362,7 +362,7 @@ func TestUserCycle(t *testing.T) {
 		newReq.Header.Set("Content-Type", "application/json")
 		return newReq
 	}), func(t *testing.T, response *testifyhttp.TestResponseWriter) {
-		assert.Equal(t, http.StatusNotFound, response.StatusCode, "Status code should be Not Found for non-master trying to set other user as master")
+		assert.Equal(t, http.StatusUnauthorized, response.StatusCode, "Status code should be Unauthorized for non-master trying to set other user as master")
 	})
 
 	goweb.Test(t, "DELETE sprints/"+sprintId+"/users/"+userId1, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
