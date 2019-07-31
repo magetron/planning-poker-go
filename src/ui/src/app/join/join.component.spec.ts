@@ -9,11 +9,6 @@ import { MatCardModule, MatFormFieldModule, MatIconModule, MatListModule, MatTab
 
 import { CommsService } from '../services/comms.service'
 import * as globals from '../services/globals.service';
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { Sprint } from '../models/sprint';
-import { User } from '../models/user';
 
 import { JoinComponent } from './join.component';
 import { NewSprintComponent } from '../new-sprint/new-sprint.component';
@@ -41,8 +36,7 @@ describe('JoinComponent', () => {
         JoinComponent,
         PokerControlComponent,
         PokerCardComponent,
-        MemberslistComponent,
-        Observable
+        MemberslistComponent
       ],
       imports: [ 
         FormsModule,
@@ -57,10 +51,7 @@ describe('JoinComponent', () => {
         MatTableModule, 
         MatButtonModule, 
         MatInputModule,  
-        MatToolbarModule,
-        Injectable,
-        HttpClient, 
-        HttpHeaders
+        MatToolbarModule
       ]
     })
     .compileComponents().then(() => {
