@@ -3,7 +3,7 @@ import { MatCardModule, MatFormFieldModule, MatIconModule, MatListModule, MatTab
 import { FormsModule } from '@angular/forms';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
-
+import { Sprint } from '../models/sprint';
 import { ShareComponent } from './share.component';
 import { TopBarComponent } from '../top-bar/top-bar.component';
 import { AppRoutingModule } from '../app-routing.module';
@@ -12,8 +12,10 @@ import { JoinComponent } from '../join/join.component';
 import { PokerCardComponent } from '../poker/poker-card/poker-card.component';
 import { PokerControlComponent } from '../poker/poker-control/poker-control.component';
 import { MemberslistComponent } from '../poker/memberslist/memberslist.component';
+import { share } from 'rxjs/operators';
+import { spread } from 'q';
 
-describe('ShareComponent', () => {
+fdescribe('ShareComponent', () => {
   let component: ShareComponent;
   let fixture: ComponentFixture<ShareComponent>;
 
@@ -41,12 +43,17 @@ describe('ShareComponent', () => {
 
       ] 
     })
-    .compileComponents();
+    .compileComponents().then();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ShareComponent);
     component = fixture.componentInstance;
+
+    component.share = {
+      "Id" : "testSprint",
+      "Name" : "Sprint 1"
+    }
     fixture.detectChanges();
   });
 

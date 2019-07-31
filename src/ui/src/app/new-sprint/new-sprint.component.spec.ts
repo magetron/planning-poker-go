@@ -71,46 +71,4 @@ describe('NewSprintComponent', () => {
     expect(title.textContent).toBe(' Create a new session ');
   }));
 
-  // it('should display join link after user press enter', async(() => {
-  //   const inputEn = fixture.debugElement.query(By.css('div mat-card-content mat-form-field input'));
-  //   const inputEl = inputEn.nativeElement;
-  //   inputEl.value = 'Sprint 1';
-  //   inputEl.dispatchEvent(new Event('input'));
-  //   inputEl.dispatchEvent(new Event('keyup.enter'));
-  //   fixture.detectChanges();
-  //   expect(newSprintComponent.name).toContain(inputEl);
-  //   // const de = fixture.debugElement.query(By.css('h2'));
-  //   // expect(de.nativeElement.textContent).toEqual('Updated Task 1');
-  // }));
-
-
-
-
-  // describe('JoinComponent', () => {
-  //   let joinComponent: JoinComponent;
-  //   let joinFixture: ComponentFixture<JoinComponent>;
-  
-  //   beforeEach(async(() => {
-  //     TestBed.compileComponents().then(() => {
-  //       // const inputEn = newSprintFixture.debugElement.query(By.css('div mat-card-content mat-form-field input'));
-  //       // const inputEl = inputEn.nativeElement;
-  //       // inputEl.value = 'Sprint 1';
-  //       // inputEl.dispatchEvent(new Event('input'));
-  //       // inputEl.dispatchEvent(new Event('keyup.enter'));
-  //       newSprintComponent.createSprint("Sprint1");
-  //       joinFixture = TestBed.createComponent(JoinComponent);
-  //       joinComponent = joinFixture.componentInstance;
-  //       joinFixture.detectChanges();
-  //     });
-  //   }));
-  
-  //   beforeEach(() => {
-  //   });
-
-  //   it('should create', async(() => {
-  //     expect(joinComponent).toBeTruthy();
-  //   }));
-
-  // });
-
 });
