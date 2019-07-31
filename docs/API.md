@@ -46,7 +46,7 @@ Content-Type : application/json
 }
 ```
 
-### Getting A Specified Sprint
+### Getting a Specified Sprint
 
 * GET sprints/{id}
 
@@ -63,6 +63,10 @@ Content-Type : application/json
 }
 ```
 
+OR
+
+None (Status code 404)
+
 ### Deleting All Sprints (Flush)
 
 * DELETE sprints/
@@ -71,7 +75,7 @@ Content-Type : application/json
 
 None (Status code 200)
 
-### Deleting A Specified Sprint
+### Deleting a Specified Sprint
 
 * DELETE sprints/{id}
 
@@ -80,3 +84,84 @@ None (Status code 200)
 None (Status code 200)
 
 ## Users
+
+### Creating Users in a Sprint
+
+* POST sprints/[sprintId]/users/
+* Name : "New User"
+
+#### Sample Response
+
+```
+{
+  "d": {
+    "Id": "207e0a80-ac41-4823-bb43-c235fa655e21",
+    "Name": "New User",
+    "Vote": -1,
+    "Admin": true
+  },
+  "s": 200
+}
+```
+
+### Getting Users in a Sprint
+
+* GET sprints/[sprintId]/users/
+
+#### Sample Response
+
+```
+{
+  "d": {
+    "Users": {
+      "207e0a80-ac41-4823-bb43-c235fa655e21": {
+        "Id": "207e0a80-ac41-4823-bb43-c235fa655e21",
+        "Name": "New User",
+        "Vote": -1,
+        "Admin": true
+      },
+      "faaaad5a-7d79-4fa2-bbba-949a96891abf": {
+        "Id": "faaaad5a-7d79-4fa2-bbba-949a96891abf",
+        "Name": "New User 1",
+        "Vote": -1,
+        "Admin": false
+      }
+    },
+    "SprintId": "_m9tqacjp",
+    "VotesShown": false,
+    "AdminId": "207e0a80-ac41-4823-bb43-c235fa655e21"
+  },
+  "s": 200
+}
+```
+
+### Getting a Specified User in a Sprint
+
+* GET sprints/[sprintId]/users/{id}
+
+#### Sample Response
+
+```
+{
+  "d": {
+    "Id": "207e0a80-ac41-4823-bb43-c235fa655e21",
+    "Name": "New User",
+    "Vote": -1,
+    "Admin": true
+  },
+  "s": 200
+}
+```
+
+### Voting
+
+* PUT sprints/[sprintId]/users/{id}
+* Vote : 8
+
+#### Sample Response
+
+None (Status code 200)
+
+OR
+
+None (Status code 404)
