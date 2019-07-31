@@ -49,7 +49,6 @@ fdescribe('ShareComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ShareComponent);
     component = fixture.componentInstance;
-
     component.share = {
       "Id" : "testSprint",
       "Name" : "Sprint 1"
