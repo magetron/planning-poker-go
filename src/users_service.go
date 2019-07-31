@@ -226,13 +226,13 @@ func (us *UsersService) ShowVote(ctx context.Context) error {
 }
 
 func (us *UsersService) Update(id string, ctx context.Context) error {
-	for _, users := range us.AllUsers {
-		if users.SprintId == id {
-			for _, user := range users.Users {
-				user.Vote = -1
-			}
-			return goweb.Respond.WithOK(ctx)
-		}
+	users, exsist := us.AllUsers[id]
+	if !exsist {
+		return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 	}
-	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
+
+	for _, user := range users.Users {
+		user.Vote = -1
+	}
+	return goweb.Respond.WithOK(ctx)
 }
