@@ -1,7 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+
 import { MatCardModule, MatFormFieldModule, MatIconModule, MatListModule, MatTableModule, MatButtonModule, MatInputModule,  MatToolbarModule } from '@angular/material';
 import { FormsModule } from '@angular/forms';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { ActivatedRoute, convertToParamMap } from '@angular/router';
 
 import { PokerControlComponent } from './poker-control.component';
 import { PokerCardComponent } from '../poker-card/poker-card.component';
@@ -17,6 +19,12 @@ describe('PokerControlComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      providers: [
+        { 
+          provide: ActivatedRoute,
+          useValue: {snapshot: {paramMap: convertToParamMap({'sprint_id': 'test'})}}
+        }
+      ],
       declarations: [
         PokerControlComponent,
         PokerCardComponent,
@@ -43,6 +51,8 @@ describe('PokerControlComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(PokerControlComponent);
     component = fixture.componentInstance;
+    //route = fixture.debugElement.injector.get(ActivatedRoute);
+    //route.setParamMap({sprint_id: "test"})
     fixture.detectChanges();
   });
 
