@@ -165,3 +165,58 @@ None (Status code 200)
 OR
 
 None (Status code 404)
+
+### Delete All Users in a Specified Sprint
+
+* DELETE sprints/[sprintId]/users/
+
+#### Sample Response
+
+None (Status code 200)
+
+### Delete a Specified User in a Specified Sprint
+
+* DELETE sprints/[sprintId]/users/{id}
+
+#### Sample Response
+
+None (Status code 200)
+
+OR
+
+None (Status code 404)
+
+### Set User as Admin
+
+* POST sprints/[sprintId]/users/[userId]/setadmin
+* Successor : [userId]
+
+#### Sample Response
+
+None (Status code 200)
+
+OR 
+
+None (Status code 401)
+
+OR
+
+None (Status code 404)
+
+### Show Vote in the current Sprint
+
+* POST sprints/[sprintId]/users/[userId]/showvote
+* VoteShown : true / false
+
+#### Sample Response
+
+None (Status code 200)
+
+OR
+
+None (Status code 401)
+
+OR
+
+None (Status code 404)
+
