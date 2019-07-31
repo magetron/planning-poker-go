@@ -148,6 +148,8 @@ func (us *UsersService) Replace(id string, ctx context.Context) error {
 
 	us.AllUsers[urlId].Users[id].Vote = voteVal
 
+	log.Printf("User %s voted %f in the current round of Sprint %s", id, voteVal, urlId)
+
 	return goweb.Respond.WithOK(ctx)
 }
 
