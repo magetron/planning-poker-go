@@ -33,14 +33,6 @@ export class JoinComponent implements OnInit {
     this.sprint.Id = this.route.snapshot.paramMap.get('sprint_id');
     //if you get a sprint title, set the sprint
     this.comms.getSprintDetails(this.sprint.Id)
-      .pipe(
-        catchError(err => {
-          console.log('Connection error', err);
-          //TODO: Handle properly - notify the user, retry?
-          this.router.navigateByUrl(`/new`);
-          return throwError(err);
-        })
-      )
       .subscribe(res => {
         if (res && res.s === 200) {
           if (res.d['Id'] === this.sprint.Id) {
@@ -57,18 +49,18 @@ export class JoinComponent implements OnInit {
         } else if (res) { //response indicates the sprintID is invalid
             console.log("Unexpected responce:" + res);
         }
+      },
+      err => {
+        console.log('Connection error', err);
+        //TODO: Handle properly - notify the user, retry?
+        this.router.navigateByUrl(`/new`);
+        return throwError(err);
       })
   }
 
   registerUser(username: string): void {
     if (username) {
-      this.comms.joinSprint(username, this.sprint).pipe(
-        catchError(err => {
-          console.log('Connection error', err);
-          //TODO: Handle properly - notify the user, retry?
-          return throwError(err);
-        })
-      ).subscribe(
+      this.comms.joinSprint(username, this.sprint).subscribe(
         res => {
           if (res && res.s === 200) {
             this.internal.logInUser(res.d as User);
@@ -79,6 +71,11 @@ export class JoinComponent implements OnInit {
           } else {
             console.log("Connection error");
           }
+        },
+        err => {
+          console.log('Connection error', err);
+          //TODO: Handle properly - notify the user, retry?
+          return throwError(err);
         }
       )
     } else {
