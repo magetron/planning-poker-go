@@ -15,7 +15,7 @@ import { MemberslistComponent } from '../poker/memberslist/memberslist.component
 import { share } from 'rxjs/operators';
 import { spread } from 'q';
 
-fdescribe('ShareComponent', () => {
+describe('ShareComponent', () => {
   let component: ShareComponent;
   let fixture: ComponentFixture<ShareComponent>;
 
