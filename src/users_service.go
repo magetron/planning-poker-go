@@ -225,7 +225,7 @@ func (us *UsersService) ShowVote(ctx context.Context) error {
 	return goweb.Respond.WithOK(ctx)
 }
 
-func (us *UsersService) Update(id string, ctx context.Context) error {
+func (us *UsersService) Reset(id string, ctx context.Context) error {
 	users, exsist := us.AllUsers[id]
 	if !exsist {
 		return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
