@@ -65,7 +65,9 @@ Content-Type : application/json
 
 OR
 
+```
 None (Status code 404)
+```
 
 ### Deleting All Sprints (Flush)
 
@@ -73,7 +75,9 @@ None (Status code 404)
 
 #### Sample Response
 
+```
 None (Status code 200)
+```
 
 ### Deleting a Specified Sprint
 
@@ -81,7 +85,9 @@ None (Status code 200)
 
 #### Sample Response
 
+```
 None (Status code 200)
+```
 
 ## Users
 
@@ -160,11 +166,13 @@ None (Status code 200)
 
 #### Sample Response
 
+```
 None (Status code 200)
 
 OR
 
 None (Status code 404)
+```
 
 ### Delete All Users in a Specified Sprint
 
@@ -172,7 +180,9 @@ None (Status code 404)
 
 #### Sample Response
 
+```
 None (Status code 200)
+```
 
 ### Delete a Specified User in a Specified Sprint
 
@@ -180,11 +190,13 @@ None (Status code 200)
 
 #### Sample Response
 
+```
 None (Status code 200)
 
 OR
 
 None (Status code 404)
+```
 
 ### Set User as Admin
 
@@ -193,6 +205,7 @@ None (Status code 404)
 
 #### Sample Response
 
+```
 None (Status code 200)
 
 OR 
@@ -202,6 +215,7 @@ None (Status code 401)
 OR
 
 None (Status code 404)
+```
 
 ### Show Vote in the current Sprint
 
@@ -210,6 +224,7 @@ None (Status code 404)
 
 #### Sample Response
 
+```
 None (Status code 200)
 
 OR
@@ -219,4 +234,4 @@ None (Status code 401)
 OR
 
 None (Status code 404)
-
+```
