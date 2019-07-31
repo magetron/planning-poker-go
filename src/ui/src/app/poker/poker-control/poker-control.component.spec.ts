@@ -51,8 +51,6 @@ describe('PokerControlComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(PokerControlComponent);
     component = fixture.componentInstance;
-    //route = fixture.debugElement.injector.get(ActivatedRoute);
-    //route.setParamMap({sprint_id: "test"})
     fixture.detectChanges();
   });
 
