@@ -29,7 +29,6 @@ describe('CommsService', () => {
   });
 
   it('should be created', () => {
-    //const commsService: CommsService = TestBed.get(CommsService);
     expect(commsService).toBeTruthy();
   });
 
