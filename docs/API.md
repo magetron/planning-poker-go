@@ -45,3 +45,38 @@ Content-Type : application/json
   "s": 200
 }
 ```
+
+### Getting A Specified Sprint
+
+* GET sprints/{id}
+
+#### Sample Response
+
+```
+{
+  "d": {
+    "Id": "5yojNtnjM",
+    "Name": "DEMO Sprint",
+    "CreationTime": "2019-07-31T11:57:20.338407+01:00"
+  },
+  "s": 200
+}
+```
+
+### Deleting All Sprints (Flush)
+
+* DELETE sprints/
+
+#### Sample Response
+
+None (Status code 200)
+
+### Deleting A Specified Sprint
+
+* DELETE sprints/{id}
+
+#### Sample Response
+
+None (Status code 200)
+
+## Users
