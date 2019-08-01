@@ -9,8 +9,7 @@ BINARY_UNIX=$(BINARY_NAME)_unix
 NGCMD=ng
 NGSERVE=$(NGCMD) serve
 NGBUILD=$(NGCMD) build
-NGPROD=$(NGCMD) build --prod
-NGTEST=$(NGCMD) test --code-coverage --karma-config .config/karma-headless.conf.js --progress false
+NGTEST=$(NGCMD) test --code-coverage --karma-config ./.config/karma-headless.conf.js --progress false
 UINAME=ui
 UIPATH=../static-ui
 
@@ -27,26 +26,26 @@ prod:
 
 docker:
 	$(MAKE) test
-	mv ui/src/app/services/globals.service.ts ui/src/app/services/globals.service.ts.tmp && \
-	cp ui/src/app/services/globals-docker.service.ts ui/src/app/services/globals.service.ts && \
-	$(MAKE) build-linux && \
-	mv ui/src/app/services/globals.service.ts.tmp ui/src/app/services/globals.service.ts || \
-	mv ui/src/app/services/globals.service.ts.tmp ui/src/app/services/globals.service.ts
+	$(MAKE) build-linux --configuration=fargate
+
+integration:
+	$(MAKE) test
+	$(MAKE) build-linux --configuration=integration
 
 build-dev:
 	$(GOBUILD) -o $(BINARY_NAME) -v
-	cd ui; $(NGBUILD) $(UINAME) --outputPath=$(UIPATH)
 	cd _gc; $(GOBUILD) -o ../gc
+	cd ui; $(NGBUILD) $(UINAME) --outputPath=$(UIPATH)
 
 build-prod:
 	$(GOBUILD) -o $(BINARY_NAME) -v
-	cd ui; $(NGPROD) $(UINAME) --outputPath=$(UIPATH)
 	cd _gc; $(GOBUILD) -o ../gc
+	cd ui; $(NGBUILD) --configuration=production $(UINAME) --outputPath=$(UIPATH)
 
 build-linux:
 	env GOOS=linux GOARCH=$(ARCH) $(GOBUILD) -o $(BINARY_NAME)
-	cd ui; $(NGPROD) $(UINAME) --outputPath=$(UIPATH)
 	cd _gc; env GOOS=linux GOARCH=$(ARCH) $(GOBUILD) -o ../gc
+	cd ui; $(NGBUILD) $(UINAME) --outputPath=$(UIPATH)
 
 test:
 	$(GOTEST) --cover -v ./...
