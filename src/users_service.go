@@ -74,19 +74,16 @@ func (us *UsersService) ReadMany(ctx context.Context) error {
 	urlId := ctx.PathValue("sprintId")
 
 	if us.AllUsers == nil {
-		return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
+		return goweb.API.RespondWithData(ctx, make(map[string]*User))
 	}
 
 	users, exsist := us.AllUsers[urlId]
-	if exsist {
-		return goweb.API.RespondWithData(ctx, users)
+	if !exsist {
+		return goweb.API.RespondWithData(ctx, make(map[string]*User))
 	}
 
-	if DEV {
-		log.Printf("Accessed all Users Information in Sprint %s", urlId)
-	}
-
-	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
+	log.Printf("Accessed all Users Information in Sprint %s", urlId)
+	return goweb.API.RespondWithData(ctx, users)
 
 }
 
@@ -96,28 +93,21 @@ func (us *UsersService) Read(id string, ctx context.Context) error {
 
 	user, exsist := us.AllUsers[urlId].Users[id]
 
-	if exsist {
-		return goweb.API.RespondWithData(ctx, user)
+	if !exsist {
+		return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 	}
 
-	if DEV {
-		log.Printf("Accessed Users %s Information in Sprint %s", id, urlId)
-	}
-
-	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
+	log.Printf("Accessed Users %s Information in Sprint %s", id, urlId)
+	return goweb.API.RespondWithData(ctx, user)
 }
 
 func (us *UsersService) DeleteMany(ctx context.Context) error {
 	urlId := ctx.PathValue("sprintId")
 
-	us.AllUsers[urlId].Users = make(map[string]*User)
+	delete(us.AllUsers, urlId)
 
-	if DEV {
-		log.Printf("IMPORTANT : Deleted All Users in Sprint %s", urlId)
-	}
-
+	log.Printf("IMPORTANT : Deleted All Users in Sprint %s", urlId)
 	return goweb.Respond.WithOK(ctx)
-
 }
 
 func (us *UsersService) Delete(id string, ctx context.Context) error {
@@ -140,13 +130,13 @@ func (us *UsersService) Replace(id string, ctx context.Context) error {
 
 	urlId := ctx.PathValue("sprintId")
 
-	_, exsist := us.AllUsers[urlId].Users[id]
+	user, exsist := us.AllUsers[urlId].Users[id]
 
 	if !exsist {
 		return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 	}
 
-	us.AllUsers[urlId].Users[id].Vote = voteVal
+	user.Vote = voteVal
 
 	log.Printf("User %s voted %f in the current round of Sprint %s", id, voteVal, urlId)
 
