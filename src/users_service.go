@@ -83,8 +83,29 @@ func (us *UsersService) ReadMany(ctx context.Context) error {
 	}
 
 	log.Printf("Accessed all Users Information in Sprint %s", urlId)
-	return goweb.API.RespondWithData(ctx, users)
 
+	if !users.VotesShown {
+		tmpReturnUserArray := new(Users)
+		tmpReturnUserArray.VotesShown = users.VotesShown
+		tmpReturnUserArray.AdminId = users.AdminId
+		tmpReturnUserArray.SprintId = users.SprintId
+		tmpReturnUserArray.Users = make(map[string]*User)
+		for _, user := range users.Users {
+			tmpReturnUser := new(User)
+			tmpReturnUser.Id = user.Id
+			tmpReturnUser.Admin = user.Admin
+			tmpReturnUser.Name = user.Name
+			if user.Vote != -1 {
+				tmpReturnUser.Vote = -3
+			} else {
+				tmpReturnUser.Vote = -1
+			}
+			tmpReturnUserArray.Users[user.Id] = tmpReturnUser
+		}
+		return goweb.API.RespondWithData(ctx, tmpReturnUserArray)
+	}
+
+	return goweb.API.RespondWithData(ctx, users)
 }
 
 func (us *UsersService) Read(id string, ctx context.Context) error {
@@ -103,6 +124,19 @@ func (us *UsersService) Read(id string, ctx context.Context) error {
 
 
 	log.Printf("Accessed Users %s Information in Sprint %s", id, urlId)
+
+	if !users.VotesShown {
+		tmpUser := new(User)
+		tmpUser.Id = user.Id
+		tmpUser.Admin = user.Admin
+		tmpUser.Name = user.Name
+		if user.Vote != -1 {
+			tmpUser.Vote = -3
+		} else {
+			tmpUser.Vote = -1
+		}
+		return goweb.API.RespondWithData(ctx, tmpUser)
+	}
 	return goweb.API.RespondWithData(ctx, user)
 }
 
