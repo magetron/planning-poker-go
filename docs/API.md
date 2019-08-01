@@ -10,7 +10,7 @@ Content-Type : application/json
 
 ### Creating Sprints
 
-* POST sprints/ 
+* POST sprints
 * Name : "DEMO Sprint"
 
 #### Sample Response
@@ -24,7 +24,7 @@ Content-Type : application/json
 
 ### Getting All Sprints
 
-* GET sprints/
+* GET sprints
 
 #### Sample Response
 
@@ -71,7 +71,7 @@ None (Status code 404)
 
 ### Deleting All Sprints (Flush)
 
-* DELETE sprints/
+* DELETE sprints
 
 #### Sample Response
 
@@ -97,7 +97,7 @@ None (Status code 404)
 
 ### Creating Users in a Sprint
 
-* POST sprints/[sprintId]/users/
+* POST sprints/[sprintId]/users
 * Name : "New User"
 
 #### Sample Response
@@ -116,7 +116,7 @@ None (Status code 404)
 
 ### Getting Users in a Sprint
 
-* GET sprints/[sprintId]/users/
+* GET sprints/[sprintId]/users
 
 #### Sample Response
 
@@ -182,9 +182,9 @@ OR
 None (Status code 404)
 ```
 
-### Delete All Users in a Specified Sprint
+### Deleting All Users in a Specified Sprint
 
-* DELETE sprints/[sprintId]/users/
+* DELETE sprints/[sprintId]/users
 
 #### Sample Response
 
@@ -192,7 +192,7 @@ None (Status code 404)
 None (Status code 200)
 ```
 
-### Delete a Specified User in a Specified Sprint
+### Deleting a Specified User in a Specified Sprint
 
 * DELETE sprints/[sprintId]/users/{id}
 
@@ -206,7 +206,7 @@ OR
 None (Status code 404)
 ```
 
-### Set User as Admin
+### Setting User as Admin
 
 * POST sprints/[sprintId]/users/[userId]/setadmin
 * Successor : [userId]
@@ -243,3 +243,119 @@ OR
 
 None (Status code 404)
 ```
+
+
+## Rounds
+
+### Creating Rounds in a Sprint
+
+* GET sprints/[sprintId]/rounds
+* Name : "Task 1"
+
+#### Sample Response
+
+```
+{
+  "d": {
+    "Id": 1,
+    "Name": "Task 1",
+    "Med": 0,
+    "Avg": 0,
+    "Final": 0,
+    "Archived": false,
+    "CreationTime": 1564664527
+  },
+  "s": 200
+}
+```
+
+### Getting All Rounds in a Sprint
+
+* GET sprints/[sprintId]/rounds
+
+#### Sample Response
+
+```
+{
+  "d": {
+    "Rounds": [
+      {
+        "Id": 1,
+        "Name": "Task 1",
+        "Med": 0,
+        "Avg": 0,
+        "Final": 0,
+        "Archived": false,
+        "CreationTime": 1564664527
+      },
+      {
+        "Id": 2,
+        "Name": "Task 2",
+        "Med": 0,
+        "Avg": 0,
+        "Final": 0,
+        "Archived": false,
+        "CreationTime": 1564664555
+      }
+    ],
+    "SprintId": "E4yNEcn0p"
+  },
+  "s": 200
+}
+```
+
+### Getting a Specified Round in a Sprint
+
+* GET sprints/[sprintId]/rounds/{id}
+
+#### Sample Response
+
+```
+{
+  "d": {
+    "Id": 1,
+    "Name": "Task 1",
+    "Med": 0,
+    "Avg": 0,
+    "Final": 0,
+    "Archived": false,
+    "CreationTime": 1564664734
+  },
+  "s": 200
+}
+
+OR
+
+None (Status code 404)
+```
+
+### Deleting All Rounds in a Sprint
+
+* DELETE sprints/[sprintId]/rounds/{id}
+
+#### Sample Response
+
+```
+None (Status code 200)
+```
+
+### Archiving a Specified Round in a Sprint
+
+* PUT sprints/[sprintId]/rounds/{id}
+* Average : 0.5
+* Median : 8
+* Final : 5
+
+#### Sample Response
+
+```
+None (Status code 200)
+
+OR
+
+None (Status code 404)
+```
+
+
+
+
