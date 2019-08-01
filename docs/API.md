@@ -87,6 +87,10 @@ None (Status code 200)
 
 ```
 None (Status code 200)
+
+OR
+
+None (Status code 404)
 ```
 
 ## Users
@@ -157,6 +161,10 @@ None (Status code 200)
   },
   "s": 200
 }
+
+OR
+
+None (Status code 404)
 ```
 
 ### Voting
