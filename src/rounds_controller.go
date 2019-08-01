@@ -154,6 +154,7 @@ func (rc *RoundsController) Replace (id string, ctx context.Context) error {
 	round.Avg = voteAvg
 	round.Med = voteMed
 	round.Final = voteFin
+	round.Archived = true
 	_ = us.Reset(urlId, ctx)
 	log.Printf("Round %d in Sprint %s is archived.", round.Id, rounds.SprintId)
 	return goweb.Respond.WithOK(ctx)
