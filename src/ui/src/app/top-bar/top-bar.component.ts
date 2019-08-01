@@ -20,13 +20,14 @@ export class TopBarComponent implements OnInit {
   sprint: Sprint;
   @Input() sprint_id: string;
   logoutAll: boolean;
+  subscriber
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private comms: CommsService,
     private internal: InternalService,
-    private socket: WebsocketService,
+    private webSocket: WebsocketService,
   ) { }
 
   ngOnInit() {
@@ -40,6 +41,8 @@ export class TopBarComponent implements OnInit {
         console.log("logging all user out");
       }
     });
+    this.subscriber = this.webSocket.connect(this.sprint_id).subscribe();
+    this.internal.user$.subscribe(msg => this.user = msg);
   }
 
   logOut() {
@@ -49,9 +52,9 @@ export class TopBarComponent implements OnInit {
       } else {
         this.comms.deleteUser(this.sprint.Id, this.user.Id).subscribe(response => {
           if (response == null) {
-            console.log("User logged out");
+            console.log("User logged out")
             localStorage.removeItem("user");
-            this.socket.send("update")
+            this.webSocket.send("update")
             this.internal.updateUser(null);
             this.router.navigateByUrl(`/new`);
           } else {
