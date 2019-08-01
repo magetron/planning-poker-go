@@ -79,8 +79,8 @@ func (rc *RoundsController) ReadMany(ctx context.Context) error {
 		return goweb.API.RespondWithData(ctx, make([]*Round, 0))
 	}
 
-	rounds, exsist := rc.AllRounds[urlId]
-	if !exsist {
+	rounds, exist := rc.AllRounds[urlId]
+	if !exist {
 		return goweb.API.RespondWithData(ctx, make([]*Round, 0))
 	}
 
@@ -97,9 +97,9 @@ func (rc *RoundsController) Read(id string, ctx context.Context) error {
 		return goweb.API.RespondWithError(ctx, http.StatusInternalServerError, convErr.Error())
 	}
 
-	rounds, exsist := rc.AllRounds[urlId]
+	rounds, exist := rc.AllRounds[urlId]
 
-	if !exsist {
+	if !exist {
 		return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 	}
 
@@ -139,9 +139,9 @@ func (rc *RoundsController) Replace (id string, ctx context.Context) error {
 	voteMed := voteMap["Median"].(float64)
 	voteFin := voteMap["Final"].(float64)
 
-	rounds, exsist := rc.AllRounds[urlId]
+	rounds, exist := rc.AllRounds[urlId]
 
-	if !exsist {
+	if !exist {
 		return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 	}
 
