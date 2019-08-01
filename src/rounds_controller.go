@@ -108,7 +108,7 @@ func (rc *RoundsController) Read(id string, ctx context.Context) error {
 	}
 
 	log.Printf("Accessed Round %d Information of Sprint %s", roundId, urlId)
-	return goweb.API.RespondWithData(ctx, rounds.Rounds[roundId])
+	return goweb.API.RespondWithData(ctx, rounds.Rounds[roundId - 1])
 }
 
 func (rc *RoundsController) DeleteMany(ctx context.Context) error {
@@ -149,7 +149,7 @@ func (rc *RoundsController) Replace (id string, ctx context.Context) error {
 		return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 	}
 
-	round := rounds.Rounds[roundId]
+	round := rounds.Rounds[roundId - 1]
 
 	round.Avg = voteAvg
 	round.Med = voteMed
