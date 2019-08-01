@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Inject} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import { throwError, forkJoin } from 'rxjs';
+import { throwError, forkJoin, Subscription } from 'rxjs';
 import { catchError, first } from 'rxjs/operators';
 import { AssertionError } from 'assert';
 
@@ -40,7 +40,7 @@ export class PokerControlComponent implements OnInit {
   user: User;
   baseUrl: string;
   isVoteShown : boolean;
-  subscriber
+  subscriber: Subscription
 
   constructor(
     private router: Router,
@@ -55,15 +55,6 @@ export class PokerControlComponent implements OnInit {
     this.baseUrl = globals.baseUrl;
 
     this.comms.getSprintDetails(this.sprint_id)
-    .pipe(
-      catchError(err => {
-        console.log('Connection error', err);
-        //TODO: Handle properly - notify the user, retry?
-        this.router.navigateByUrl(`/join/${this.sprint_id}`);
-        //TODO: delete user from local storage?
-        return throwError(err);
-      })
-    )
     .subscribe(res => {
       if (res && res.s === 200) {
         if (res.d['Id'] === this.sprint_id) {
@@ -74,6 +65,13 @@ export class PokerControlComponent implements OnInit {
       } else if (res) {
           console.log("Unexpected response:" + res);
       }
+    },
+    err => {
+      console.log('Connection error', err);
+      //TODO: Handle properly - notify the user, retry?
+      this.router.navigateByUrl(`/join/${this.sprint_id}`);
+      //TODO: delete user from local storage?
+      return throwError(err);
     })
 
     this.subscriber = this.webSocket.connect(this.sprint_id).subscribe();
