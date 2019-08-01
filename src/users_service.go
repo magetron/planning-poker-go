@@ -218,7 +218,6 @@ func (us *UsersService) ShowVote(ctx context.Context) error {
 	
 	if !exsist {
 		log.Printf("Sprint %s not found for show vote", sprintId)
-		log.Printf("Sprint %s not found for show vote", sprintId)
 		return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 	}
 	
