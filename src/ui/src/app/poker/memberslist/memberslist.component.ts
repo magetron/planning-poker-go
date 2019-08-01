@@ -139,6 +139,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
         console.info(response);
         if (response && response.status === 200) {
           console.log("Set successor");
+          this.user.Admin = false;
           this.internal.updateUser(this.user);
           this.socketBroadcast();
         } else {
