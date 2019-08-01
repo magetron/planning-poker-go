@@ -224,9 +224,15 @@ func TestConnHub (t *testing.T) {
 	}
 	defer ws2.Close()
 
-	if err2 := ws2.WriteMessage(websocket.TextMessage, []byte("update")); err2 != nil {
+	ws2_1, _, err2 := websocket.DefaultDialer.Dial(url2, nil)
+	if err2 != nil {
 		t.Fatalf("%v", err2)
 	}
+
+	if err2 := ws2_1.WriteMessage(websocket.TextMessage, []byte("update")); err2 != nil {
+		t.Fatalf("%v", err2)
+	}
+
 	_, p2, err2 := ws2.ReadMessage()
 	assert.Equal(t, `[[{"Id":"` + userId2 + `","Name":"New User Sprint 2","Vote":-1,"Admin":true}]]`, string(p2))
 }
