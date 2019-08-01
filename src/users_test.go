@@ -44,6 +44,10 @@ func TestEmptyUser(t *testing.T) {
 	goweb.Test(t, "GET sprints/"+sprintId+"/users/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for querying all Users.")
 	})
+
+	goweb.Test(t, "DELETE sprints/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for deleting Sprints.")
+	})
 }
 
 func TestUserCycle(t *testing.T) {
@@ -119,6 +123,11 @@ func TestUserCycle(t *testing.T) {
 		assert.Equal(t, `{"d":{"Id":"`+userId1+`","Name":"New User 1","Vote":-1,"Admin":true},"s":200}`, response.Output, "Response should be Existing User object.")
 	})
 
+	goweb.Test(t, "GET sprints/"+sprintId+"/users/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for All Users.")
+		assert.True(t, `{"d":{"Users":{"`+userId1+`":{"Id":"`+userId1+`","Name":"New User 1","Vote":-1,"Admin":true},"`+userId2+`":{"Id":"`+userId2+`","Name":"New User 2","Vote":-1,"Admin":false}},"SprintId":"`+sprintId+`","VotesShown":false,"AdminId":"`+userId1+`"},"s":200}` == response.Output || `{"d":{"Users":{"`+userId2+`":{"Id":"`+userId2+`","Name":"New User 2","Vote":-1,"Admin":false},"`+userId1+`":{"Id":"`+userId1+`","Name":"New User 1","Vote":-1,"Admin":true}},"SprintId":"`+sprintId+`","VotesShown":false,"AdminId":"`+userId1+`"},"s":200}` == response.Output, "Response should be Existing User object.")
+	})
+
 	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
 		newReqBody, newReqBodyErr := json.Marshal(map[string]float64{
 			"Vote": 0.1,
@@ -186,5 +195,9 @@ func TestUserCycle(t *testing.T) {
 
 	goweb.Test(t, "GET sprints/"+sprintId+"/users/"+userId1, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusNotFound, response.StatusCode, "Status code should be Not Found for non-existing User.")
+	})
+
+	goweb.Test(t, "DELETE sprints/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for deleting Sprints.")
 	})
 }
