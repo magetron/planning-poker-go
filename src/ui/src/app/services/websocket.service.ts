@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 //import { switchMap,retryWhen,delay } from 'rxjs/operators';
 import { webSocket, WebSocketSubject } from "rxjs/webSocket";
-import * as globals from './globals.service';
+import { environment } from 'src/environments/environment';
 import { InternalService } from './internal.service';
 
 @Injectable({
@@ -22,7 +22,7 @@ export class WebsocketService {
 
   connect(sprint_id: string): Observable<any> {
     this.infoSocket$ = webSocket({
-      url: globals.infoSocket + sprint_id,
+      url: environment.infoSocket + sprint_id,
       serializer: msg => msg,
       deserializer: ({ data }) => {
         let j = JSON.parse(data);

@@ -4,7 +4,14 @@
 
 export const environment = {
   production: false,
-  gateway: 'http://localhost:8080',
+  //gateway: 'http://localhost:8080', //possibly unused?
+
+  apiUrl: "http://localhost:8080",
+  baseUrl: location.origin + '/#',
+
+  socketRefreshTime: 1000, //how often to update user votes
+  infoSocket: "ws://localhost:8080/info/",
+
 };
 
 /*
