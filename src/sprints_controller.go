@@ -62,9 +62,9 @@ func (sc *SprintsController) ReadMany(ctx context.Context) error {
 
 func (sc *SprintsController) Read(id string, ctx context.Context) error {
 
-	sprint, exsist := sc.Sprints[id]
+	sprint, exist := sc.Sprints[id]
 
-	if !exsist {
+	if !exist {
 		return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 	}
 
