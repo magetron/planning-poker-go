@@ -21,6 +21,7 @@ func (sc *SprintsController) Before(ctx context.Context) error {
 
 func (sc *SprintsController) Create(ctx context.Context) error {
 	data, dataErr := ctx.RequestData()
+
 	if dataErr != nil {
 		return goweb.API.RespondWithError(ctx, http.StatusInternalServerError, dataErr.Error())
 	}
@@ -51,12 +52,10 @@ func (sc *SprintsController) Create(ctx context.Context) error {
 func (sc *SprintsController) ReadMany(ctx context.Context) error {
 
 	if sc.Sprints == nil {
-		sc.Sprints = make(map[string]*Sprint)
+		return goweb.API.RespondWithData(ctx, make(map[string]*Sprint))
 	}
 
-	if DEV {
-		log.Print("Accessed all Sprints Information")
-	}
+	log.Print("Accessed all Sprints Information")
 
 	return goweb.API.RespondWithData(ctx, sc.Sprints)
 }
@@ -65,19 +64,16 @@ func (sc *SprintsController) Read(id string, ctx context.Context) error {
 
 	sprint, exsist := sc.Sprints[id]
 
-	if DEV {
-		log.Printf("Accessed Sprint %s Information", id)
-	}
-
 	if !exsist {
 		return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 	}
-	return goweb.API.RespondWithData(ctx, sprint)
 
+	log.Printf("Accessed Sprint %s Information", id)
+	return goweb.API.RespondWithData(ctx, sprint)
 }
 
 func (sc *SprintsController) DeleteMany(ctx context.Context) error {
-	sc.Sprints = make(map[string]*Sprint)
+	sc.Sprints = nil
 	log.Print("IMPORTANT : Deleted All Sprints")
 	return goweb.Respond.WithOK(ctx)
 }
