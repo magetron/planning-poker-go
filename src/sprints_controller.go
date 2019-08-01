@@ -79,7 +79,15 @@ func (sc *SprintsController) DeleteMany(ctx context.Context) error {
 }
 
 func (sc *SprintsController) Delete(id string, ctx context.Context) error {
+
+	_, exist := sc.Sprints[id]
+
+	if !exist {
+		return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
+	}
+
 	delete(sc.Sprints, id)
 	log.Printf("Deleted Sprint %s", id)
+
 	return goweb.Respond.WithOK(ctx)
 }

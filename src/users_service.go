@@ -77,8 +77,8 @@ func (us *UsersService) ReadMany(ctx context.Context) error {
 		return goweb.API.RespondWithData(ctx, make(map[string]*User))
 	}
 
-	users, exsist := us.AllUsers[urlId]
-	if !exsist {
+	users, exist := us.AllUsers[urlId]
+	if !exist {
 		return goweb.API.RespondWithData(ctx, make(map[string]*User))
 	}
 
@@ -91,9 +91,9 @@ func (us *UsersService) Read(id string, ctx context.Context) error {
 
 	urlId := ctx.PathValue("sprintId")
 
-	user, exsist := us.AllUsers[urlId].Users[id]
+	user, exist := us.AllUsers[urlId].Users[id]
 
-	if !exsist {
+	if !exist {
 		return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 	}
 
@@ -113,7 +113,15 @@ func (us *UsersService) DeleteMany(ctx context.Context) error {
 func (us *UsersService) Delete(id string, ctx context.Context) error {
 	urlId := ctx.PathValue("sprintId")
 
+	_, exist := us.AllUsers[urlId].Users[id]
+
+	if !exist {
+		return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
+	}
+
 	delete(us.AllUsers[urlId].Users, id)
+
+	log.Printf("Deleted User %s in Sprint %s", urlId, id)
 
 	return goweb.Respond.WithStatus(ctx, http.StatusOK)
 }
