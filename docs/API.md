@@ -342,9 +342,14 @@ None (Status code 200)
 ### Archiving a Specified Round in a Sprint
 
 * PUT sprints/[sprintId]/rounds/{id}
-* Average : 0.5
-* Median : 8
-* Final : 5
+
+```
+{
+    "Average" : 0.5,
+    "Median" : 8,
+    "Final" : 5
+}
+```
 
 #### Sample Response
 
