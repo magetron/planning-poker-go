@@ -130,7 +130,7 @@ func TestUserCycle(t *testing.T) {
 
 	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
 		newReqBody, newReqBodyErr := json.Marshal(map[string]float64{
-			"Vote": 0.1,
+			"Vote": 8,
 		})
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
@@ -147,12 +147,46 @@ func TestUserCycle(t *testing.T) {
 
 	goweb.Test(t, "GET sprints/"+sprintId+"/users/"+userId1, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for Existing User.")
-		assert.Equal(t, `{"d":{"Id":"`+userId1+`","Name":"New User 1","Vote":0.1,"Admin":true},"s":200}`, response.Output, "Response should be Existing User object.")
+		assert.Equal(t, `{"d":{"Id":"`+userId1+`","Name":"New User 1","Vote":8,"Admin":true},"s":200}`, response.Output, "Response should be Existing User object.")
 	})
 
 	goweb.Test(t, "GET sprints/"+sprintId+"/users/"+userId2, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for Existing User.")
 		assert.Equal(t, `{"d":{"Id":"`+userId2+`","Name":"New User 2","Vote":-1,"Admin":false},"s":200}`, response.Output, "Response should be Existing User object.")
+	})
+
+	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
+		newReqBody, newReqBodyErr := json.Marshal(map[string]bool{
+			"VoteShown": true,
+		})
+		if newReqBodyErr != nil {
+			log.Fatal(newReqBodyErr)
+		}
+		newReq, newErr := http.NewRequest("POST", "sprints/"+sprintId+"/users/"+userId2+"/showvote/", bytes.NewBuffer(newReqBody))
+		if newErr != nil {
+			log.Fatal(newErr)
+		}
+		newReq.Header.Set("Content-Type", "application/json")
+		return newReq
+	}), func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		assert.Equal(t, http.StatusUnauthorized, response.StatusCode, "Status code should be Unauthorized for non-master Showing Votes.")
+	})
+
+	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
+		newReqBody, newReqBodyErr := json.Marshal(map[string]bool{
+			"VoteShown": true,
+		})
+		if newReqBodyErr != nil {
+			log.Fatal(newReqBodyErr)
+		}
+		newReq, newErr := http.NewRequest("POST", "sprints/"+sprintId+"/users/"+userId1+"/showvote/", bytes.NewBuffer(newReqBody))
+		if newErr != nil {
+			log.Fatal(newErr)
+		}
+		newReq.Header.Set("Content-Type", "application/json")
+		return newReq
+	}), func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for master Showing Votes.")
 	})
 
 	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
