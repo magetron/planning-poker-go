@@ -25,19 +25,23 @@ prod:
 	$(MAKE) build-prod
 
 docker:
+	export PP_DEV=false
 	$(MAKE) test
 	$(MAKE) build-linux --configuration=fargate
 
 integration:
+	export PP_DEV=false
 	$(MAKE) test
 	$(MAKE) build-linux --configuration=integration
 
 build-dev:
+	export PP_DEV=true
 	$(GOBUILD) -o $(BINARY_NAME) -v
 	cd _gc; $(GOBUILD) -o ../gc
 	cd ui; $(NGBUILD) $(UINAME) --outputPath=$(UIPATH)
 
 build-prod:
+	export PP_DEV=false
 	$(GOBUILD) -o $(BINARY_NAME) -v
 	cd _gc; $(GOBUILD) -o ../gc
 	cd ui; $(NGBUILD) --configuration=production $(UINAME) --outputPath=$(UIPATH)
@@ -56,13 +60,16 @@ clean:
 	rm -f $(BINARY_NAME)
 	cd ui; rm -rf $(UIPATH)
 	rm -f gc
+	env --unset=PP_DEV
 
 run-dev:
+	export PP_DEV=true
 	$(GOBUILD) -o $(BINARY_NAME) -v ./...
 	./$(BINARY_NAME) &
 	cd ui; $(NGSERVE)
 
 run-prod:
+	export PP_DEV=false
 	cd _gc; $(GOBUILD) -o ../gc
 	./gc &
 	$(GOBUILD) -o $(BINARY_NAME) -v ./...

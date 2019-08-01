@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
+	"strconv"
 	"time"
 
 	"github.com/stretchr/goweb"
@@ -69,6 +70,8 @@ func mapRoutes() {
 }
 
 func main() {
+
+	DEV, _ = strconv.ParseBool(os.Getenv("PP_DEV"))
 
 	mapRoutes()
 
