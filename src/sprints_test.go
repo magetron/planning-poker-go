@@ -77,7 +77,6 @@ func TestSprintErr (t *testing.T) {
 	}), func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusInternalServerError, response.StatusCode, "Status code should be Internal Server Error for no payload.")
 	})
-
 }
 
 
