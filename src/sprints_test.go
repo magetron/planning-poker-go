@@ -57,8 +57,29 @@ func TestEmptyNameSprint(t *testing.T) {
 	goweb.Test(t, "DELETE sprints/"+sprintId, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for Deleting Sprint.")
 	})
+}
+
+func TestSprintErr (t *testing.T) {
+
+	codecService := goweb.DefaultHttpHandler().CodecService()
+	handler := handlers.NewHttpHandler(codecService)
+	goweb.SetDefaultHttpHandler(handler)
+
+	mapRoutes()
+
+	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
+		newReq, newErr := http.NewRequest("POST", "sprints/", bytes.NewBufferString(""))
+		if newErr != nil {
+			log.Fatal(newErr)
+		}
+		newReq.Header.Set("Content-Type", "application/json")
+		return newReq
+	}), func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		assert.Equal(t, http.StatusInternalServerError, response.StatusCode, "Status code should be Internal Server Error for no payload.")
+	})
 
 }
+
 
 func TestSprintCycle(t *testing.T) {
 
