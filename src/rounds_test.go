@@ -171,6 +171,10 @@ func TestRoundErr(t *testing.T) {
 		assert.Equal(t, http.StatusInternalServerError, response.StatusCode, "Status code should be Internal Server Error for no payload.")
 	})
 
+	goweb.Test(t, "DELETE sprints/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for deleting Sprints.")
+	})
+
 }
 
 func TestRoundCycle(t *testing.T) {
