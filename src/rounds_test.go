@@ -50,6 +50,129 @@ func TestEmptyRound(t *testing.T) {
 	})
 }
 
+func TestRoundErr(t *testing.T) {
+	codecService := goweb.DefaultHttpHandler().CodecService()
+	handler := handlers.NewHttpHandler(codecService)
+	goweb.SetDefaultHttpHandler(handler)
+
+	mapRoutes()
+
+	sprintId := ""
+	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
+		newReqBody, newReqBodyErr := json.Marshal(map[string]string{
+			"Name": "New Sprint",
+		})
+		if newReqBodyErr != nil {
+			log.Fatal(newReqBodyErr)
+		}
+		newReq, newErr := http.NewRequest("POST", "sprints/", bytes.NewBuffer(newReqBody))
+		if newErr != nil {
+			log.Fatal(newErr)
+		}
+		newReq.Header.Set("Content-Type", "application/json")
+		return newReq
+	}), func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for New Sprint.")
+		assert.Equal(t, 25, len(response.Output), "Response Length should be 25 for New Sprint.")
+		sprintId = response.Output[6:15]
+	})
+
+	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
+		newReq, newErr := http.NewRequest("POST", "sprints/abcdef/rounds", bytes.NewBufferString(""))
+		if newErr != nil {
+			log.Fatal(newErr)
+		}
+		newReq.Header.Set("Content-Type", "application/json")
+		return newReq
+	}), func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		assert.Equal(t, http.StatusInternalServerError, response.StatusCode, "Status code should be Internal Server Error for no payload.")
+	})
+
+	goweb.Test(t, "GET sprints/"+sprintId+"/rounds/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		assert.Equal(t, `{"d":[],"s":200}`, response.Output, "Should have no info for Rounds.")
+		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for Existing Round.")
+	})
+
+	goweb.Test(t, "GET sprints/abcdefg/rounds/1", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		assert.Equal(t, http.StatusNotFound, response.StatusCode, "Status code should be Not found for non existing Sprints of Rounds.")
+	})
+
+	goweb.Test(t, "GET sprints/"+sprintId+"/rounds/abcde", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		assert.Equal(t, http.StatusInternalServerError, response.StatusCode, "Status code should be OK for Existing Round.")
+	})
+
+	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
+		newReqBody, newReqBodyErr := json.Marshal(map[string]string{
+			"Name": "Task 1",
+		})
+		if newReqBodyErr != nil {
+			log.Fatal(newReqBodyErr)
+		}
+		newReq, newErr := http.NewRequest("POST", "sprints/"+sprintId+"/rounds/", bytes.NewBuffer(newReqBody))
+		if newErr != nil {
+			log.Fatal(newErr)
+		}
+		newReq.Header.Set("Content-Type", "application/json")
+		return newReq
+	}), func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for New Round.")
+	})
+
+	goweb.Test(t, "GET sprints/"+sprintId+"/rounds/2", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		assert.Equal(t, http.StatusNotFound, response.StatusCode, "Status code should be Not found for non existing Round.")
+	})
+
+	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
+		newReqBody, newReqBodyErr := json.Marshal(map[string]float64{
+			"Average": 0.5,
+			"Median": 8,
+			"Final": 5,
+		})
+		if newReqBodyErr != nil {
+			log.Fatal(newReqBodyErr)
+		}
+		newReq, newErr := http.NewRequest("PUT", "sprints/abcdef/rounds/5", bytes.NewBuffer(newReqBody))
+		if newErr != nil {
+			log.Fatal(newErr)
+		}
+		newReq.Header.Set("Content-Type", "application/json")
+		return newReq
+	}), func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		assert.Equal(t, http.StatusNotFound, response.StatusCode, "Status code should be Not found for non-existing Round.")
+	})
+
+	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
+		newReqBody, newReqBodyErr := json.Marshal(map[string]float64{
+			"Average": 0.5,
+			"Median": 8,
+			"Final": 5,
+		})
+		if newReqBodyErr != nil {
+			log.Fatal(newReqBodyErr)
+		}
+		newReq, newErr := http.NewRequest("PUT", "sprints/abcdef/rounds/abcd", bytes.NewBuffer(newReqBody))
+		if newErr != nil {
+			log.Fatal(newErr)
+		}
+		newReq.Header.Set("Content-Type", "application/json")
+		return newReq
+	}), func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		assert.Equal(t, http.StatusInternalServerError, response.StatusCode, "Status code should be Internal Server Error for wrong round id.")
+	})
+
+	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
+		newReq, newErr := http.NewRequest("PUT", "sprints/abcdef/rounds/abcd", bytes.NewBufferString(""))
+		if newErr != nil {
+			log.Fatal(newErr)
+		}
+		newReq.Header.Set("Content-Type", "application/json")
+		return newReq
+	}), func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		assert.Equal(t, http.StatusInternalServerError, response.StatusCode, "Status code should be Internal Server Error for no payload.")
+	})
+
+}
+
 func TestRoundCycle(t *testing.T) {
 
 	codecService := goweb.DefaultHttpHandler().CodecService()
@@ -152,7 +275,7 @@ func TestRoundCycle(t *testing.T) {
 		newReq.Header.Set("Content-Type", "application/json")
 		return newReq
 	}), func(t *testing.T, response *testifyhttp.TestResponseWriter) {
-		assert.Equal(t, http.StatusNotFound, response.StatusCode, "Status code should be Not found for non-exsisting Round.")
+		assert.Equal(t, http.StatusNotFound, response.StatusCode, "Status code should be Not found for non-existing Round.")
 	})
 
 	goweb.Test(t, "GET sprints/"+sprintId+"/rounds/1", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
