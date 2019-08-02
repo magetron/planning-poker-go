@@ -14,7 +14,8 @@ UINAME=ui
 UIPATH=../static-ui
 
 
-.PHONY: dev prod docker build-dev build-prod test clean run-dev run
+.PHONY: dev prod deploy integration build-dev build-prod build-linux \
+ build-back-linux build-back-int build-back-far test clean run-dev run
 
 dev: 
 	$(MAKE) test 
@@ -24,13 +25,15 @@ prod:
 	$(MAKE) test 
 	$(MAKE) build-prod
 
-docker:
+deploy:
 	$(MAKE) test
-	$(MAKE) build-linux --configuration=fargate
+	$(MAKE) build-back-linux
+	$(MAKE) build-front-far
 
 integration:
 	$(MAKE) test
-	$(MAKE) build-linux --configuration=integration
+	$(MAKE) build-back-linux
+	$(MAKE) build-front-int
 
 build-dev:
 	$(GOBUILD) -o $(BINARY_NAME) -v
@@ -43,9 +46,21 @@ build-prod:
 	cd ui; $(NGBUILD) --configuration=production $(UINAME) --outputPath=$(UIPATH)
 
 build-linux:
+	$(MAKE) build-back-linux
+	cd ui; $(NGBUILD) --configuration=production $(UINAME) --outputPath=$(UIPATH)
+
+build-back-linux:
 	env GOOS=linux GOARCH=$(ARCH) $(GOBUILD) -o $(BINARY_NAME)
 	cd _gc; env GOOS=linux GOARCH=$(ARCH) $(GOBUILD) -o ../gc
-	cd ui; $(NGBUILD) $(UINAME) --outputPath=$(UIPATH)
+
+build-front:
+	cd ui; $(NGBUILD) --configuration=production $(UINAME) --outputPath=$(UIPATH)
+
+build-front-int:
+	cd ui; $(NGBUILD) --configuration=integration $(UINAME) --outputPath=$(UIPATH)
+
+build-front-far:
+	cd ui; $(NGBUILD) --configuration=fargate $(UINAME) --outputPath=$(UIPATH)
 
 test:
 	$(GOTEST) --cover -v ./...
