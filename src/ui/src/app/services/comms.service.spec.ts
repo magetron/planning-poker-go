@@ -3,7 +3,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 
 import { CommsService } from './comms.service';
 
-import * as globals from '../services/globals.service';
+import { environment } from 'src/environments/environment';
 
 describe('CommsService', () => {
 
@@ -50,7 +50,7 @@ describe('CommsService', () => {
       });
 
       //set the expectations for the HttpClient mock
-      const req = httpMock.expectOne(globals.apiUrl + '/sprints/testSprint');
+      const req = httpMock.expectOne(environment.apiUrl + '/sprints/testSprint');
       expect(req.request.method).toEqual('GET');
 
       //fake data to be returned by the mock

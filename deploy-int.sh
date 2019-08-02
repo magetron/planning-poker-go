@@ -1,7 +1,7 @@
 #!/bin/sh
 cd src
 echo building...
-make docker > /dev/null
+make integration > /dev/null
 cd ..
 echo done
 echo removing previous docker image...

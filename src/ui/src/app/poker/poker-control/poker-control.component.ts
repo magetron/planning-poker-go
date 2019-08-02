@@ -11,7 +11,7 @@ import { Sprint } from 'src/app/models/sprint';
 import { Round } from '../../models/round';
 import { CommsService } from 'src/app/services/comms.service';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
-import * as globals from '../../services/globals.service';
+import { environment } from 'src/environments/environment';
 import { WebsocketService } from 'src/app/services/websocket.service';
 
 @Component({
@@ -52,7 +52,7 @@ export class PokerControlComponent implements OnInit {
 
   ngOnInit() {
     this.sprint_id = this.route.snapshot.paramMap.get('sprint_id');
-    this.baseUrl = globals.baseUrl;
+    this.baseUrl = environment.baseUrl;
 
     this.comms.getSprintDetails(this.sprint_id)
     .subscribe(res => {

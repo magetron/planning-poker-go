@@ -8,7 +8,7 @@ import { Sprint } from 'src/app/models/sprint';
 import { Round } from 'src/app/models/round';
 import { Cardify } from '../../models/cardify.component';
 import { webSocket, WebSocketSubject } from "rxjs/webSocket";
-import * as globals from "../../services/globals.service";
+import { environment } from 'src/environments/environment';
 import { WebsocketService } from 'src/app/services/websocket.service';
 
 @Component({

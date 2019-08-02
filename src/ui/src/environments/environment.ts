@@ -4,7 +4,11 @@
 
 export const environment = {
   production: false,
-  gateway: 'http://localhost:8080',
+  
+  baseUrl: location.origin + '/#',
+
+  apiUrl: "http://localhost:8080",
+  infoSocket: "ws://localhost:8080/info/",
 };
 
 /*

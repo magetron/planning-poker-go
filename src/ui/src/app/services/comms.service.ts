@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
-import * as globals from './globals.service';
+import { environment } from 'src/environments/environment';
 import { Sprint } from '../models/sprint';
 import { User } from '../models/user';
 
@@ -50,7 +50,7 @@ export class CommsService {
     if (name !== "") {
       console.log("Creating sprint " + jsonObject.Name);
       const result = this.httpClient.post<SimpleResponse>(
-        `${globals.apiUrl}/sprints`, jsonObject, HTTPOPTIONS);
+        `${environment.apiUrl}/sprints`, jsonObject, HTTPOPTIONS);
       return result;
     } else {
       console.log("Empty sprint name rejected");
@@ -60,7 +60,7 @@ export class CommsService {
 
   getSprintDetails(id: string): Observable<ComplexResponse> {
     const result = this.httpClient.get<ComplexResponse>(
-      `${globals.apiUrl}/sprints/${id}`, HTTPOPTIONS);
+      `${environment.apiUrl}/sprints/${id}`, HTTPOPTIONS);
     return result;
   }
 
@@ -70,13 +70,13 @@ export class CommsService {
     }
 
     const result = this.httpClient.post<ComplexResponse>(
-      `${globals.apiUrl}/sprints/${sprint.Id}/users`, jsonObject, HTTPOPTIONS);
+      `${environment.apiUrl}/sprints/${sprint.Id}/users`, jsonObject, HTTPOPTIONS);
     return result;
   }
 
   getSprintUsers(sprint_id: string) : Observable<UserResponse>{
     const result = this.httpClient.get<UserResponse>(
-      `${globals.apiUrl}/sprints/${sprint_id}/users`, HTTPOPTIONS);
+      `${environment.apiUrl}/sprints/${sprint_id}/users`, HTTPOPTIONS);
     return result;
   }
 
@@ -86,7 +86,7 @@ export class CommsService {
       "Vote": vote,
     }
     const result = this.httpClient.put<SimpleResponse>(
-      `${globals.apiUrl}/sprints/${sprint_id}/users/${user_id}`,
+      `${environment.apiUrl}/sprints/${sprint_id}/users/${user_id}`,
        jsonObject, HTTPOPTIONS_NO_BODY);
     return result;
   }
@@ -96,7 +96,7 @@ export class CommsService {
       "Successor": successor_id
     }
     const result = this.httpClient.post<SimpleResponse>(
-      `${globals.apiUrl}/sprints/${sprint_id}/users/${user_id}/setadmin`,
+      `${environment.apiUrl}/sprints/${sprint_id}/users/${user_id}/setadmin`,
        jsonObject, HTTPOPTIONS_NO_BODY);
     return result;
   }
@@ -106,7 +106,7 @@ export class CommsService {
       "Name": sprint_story,
     }
     const result = this.httpClient.post<SimpleResponse>(
-      `${globals.apiUrl}/sprints/${sprint_id}/rounds`,
+      `${environment.apiUrl}/sprints/${sprint_id}/rounds`,
        jsonObject, HTTPOPTIONS_NO_BODY);
     return result;
   }
@@ -118,20 +118,20 @@ export class CommsService {
       "Final": fin,
     }
     const result = this.httpClient.put<SimpleResponse>(
-      `${globals.apiUrl}/sprints/${sprint_id}/rounds/${round_no}`,
+      `${environment.apiUrl}/sprints/${sprint_id}/rounds/${round_no}`,
        jsonObject, HTTPOPTIONS_NO_BODY);
     return result;
   }
 
   deleteUser (sprint_id: string, user_id: string): Observable<any>{
     const result = this.httpClient.delete<SimpleResponse>(
-      `${globals.apiUrl}/sprints/${sprint_id}/users/${user_id}`,HTTPOPTIONS);
+      `${environment.apiUrl}/sprints/${sprint_id}/users/${user_id}`,HTTPOPTIONS);
     return result;
   }
 
   getUserDetails (sprint_id: string, user_id: string): Observable<ComplexResponse>{
     const result = this.httpClient.get<ComplexResponse>(
-      `${globals.apiUrl}/sprints/${sprint_id}/users/${user_id}`, HTTPOPTIONS);
+      `${environment.apiUrl}/sprints/${sprint_id}/users/${user_id}`, HTTPOPTIONS);
     return result;
   }
 
@@ -140,7 +140,7 @@ export class CommsService {
       "VoteShown": showVote,
     }
     const result = this.httpClient.post<StatusResponse>(
-      `${globals.apiUrl}/sprints/${sprint_id}/users/${user_id}/showvote`, jsonObject, HTTPOPTIONS_NO_BODY);
+      `${environment.apiUrl}/sprints/${sprint_id}/users/${user_id}/showvote`, jsonObject, HTTPOPTIONS_NO_BODY);
     return result;
   }
 }

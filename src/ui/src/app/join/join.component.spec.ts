@@ -9,7 +9,7 @@ import { MatCardModule, MatFormFieldModule, MatIconModule, MatListModule, MatTab
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 
 import { CommsService } from '../services/comms.service'
-import * as globals from '../services/globals.service';
+import { environment } from '../../environments/environment';
 import { JoinComponent } from './join.component';
 import { NewSprintComponent } from '../new-sprint/new-sprint.component';
 import { ShareComponent } from '../share/share.component';
@@ -75,7 +75,7 @@ describe('JoinComponent', () => {
         });
   
         //set the expectations for the HttpClient mock
-        const req = httpMock.expectOne(globals.apiUrl + '/sprints');
+        const req = httpMock.expectOne(environment.apiUrl + '/sprints');
         expect(req.request.method).toEqual('POST');
   
         //fake data to be returned by the mock
