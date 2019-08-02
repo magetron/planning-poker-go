@@ -56,7 +56,6 @@ clean:
 	rm -f $(BINARY_NAME)
 	cd ui; rm -rf $(UIPATH)
 	rm -f gc
-	env --unset=PP_DEV
 
 run-dev:
 	$(GOBUILD) -o $(BINARY_NAME) -v ./...
