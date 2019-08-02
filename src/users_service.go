@@ -32,10 +32,6 @@ func (us *UsersService) Create(ctx context.Context) error {
 		return goweb.API.RespondWithError(ctx, http.StatusInternalServerError, dataErr.Error())
 	}
 
-	if !ctx.PathParams().Has("sprintId") {
-		return goweb.API.RespondWithError(ctx, http.StatusInternalServerError, "No sprintID Specified in URL.")
-	}
-
 	urlId := ctx.PathValue("sprintId")
 
 	dataMap := data.(map[string]interface{})

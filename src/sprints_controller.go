@@ -26,10 +26,7 @@ func (sc *SprintsController) Create(ctx context.Context) error {
 		return goweb.API.RespondWithError(ctx, http.StatusInternalServerError, dataErr.Error())
 	}
 
-	sid, idErr := shortid.New(1, shortid.DefaultABC, 2342)
-	if idErr != nil {
-		return goweb.API.RespondWithError(ctx, http.StatusInternalServerError, idErr.Error())
-	}
+	sid, _ := shortid.New(1, shortid.DefaultABC, 2342)
 
 	dataMap := data.(map[string]interface{})
 
