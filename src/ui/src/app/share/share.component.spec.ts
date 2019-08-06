@@ -63,8 +63,18 @@ describe('ShareComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should show correct sprint name', ()=> {
+    let visible_link: string = fixture.debugElement.query(By.css("mat-card-title")).childNodes[0].nativeNode.data
+    expect(visible_link).toEqual(" A session has been created for " + "Sprint 1" + ". ")
+  })
+
   it('should show correct url', ()=> {
     let visible_link: string = fixture.debugElement.query(By.css("mat-card-subtitle a p")).childNodes[0].nativeNode.data
     expect(visible_link).toContain(environment.baseUrl + "/join/" + "testSprint")
+  })
+
+  it('should lead to correct url', ()=> {
+    let link: string = fixture.debugElement.query(By.css("mat-card-subtitle a")).properties.href
+    expect(link).toEqual('#' + "/join/" + "testSprint")
   })
 });
