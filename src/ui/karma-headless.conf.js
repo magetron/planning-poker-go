@@ -28,9 +28,14 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome'],
+    browsers: ['Chromium'],
     singleRun: true,
     restartOnFileChange: true,
-    
+    flags: [
+	  '--disable-translate',
+	  '--disable-extensions',
+	  '--no-sandbox'
+	  '--headless'
+	]
   });
 };
