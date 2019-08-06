@@ -26,16 +26,20 @@ module.exports = function (config) {
     reporters: ['progress', 'dots'],
     port: 9876,
     colors: true,
-    logLevel: config.LOG_INFO,
-    autoWatch: true,
-    browsers: ['Chromium'],
+    logLevel: config.LOG_DEBUG,
+    autoWatch: false,
     singleRun: true,
     restartOnFileChange: true,
-    flags: [
-	  '--disable-translate',
-	  '--disable-extensions',
-	  '--no-sandbox',
-	  '--headless'
-	]
+	browsers: ['ChromeHeadlessNoSandbox'],
+	customLaunchers: {
+		ChromeHeadlessNoSandbox: {
+			base: 'Chromium',
+			flags: [
+				'--disable-gpu',
+				'--headless',
+				'--disable-features=NetworkService'
+			]
+		}
+	}
   });
 };
