@@ -70,11 +70,22 @@ describe('ShareComponent', () => {
 
   it('should show correct url', ()=> {
     let visible_link: string = fixture.debugElement.query(By.css("mat-card-subtitle a p")).childNodes[0].nativeNode.data
-    expect(visible_link).toContain(environment.baseUrl + "/join/" + "testSprint")
+    expect(visible_link).toEqual(" " + environment.baseUrl + "/join/" + "testSprint" + " ")
   })
 
   it('should lead to correct url', ()=> {
     let link: string = fixture.debugElement.query(By.css("mat-card-subtitle a")).properties.href
     expect(link).toEqual('#' + "/join/" + "testSprint")
+  })
+
+  //TODO: actually test clipboard?
+  it('should copy url to clipboard', async ()=> {
+    spyOn(component, "copylink")
+
+    let copy_button: any = fixture.debugElement.nativeElement.querySelector("button")
+    copy_button.click()
+    await fixture.whenStable();
+    
+    expect(component.copylink).toHaveBeenCalled()
   })
 });
