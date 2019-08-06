@@ -34,7 +34,7 @@ module.exports = function (config) {
     flags: [
 	  '--disable-translate',
 	  '--disable-extensions',
-	  '--no-sandbox'
+	  '--no-sandbox',
 	  '--headless'
 	]
   });
