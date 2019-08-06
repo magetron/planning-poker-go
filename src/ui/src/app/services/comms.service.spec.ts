@@ -7,7 +7,7 @@ import * as globals from '../services/globals.service';
 import { Sprint } from '../models/sprint';
 import { HttpResponse } from '@angular/common/http';
 
-fdescribe('CommsService', () => {
+describe('CommsService', () => {
 
   let httpTestingController: HttpTestingController;
   let commsService : CommsService;
