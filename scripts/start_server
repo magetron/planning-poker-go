@@ -1,0 +1,6 @@
+#!/bin/sh
+cd src
+make integration
+docker rmi -f planningpoker > /dev/null
+docker build -t planningpoker .
+./deploy-docker.sh
