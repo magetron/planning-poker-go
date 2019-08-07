@@ -30,6 +30,9 @@ module.exports = function (config) {
     logLevel: config.LOG_DEBUG,
     autoWatch: true,
     browsers: ['Electron'],
+	flags: [
+		'--no-sandbox'
+	],
     singleRun: true,
     restartOnFileChange: true,
   });
