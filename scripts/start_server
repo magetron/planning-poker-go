@@ -1,9 +1,5 @@
 #!/bin/sh
-ls
-pwd
-cd ..
-ls
-pwd
+cd ~/
 cd src
 make integration
 cd ..
