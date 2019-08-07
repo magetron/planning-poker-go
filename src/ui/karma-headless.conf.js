@@ -33,8 +33,11 @@ module.exports = function (config) {
 	browsers: ['HeadlessBrowser'],
 	customLaunchers: {
 		HeadlessBrowser: {
-			base: 'Electron',
+			base: 'Chromium',
 			flags: [
+				'--remote-debugging-port=12345',
+				'--disable-gpu',
+				'--headless',
 				'--no-sandbox'
 			]
 		}
