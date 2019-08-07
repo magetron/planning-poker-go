@@ -29,10 +29,16 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_DEBUG,
     autoWatch: true,
-    browsers: ['Electron'],
-	flags: [
-		'--no-sandbox'
-	],
+    
+	browsers: ['HeadlessBrowser'],
+	customLaunchers: {
+		HeadlessBrowser: {
+			base: 'Electron',
+			flags: [
+				'--no-sandbox'
+			]
+		}
+	},
     singleRun: true,
     restartOnFileChange: true,
   });
