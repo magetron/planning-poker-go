@@ -1,4 +1,9 @@
 #!/bin/sh
+ls
+pwd
+cd ..
+ls
+pwd
 cd src
 make integration
 cd ..
