@@ -24,7 +24,6 @@ export class MemberslistComponent extends Cardify implements OnInit {
   round: Round;
   @Input() sprint_id: string;
 
-  showV: boolean = false;
   btn1text: string;
   displayedColumns: string[] = ['NAME', 'VOTE'];
 
@@ -82,7 +81,9 @@ export class MemberslistComponent extends Cardify implements OnInit {
     arr.sort(function(a, b) {
       return a - b;
     });
+
     let half = Math.floor(arr.length / 2);
+
     if (arr.length % 2){
       return arr[half];
     } else {
@@ -91,7 +92,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
   }
 
   mode(arr: number[]): number {
-    var modes = [], count = [], maxIndex = 0;
+    let modes = new Array, count = new Object, maxIndex = 0;
 
     for (let i of arr) {
       count[i] = (count[i] || 0) + 1;
@@ -102,7 +103,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
 
     for (let i in count) {
       if (count.hasOwnProperty(i) && count[i] === maxIndex) {
-          modes.push(Number(i));
+          modes.push(i);
       }
     }
     return Math.max.apply(null, modes);
@@ -113,18 +114,15 @@ export class MemberslistComponent extends Cardify implements OnInit {
     let state = btn.classList.toggle("showV")
     btn.classList.toggle("hideV")
 
+    this.internal.showVote(state)
     if (state) {
-      this.showV = true;
-      this.internal.showVote(this.showV)
       this.btn1text = "Hide Vote";
     } else {
-      this.showV = false;
-      this.internal.showVote(this.showV)
       this.btn1text = "Show Vote";
     }
 
     //console.log("showV value", this.showV);
-    this.comms.showVote(this.sprint_id, this.user.Id, this.showV ).subscribe((response => {
+    this.comms.showVote(this.sprint_id, this.user.Id, state).subscribe((response => {
       if (response.status === 200) {
         this.socketBroadcast();
         //console.log("Set Vote to be shown?", this.showV);
