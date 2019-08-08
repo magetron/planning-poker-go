@@ -163,7 +163,7 @@ export class PokerControlComponent implements OnInit {
   }
 
   secondsToClockString(seconds: number): string {
-    let min = (seconds/60).toLocaleString("en", {maximumFractionDigits: 0})
+    let min = (Math.trunc(seconds/60)).toFixed(0)
     let sec = (seconds%60).toLocaleString("en", {minimumIntegerDigits: 2, maximumFractionDigits: 0})
 
     return min + ":" + sec
