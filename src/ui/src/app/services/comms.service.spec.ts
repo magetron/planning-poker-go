@@ -3,7 +3,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 
 import { CommsService } from './comms.service';
 
-import * as globals from '../services/globals.service';
+import { environment } from 'src/environments/environment'
 import { Sprint } from '../models/sprint';
 import { HttpResponse } from '@angular/common/http';
 
@@ -46,7 +46,7 @@ describe('CommsService', () => {
         });
       });
 
-      const req = httpMock.expectOne(globals.apiUrl + '/sprints');
+      const req = httpMock.expectOne(environment.apiUrl + '/sprints');
       expect(req.request.method).toEqual('POST');
 
       req.flush({
@@ -71,7 +71,7 @@ describe('CommsService', () => {
         });
       });
 
-      const req = httpMock.expectOne(globals.apiUrl + '/sprints/sprintId1');
+      const req = httpMock.expectOne(environment.apiUrl + '/sprints/sprintId1');
       expect(req.request.method).toEqual('GET');
 
       //fake data to be returned by the mock
@@ -104,7 +104,7 @@ describe('CommsService', () => {
         });
       });
 
-      const req = httpMock.expectOne(globals.apiUrl + '/sprints/sprintId1/users');
+      const req = httpMock.expectOne(environment.apiUrl + '/sprints/sprintId1/users');
       expect(req.request.method).toEqual('POST');
 
       req.flush({
@@ -143,7 +143,7 @@ describe('CommsService', () => {
         });
       });
 
-      const req = httpMock.expectOne(globals.apiUrl + '/sprints/sprintId1/users');
+      const req = httpMock.expectOne(environment.apiUrl + '/sprints/sprintId1/users');
       expect(req.request.method).toEqual('GET');
 
       req.flush({
@@ -173,7 +173,7 @@ describe('CommsService', () => {
         expect(data.status).toEqual(200);
       });
 
-      const req = httpMock.expectOne(globals.apiUrl + '/sprints/sprintId1/users/userId1');
+      const req = httpMock.expectOne(environment.apiUrl + '/sprints/sprintId1/users/userId1');
       expect(req.request.method).toEqual('PUT');
 
       req.flush("");
@@ -187,7 +187,7 @@ describe('CommsService', () => {
         expect(data.status).toEqual(200);
       });
 
-      const req = httpMock.expectOne(globals.apiUrl + '/sprints/sprintId1/users/userId1/setadmin');
+      const req = httpMock.expectOne(environment.apiUrl + '/sprints/sprintId1/users/userId1/setadmin');
       expect(req.request.method).toEqual('POST');
 
       req.flush("");
@@ -201,7 +201,7 @@ describe('CommsService', () => {
         expect(data.status).toEqual(200);
       });
 
-      const req = httpMock.expectOne(globals.apiUrl + '/sprints/sprintId1/rounds');
+      const req = httpMock.expectOne(environment.apiUrl + '/sprints/sprintId1/rounds');
       expect(req.request.method).toEqual('POST');
 
       req.flush("");
@@ -215,7 +215,7 @@ describe('CommsService', () => {
         expect(data.status).toEqual(200);
       });
 
-      const req = httpMock.expectOne(globals.apiUrl + '/sprints/sprintId1/rounds/1');
+      const req = httpMock.expectOne(environment.apiUrl + '/sprints/sprintId1/rounds/1');
       expect(req.request.method).toEqual('PUT');
 
       req.flush("");
@@ -229,7 +229,7 @@ describe('CommsService', () => {
         expect(data).toEqual("");
       });
 
-      const req = httpMock.expectOne(globals.apiUrl + '/sprints/sprintId1/users/userId1');
+      const req = httpMock.expectOne(environment.apiUrl + '/sprints/sprintId1/users/userId1');
       expect(req.request.method).toEqual('DELETE');
 
       req.flush("");
@@ -251,7 +251,7 @@ describe('CommsService', () => {
         });
       });
 
-      const req = httpMock.expectOne(globals.apiUrl + '/sprints/sprintId1/users/userId1');
+      const req = httpMock.expectOne(environment.apiUrl + '/sprints/sprintId1/users/userId1');
       expect(req.request.method).toEqual('GET');
 
       req.flush({
@@ -273,7 +273,7 @@ describe('CommsService', () => {
         expect(data.status).toEqual(200);
       });
 
-      const req = httpMock.expectOne(globals.apiUrl + '/sprints/sprintId1/users/userId1/showvote');
+      const req = httpMock.expectOne(environment.apiUrl + '/sprints/sprintId1/users/userId1/showvote');
       expect(req.request.method).toEqual('POST');
 
       req.flush("");
