@@ -24,7 +24,6 @@ export class MemberslistComponent extends Cardify implements OnInit {
   round: Round;
   @Input() sprint_id: string;
 
-  showV: boolean = false;
   btn1text: string;
   displayedColumns: string[] = ['NAME', 'VOTE'];
 
@@ -43,7 +42,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
     this.internal.users$.subscribe(msg => {
       this.users = msg;
       if (this.users) {
-        let stats = this.analysisVote()
+        let stats = this.analysisVote(this.users)
         this.internal.updateStats(stats)
         this.internal.updateUser(this.updateMe())
       }
@@ -54,18 +53,19 @@ export class MemberslistComponent extends Cardify implements OnInit {
     this.socket.send("update");
   }
 
-  analysisVote(): Array<number> {
-    let result = this.users.map(i => i.Vote);
+  analysisVote(users: User[]): Array<number> {
+    console.info(users)
+    let result = users.map((i: User) => i.Vote);
 
     //strip non-votes
-    result = result.filter(i => ![-1, -2, -3].includes(i));
+    result = result.filter((i: number) => ![-1, -2, -3].includes(i));
 
     if (result.length === 0) return [0, 0, 0, 0];
 
     var avg = this.mean(result);
     var median = this.median(result);
     var mode = this.mode(result);
-    let final = (median + avg)/2
+    let final = Math.ceil((median + avg)/2)
     return [mode, median, avg, final];
   }
 
@@ -81,7 +81,9 @@ export class MemberslistComponent extends Cardify implements OnInit {
     arr.sort(function(a, b) {
       return a - b;
     });
-    var half = Math.floor(arr.length / 2);
+
+    let half = Math.floor(arr.length / 2);
+
     if (arr.length % 2){
       return arr[half];
     } else {
@@ -90,20 +92,20 @@ export class MemberslistComponent extends Cardify implements OnInit {
   }
 
   mode(arr: number[]): number {
-    var modes = [], count = [], i, number, maxIndex = 0;
+    let modes = new Array, count = new Object, maxIndex = 0;
 
-    for (i = 0; i < arr.length; i += 1) {
-      number = arr[i];
-      count[number] = (count[number] || 0) + 1;
-      if (count[number] > maxIndex) {
-        maxIndex = count[number];
+    for (let i of arr) {
+      count[i] = (count[i] || 0) + 1;
+      if (count[i] > maxIndex) {
+        maxIndex = count[i];
       }
     }
 
-    for (i in count)
+    for (let i in count) {
       if (count.hasOwnProperty(i) && count[i] === maxIndex) {
-          modes.push(Number(i));
+          modes.push(i);
       }
+    }
     return Math.max.apply(null, modes);
   }
 
@@ -112,18 +114,15 @@ export class MemberslistComponent extends Cardify implements OnInit {
     let state = btn.classList.toggle("showV")
     btn.classList.toggle("hideV")
 
+    this.internal.showVote(state)
     if (state) {
-      this.showV = true;
-      this.internal.showVote(this.showV)
       this.btn1text = "Hide Vote";
     } else {
-      this.showV = false;
-      this.internal.showVote(this.showV)
       this.btn1text = "Show Vote";
     }
 
     //console.log("showV value", this.showV);
-    this.comms.showVote(this.sprint_id, this.user.Id, this.showV ).subscribe((response => {
+    this.comms.showVote(this.sprint_id, this.user.Id, state).subscribe((response => {
       if (response.status === 200) {
         this.socketBroadcast();
         //console.log("Set Vote to be shown?", this.showV);

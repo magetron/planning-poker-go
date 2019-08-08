@@ -42,6 +42,7 @@ export class InternalService {
     this.stats.next(stats);
   }
 
+  //TODO: currently doesn't seem used outside memberslist, which publishes it. However, I think we should use it to hide statistics is votes are hidden so I'm leaving it
   showVote(isVoteShown: boolean) {
     this.isVoteShown.next(isVoteShown);
   }
