@@ -66,21 +66,34 @@ export class TopBarComponent implements OnInit {
   }
 
 
- @HostListener('window:unload', [ '$event' ])
+ @HostListener('window:beforeunload', [ '$event' ])
    unloadHandler(event) {
+    console.log("someone closes the window")
     if (this.user.Admin){
-      console.log("Admin logout");
-      this.comms.appointSuccessor(this.sprint_id, this.user.Id, "");
-      /*.subscribe(response => {
-        if (response && response.status === 200) {
-          console.log("Set new admin random successful")
-        } else {
-          console.log("All users log out")
-          this.internal.logoutAllUsers(true);
+      let oldmasterId =  this.user.Id
+      
+      this.comms.deleteUser(this.sprint.Id, this.user.Id).subscribe(response => {
+        if (response == null) {
+          console.log("User logged out")
+          localStorage.removeItem("user");
+          this.webSocket.send("update")
+          this.internal.updateUser(null);
+          this.comms.appointSuccessor(this.sprint_id, oldmasterId, "").subscribe(response => {
+            if (response && response.status === 200) {
+              this.webSocket.send("update");
+              console.log("Set new admin randomly");
+            } else {
+              console.log("All users log out")
+              this.internal.logoutAllUsers(true);
+            }
+          })
         }
-      })*/
+      })
+
+
+    } else {
+      this.logOut()
     }
-    console.log("func ended");
   }
 
 }
