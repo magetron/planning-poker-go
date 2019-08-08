@@ -60,6 +60,7 @@ export class InternalService {
       return false
     }
   }
+  
   logoutAllUsers(logoutAll: boolean) {
     this.logoutAll.next(logoutAll);
   }
