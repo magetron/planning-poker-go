@@ -6,7 +6,7 @@ Powered by Interns
 
 ### Deployment
 
-To deploy to AWS EC2 instance, run `./dockerize.sh`. Make sure there is `./deploy-docker.sh` on the server side.
+Now Deployment to RELEASE (INTEGRATION) EC2 environment shall be done automatically via CodePipeline.
 
 TODO :
 * AWS fargate
