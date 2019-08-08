@@ -10,6 +10,7 @@ NGCMD=npx ng
 NGSERVE=$(NGCMD) serve
 NGBUILD=$(NGCMD) build
 NGTEST=$(NGCMD) test --code-coverage --karma-config ./karma-headless.conf.js --progress false
+#NGTEST=cd .
 UINAME=ui
 UIPATH=../static-ui
 

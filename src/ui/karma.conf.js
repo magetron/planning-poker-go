@@ -20,16 +20,26 @@ module.exports = function (config) {
     },
     coverageIstanbulReporter: {
       dir: require('path').join(__dirname, './coverage/ui'),
-      reports: ['html', 'lcovonly', 'text-summary'],
+      reports: ['text-summary'],
       fixWebpackSourcePaths: true
     },
-    reporters: ['progress', 'kjhtml'],
+    reporters: ['progress', 'dots'],
     port: 9876,
     colors: true,
-    logLevel: config.LOG_INFO,
-    autoWatch: true,
-    browsers: ['Chrome'],
-    singleRun: false,
-    restartOnFileChange: true
+    logLevel: config.LOG_DEBUG,
+    autoWatch: false,
+    singleRun: true,
+    restartOnFileChange: true,
+	browsers: ['ChromeHeadlessNoSandbox'],
+	customLaunchers: {
+		ChromeHeadlessNoSandbox: {
+			base: 'Chromium',
+			flags: [
+				'--disable-gpu',
+				'--headless',
+				'--disable-features=NetworkService'
+			]
+		}
+	}
   });
 };

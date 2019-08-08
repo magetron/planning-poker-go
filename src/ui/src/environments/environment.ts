@@ -5,7 +5,8 @@
 export const environment = {
   production: false,
   
-  baseUrl: location.origin + '/#',
+  // equivalent to location.origin + userHash
+  baseUrl: "http://localhost:4200" + '/#',
 
   apiUrl: "http://localhost:8080",
   infoSocket: "ws://localhost:8080/info/",
