@@ -22,4 +22,6 @@ phases:
        
 artifacts:
   files:
-    - 'planningpoker.tar'       
+    - 'planningpoker.tar' 
+    - 'appspec.yml'
+    - 'scripts/'
