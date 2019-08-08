@@ -1,10 +1,10 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, async } from '@angular/core/testing';
 
 import { webSocket,WebSocketSubject } from "rxjs/webSocket";
 import { WebSocketServiceSpy } from './websocketspy'
 import { WebsocketService } from './websocket.service';
 
-fdescribe('WebsocketService', () => {
+describe('WebsocketService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -24,34 +24,13 @@ fdescribe('WebsocketService', () => {
 
   it('should connect', () => {
     const service: WebsocketService = TestBed.get(WebsocketService);
-    let sth : WebSocketSubject<any>;
     service.connect("sprintId").subscribe(data => {
-      expect(data).toEqual(sth)
+      expect(data).toEqual([ [ Object({"Id":"sprintId","Name":"sprintName","Vote":-1,"Admin":true}) ] ])
     })
   });
 
-  // it('should create new sprint',
-  //   inject([HttpTestingController, CommsService], 
-  //     (httpMock: HttpTestingController, service: CommsService) => {
-  
-  // );
-
+  it('should send', () => {
+    const service: WebsocketService = TestBed.get(WebsocketService);
+    expect(service.send("update")).toBeFalsy();
+  });
 });
-
-
-
-// describe('WebsocketService', () => {
-//   beforeEach(() => TestBed.configureTestingModule({}));
-
-//   it('should be created', () => {
-//     const service: WebsocketService = TestBed.get(WebsocketService);
-//     expect(service).toBeTruthy();
-//   });
-// });
-
-  // it('should create random component', (done) => {
-  //   setTimeout(() => {
-  //     expect(component).toBeTruthy();
-  //     done();
-  //   }, 1000);
-  // });

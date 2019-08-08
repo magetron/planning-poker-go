@@ -1,30 +1,23 @@
-import { Observable, Subject } from 'rxjs';
-
-const mockData = {
-  // some arbitrary data
-};
+import { Observable, Subject, of } from 'rxjs';
+import { normalizePassiveListenerOptions } from '@angular/cdk/platform';
 
 export class WebSocketServiceSpy {
 
   private messageSpy = new Subject<string>();
   private messageHandler = this.messageSpy.asObservable();
 
-  createObservableSocket(url: string): Observable<string> {
-    console.log(`Websocket would connect to ${url}.`);
-
-   return new Observable(observer => {
-      this.messageHandler.subscribe(() => {
-        observer.next(JSON.stringify(mockData));
-      });
-    });
-  }
-
-  sendMessage(message: any) {
-    this.messageSpy.next();
-  }
-
   connect(sprint_id: string): Observable<any> {
+    let data = [[{"Id":"sprintId","Name":"sprintName","Vote":-1,"Admin":true}]];
+    let j = JSON.parse(JSON.stringify(data));
+    return of(j);
   }
 
+  send(data: any){
+    if (data === "update"){
+      this.messageSpy.next();
+    } else {
+      console.error('Did not send data, open a connection first');
+    }
+  }
 
 }
