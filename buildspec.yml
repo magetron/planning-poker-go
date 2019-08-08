@@ -24,4 +24,4 @@ artifacts:
   files:
     - 'planningpoker.tar' 
     - 'appspec.yml'
-    - 'scripts/'
+    - 'scripts/start_server'
