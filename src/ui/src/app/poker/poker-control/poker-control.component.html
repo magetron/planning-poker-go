@@ -45,7 +45,7 @@
           <mat-card-content fxLayoutAlign="center">
             <div *ngIf="round.Archived; else notArchived"> <h1>0:00</h1> </div>
             <ng-template #notArchived>
-              <h1>{{(timePassed/60).toLocaleString("en", {maximumFractionDigits: 0}) + ":" + (timePassed%60).toLocaleString("en", {minimumIntegerDigits: 2, maximumFractionDigits: 0})}}</h1>
+              <h1>{{secondsToClockString(timePassed)}}</h1>
             </ng-template>
             <br>
           </mat-card-content>

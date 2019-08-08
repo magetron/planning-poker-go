@@ -36,7 +36,7 @@ export class PokerControlComponent implements OnInit {
   rounds: Round[];
   stats: number[];
   timePassed = 0;
-  displayedColumns: string[] = ['ROUNDS', 'RESULT'];
+  displayedColumns: string[] = ['RESULT', 'ROUNDS'];
   user: User;
   baseUrl: string;
   isVoteShown : boolean;
@@ -70,7 +70,6 @@ export class PokerControlComponent implements OnInit {
       console.log('Connection error', err);
       //TODO: Handle properly - notify the user, retry?
       this.router.navigateByUrl(`/join/${this.sprint_id}`);
-      //TODO: delete user from local storage?
       return throwError(err);
     })
 
@@ -163,4 +162,10 @@ export class PokerControlComponent implements OnInit {
     return num.toFixed(2);
   }
 
+  secondsToClockString(seconds: number): string {
+    let min = (Math.trunc(seconds/60)).toFixed(0)
+    let sec = (seconds%60).toLocaleString("en", {minimumIntegerDigits: 2, maximumFractionDigits: 0})
+
+    return min + ":" + sec
+  }
 }

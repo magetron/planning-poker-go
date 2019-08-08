@@ -57,4 +57,13 @@ describe('PokerControlComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should display the correct value in the timer', () => {
+    let seconds : number[] = [0, 1, 59, 61, 120, 144, 244, 270, 298, 360,]
+    let clocks : Array<string> = new Array<string>()
+    for (let i of seconds) {
+      clocks.push(component.secondsToClockString(i))
+    }
+    expect(clocks).toEqual(["0:00", "0:01", "0:59", "1:01", "2:00", "2:24", "4:04", "4:30", "4:58", "6:00",])
+  })
 });
