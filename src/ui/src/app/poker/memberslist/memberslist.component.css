@@ -4,11 +4,13 @@
 
 .mat-cell {
   padding: 8px 8px 8px 0;
+  text-align: center;
 }
 
-.hideV{
+.hideV {
   background-color: #FFD700;
 }
+
 .showV{
   background-color: #F08080;
 }
