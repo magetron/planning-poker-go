@@ -17,7 +17,6 @@ phases:
        - cd ui && npm install
        - apt-get install -y chromium-browser 
        - cd .. && make integration
-       - service docker start
        - cd .. && docker build -t planningpoker .
        - docker save -o planningpoker.tar planningpoker
        
