@@ -16,7 +16,7 @@ export class WebSocketServiceSpy {
     if (data === "update"){
       this.messageSpy.next();
     } else {
-      console.error('Did not send data, open a connection first');
+      console.log('Did not send data, open a connection first');
     }
   }
 
