@@ -1,9 +1,3 @@
 #!/bin/sh
 cd ~/
-cd src
-make integration
-cd ..
-docker rmi -f planningpoker > /dev/null
-docker build -t planningpoker .
-cd server_script
 ./deploy-docker.sh
