@@ -1,0 +1,23 @@
+version: 0.2
+
+phases:
+ install:
+    runtime-versions:
+      golang: 1.12
+ build:
+    commands:
+       - cd src 
+       - go get -v -t ./ 
+       - apt-get update 
+       - apt-get -y install nodejs 
+       - npm install -g @angular/cli 
+       - cd ui && npm install
+       - apt-get install -y chromium-browser 
+       - cd .. && make integration
+       - service docker start
+       - cd .. && docker build -t planningpoker .
+       - docker save -o planningpoker.tar planningpoker
+       
+artifacts:
+  files:
+    - '**/*'       
