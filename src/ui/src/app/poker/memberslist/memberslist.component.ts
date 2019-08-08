@@ -82,7 +82,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
     arr.sort(function(a, b) {
       return a - b;
     });
-    var half = Math.floor(arr.length / 2);
+    let half = Math.floor(arr.length / 2);
     if (arr.length % 2){
       return arr[half];
     } else {
@@ -91,20 +91,20 @@ export class MemberslistComponent extends Cardify implements OnInit {
   }
 
   mode(arr: number[]): number {
-    var modes = [], count = [], i, number, maxIndex = 0;
+    var modes = [], count = [], maxIndex = 0;
 
-    for (i = 0; i < arr.length; i += 1) {
-      number = arr[i];
-      count[number] = (count[number] || 0) + 1;
-      if (count[number] > maxIndex) {
-        maxIndex = count[number];
+    for (let i of arr) {
+      count[i] = (count[i] || 0) + 1;
+      if (count[i] > maxIndex) {
+        maxIndex = count[i];
       }
     }
 
-    for (i in count)
+    for (let i in count) {
       if (count.hasOwnProperty(i) && count[i] === maxIndex) {
           modes.push(Number(i));
       }
+    }
     return Math.max.apply(null, modes);
   }
 
