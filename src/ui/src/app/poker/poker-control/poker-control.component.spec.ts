@@ -3,7 +3,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 
 import { MatCardModule, MatFormFieldModule, MatIconModule, MatListModule, MatTableModule, MatButtonModule, MatInputModule,  MatToolbarModule } from '@angular/material';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
+import { ActivatedRoute, convertToParamMap } from '@angular/router';
 
 import { PokerControlComponent } from './poker-control.component';
 import { PokerCardComponent } from '../poker-card/poker-card.component';
@@ -18,7 +18,7 @@ import { WebsocketService } from 'src/app/services/websocket.service';
 import { WebSocketServiceSpy } from 'src/app/services/websocketspy';
 import { ResetBtnComponent } from '../reset-btn/reset-btn.component';
 
-xdescribe('PokerControlComponent', () => {
+describe('PokerControlComponent', () => {
   let component: PokerControlComponent;
   let fixture: ComponentFixture<PokerControlComponent>;
 
@@ -32,7 +32,11 @@ xdescribe('PokerControlComponent', () => {
 
     TestBed.configureTestingModule({
       providers: [
-        {
+        /*{
+          provide: Router,
+          useValue: routerSpy
+        },*/
+        { 
           provide: Router,
           useValue: routerSpy
         },
@@ -40,14 +44,14 @@ xdescribe('PokerControlComponent', () => {
           provide: ActivatedRoute,
           useValue: {snapshot: {paramMap: convertToParamMap({'sprint_id': 'test'})}}
         },
-        {
+        /*{
           provide: InternalService,
           useValue: internalSpy
         },
         {
           provide: CommsService,
           useValue: commsSpy
-        },
+        },*/
         {
           provide: WebsocketService,
           useClass: WebSocketServiceSpy
