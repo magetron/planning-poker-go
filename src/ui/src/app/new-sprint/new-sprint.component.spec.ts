@@ -13,6 +13,7 @@ import { JoinComponent } from '../join/join.component';
 import { PokerControlComponent } from '../poker/poker-control/poker-control.component';
 import { PokerCardComponent } from '../poker/poker-card/poker-card.component';
 import { MemberslistComponent } from '../poker/memberslist/memberslist.component';
+import { ResetBtnComponent } from '../poker/reset-btn/reset-btn.component';
 
 describe('NewSprintComponent', () => {
   let newSprintComponent: NewSprintComponent;
@@ -27,7 +28,8 @@ describe('NewSprintComponent', () => {
         JoinComponent,
         PokerControlComponent,
         PokerCardComponent,
-        MemberslistComponent
+        MemberslistComponent,
+        ResetBtnComponent,
       ],
       imports: [ 
         FormsModule,

@@ -16,6 +16,7 @@ import { PokerCardComponent } from '../poker/poker-card/poker-card.component';
 import { PokerControlComponent } from '../poker/poker-control/poker-control.component';
 import { MemberslistComponent } from '../poker/memberslist/memberslist.component';
 import { environment } from 'src/environments/environment';
+import { ResetBtnComponent } from '../poker/reset-btn/reset-btn.component';
 
 describe('ShareComponent', () => {
   let component: ShareComponent;
@@ -32,6 +33,7 @@ describe('ShareComponent', () => {
          PokerCardComponent,
          MemberslistComponent,
          ShareComponent,
+         ResetBtnComponent,
        ],
       imports: [
         AppRoutingModule,

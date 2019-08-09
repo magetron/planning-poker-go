@@ -10,6 +10,7 @@ import { JoinComponent } from 'src/app/join/join.component';
 import { PokerCardComponent } from '../poker-card/poker-card.component';
 import { PokerControlComponent } from '../poker-control/poker-control.component';
 import { ShareComponent } from 'src/app/share/share.component';
+import { ResetBtnComponent } from '../reset-btn/reset-btn.component';
 
 describe('MemberslistComponent', () => {
   let component: MemberslistComponent;
@@ -24,7 +25,7 @@ describe('MemberslistComponent', () => {
         PokerControlComponent,
         PokerCardComponent,
         ShareComponent,
-
+        ResetBtnComponent,
        ],
        imports: [
         AppRoutingModule,

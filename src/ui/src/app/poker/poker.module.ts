@@ -9,12 +9,14 @@ import { MatListModule, MatTableModule, MatButtonModule, MatInputModule,  MatFor
 import { PokerCardComponent } from './poker-card/poker-card.component';
 import { MemberslistComponent } from './memberslist/memberslist.component';
 import { PokerControlComponent } from './poker-control/poker-control.component';
+import { ResetBtnComponent } from './reset-btn/reset-btn.component';
 
 @NgModule({
   declarations: [
     PokerCardComponent,
     MemberslistComponent,
-    PokerControlComponent
+    PokerControlComponent,
+    ResetBtnComponent
   ],
 
   //imports for mega data within other modules

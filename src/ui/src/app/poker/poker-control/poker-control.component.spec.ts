@@ -16,6 +16,7 @@ import { InternalService } from 'src/app/services/internal.service';
 import { CommsService } from 'src/app/services/comms.service';
 import { WebsocketService } from 'src/app/services/websocket.service';
 import { WebSocketServiceSpy } from 'src/app/services/websocketspy';
+import { ResetBtnComponent } from '../reset-btn/reset-btn.component';
 
 xdescribe('PokerControlComponent', () => {
   let component: PokerControlComponent;
@@ -59,6 +60,7 @@ xdescribe('PokerControlComponent', () => {
         NewSprintComponent,
         JoinComponent,
         ShareComponent,
+        ResetBtnComponent,
        ],
        imports: [
         AppRoutingModule,
