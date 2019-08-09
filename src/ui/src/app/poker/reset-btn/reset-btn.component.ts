@@ -34,7 +34,6 @@ export class ResetBtnComponent implements OnInit {
   resetFunc() : void {
     this.comms.appointSuccessor(this.sprint_id, this.user.Id , "").subscribe(response => {
       if (response && response.status === 200) {
-        this.socket.send("update");
         console.log("Set new admin randomly");
 
         if (this.users[0].Admin == true) {
@@ -45,6 +44,8 @@ export class ResetBtnComponent implements OnInit {
               this.socket.send("update")
             }
           });
+        } else {
+          this.socket.send("update");
         }
 
       } else {

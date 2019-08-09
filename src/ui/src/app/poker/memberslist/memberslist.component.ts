@@ -24,7 +24,6 @@ export class MemberslistComponent extends Cardify implements OnInit {
   round: Round;
   @Input() sprint_id: string;
 
-  showV: boolean = false;
   btn1text: string;
   displayedColumns: string[] = ['NAME', 'VOTE'];
 
@@ -118,21 +117,18 @@ export class MemberslistComponent extends Cardify implements OnInit {
 
     this.internal.showVote(state)
     if (state) {
-      this.showV = true;
-      this.internal.showVote(this.showV)
+      this.internal.showVote(true)
       this.btn1text = "Hide Vote";
     } else {
-      this.showV = false;
-      this.internal.showVote(this.showV)
+      this.internal.showVote(false)
       this.btn1text = "Show Vote";
     }
 
     for (let user of this.users){
       if (user.Admin == true) {
-        this.comms.showVote(this.sprint_id, this.user.Id, this.showV ).subscribe((response => {
+        this.comms.showVote(this.sprint_id, this.user.Id, state ).subscribe((response => {
           if (response.status === 200) {
             this.socketBroadcast();
-            //console.log("Set Vote to be shown?", this.showV);
           } else {
             console.log("Set Vote to be shown failed");
           }
