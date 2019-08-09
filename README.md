@@ -8,8 +8,9 @@ Powered by Interns
 
 Now Deployment to RELEASE (INTEGRATION) EC2 environment shall be done automatically via CodePipeline.
 
-TODO :
-* AWS fargate
+CodePipeline will be fetching source and deploy to `http://planning-poker-nlb-ec2-e86c54390baa9c80.elb.eu-west-1.amazonaws.com:8080/#/new`
+
+Production environment CI is on its way.
 
 ### Development
 
@@ -25,6 +26,6 @@ Once you are satisfied, run `make build-prod` to build for the current platform 
 
 Or if you are too lazy, run `make dev` to test and build the no-production static version of angular, run `make prod` to test and build the production static version of angular. 
 
-Lastly, before deployment, try `make docker` to see if the docker version of the product is building.
+Lastly, before deployment, try `make deploy` to see if the docker version of the product is building.
 
 What to do when the folder gets messy and you cannot distinguish what's been built? Try `make clean` and all tmp build files will be gone. 
