@@ -25,3 +25,4 @@ artifacts:
     - 'planningpoker.tar' 
     - 'appspec.yml'
     - 'scripts/start_server'
+    - 'imagedefinitions.json'
