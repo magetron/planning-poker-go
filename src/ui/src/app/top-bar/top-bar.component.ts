@@ -74,7 +74,6 @@ export class TopBarComponent implements OnInit {
 
       this.comms.appointSuccessor(this.sprint_id, this.user.Id , "").subscribe(response => {
         if (response && response.status === 200) {
-          this.webSocket.send("update");
           console.log("Set new admin randomly");
   
           this.comms.deleteUser(this.sprint_id, this.users[0].Id).subscribe(response => {

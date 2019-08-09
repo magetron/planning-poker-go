@@ -117,10 +117,8 @@ export class MemberslistComponent extends Cardify implements OnInit {
 
     this.internal.showVote(state)
     if (state) {
-      this.internal.showVote(true)
       this.btn1text = "Hide Vote";
     } else {
-      this.internal.showVote(false)
       this.btn1text = "Show Vote";
     }
 
