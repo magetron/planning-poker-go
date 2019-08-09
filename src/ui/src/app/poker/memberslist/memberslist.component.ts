@@ -24,6 +24,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
   round: Round;
   @Input() sprint_id: string;
 
+  showV: boolean = false;
   btn1text: string;
   displayedColumns: string[] = ['NAME', 'VOTE'];
 
@@ -110,26 +111,35 @@ export class MemberslistComponent extends Cardify implements OnInit {
   }
 
   showVoteFunc(): void {
+
     let btn = document.getElementById("btn1")
     let state = btn.classList.toggle("showV")
     btn.classList.toggle("hideV")
 
     this.internal.showVote(state)
     if (state) {
+      this.showV = true;
+      this.internal.showVote(this.showV)
       this.btn1text = "Hide Vote";
     } else {
+      this.showV = false;
+      this.internal.showVote(this.showV)
       this.btn1text = "Show Vote";
     }
 
-    //console.log("showV value", this.showV);
-    this.comms.showVote(this.sprint_id, this.user.Id, state).subscribe((response => {
-      if (response.status === 200) {
-        this.socketBroadcast();
-        //console.log("Set Vote to be shown?", this.showV);
-      } else {
-        console.log("Set Vote to be shown failed");
+    for (let user of this.users){
+      if (user.Admin == true) {
+        this.comms.showVote(this.sprint_id, this.user.Id, this.showV ).subscribe((response => {
+          if (response.status === 200) {
+            this.socketBroadcast();
+            //console.log("Set Vote to be shown?", this.showV);
+          } else {
+            console.log("Set Vote to be shown failed");
+          }
+        }))
       }
-    }))
+    }
+
   }
 
   setNextAdmin(successor : User) : void{
