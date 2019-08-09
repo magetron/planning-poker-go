@@ -22,6 +22,7 @@ phases:
 
  post_build:
      commands:
+       - $(aws ecr get-login --no-include-email --region eu-west-1)
        - docker push 137591602799.dkr.ecr.eu-west-1.amazonaws.com/planningpoker:latest
        - printf '[{"name":"planningpoker","imageUri":"137591602799.dkr.ecr.eu-west-1.amazonaws.com/planningpoker:latest"}]' > imagedefinitions.json
 
