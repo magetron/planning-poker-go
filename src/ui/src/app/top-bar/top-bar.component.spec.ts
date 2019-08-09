@@ -11,7 +11,7 @@ import { PokerControlComponent } from '../poker/poker-control/poker-control.comp
 import { ShareComponent } from '../share/share.component';
 import { PokerCardComponent } from '../poker/poker-card/poker-card.component';
 import { MemberslistComponent } from '../poker/memberslist/memberslist.component';
-
+import { ResetBtnComponent } from '../poker/reset-btn/reset-btn.component';
 
 describe('TopBarComponent', () => {
   let component: TopBarComponent;
@@ -30,6 +30,7 @@ describe('TopBarComponent', () => {
          PokerCardComponent,
          MemberslistComponent,
          ShareComponent,
+         ResetBtnComponent,
         ],
       imports: [
         AppRoutingModule,

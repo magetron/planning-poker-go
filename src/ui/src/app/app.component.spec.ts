@@ -13,6 +13,7 @@ import { PokerControlComponent } from './poker/poker-control/poker-control.compo
 import { ShareComponent } from './share/share.component';
 import { PokerCardComponent } from './poker/poker-card/poker-card.component';
 import { MemberslistComponent } from './poker/memberslist/memberslist.component';
+import { ResetBtnComponent } from './poker/reset-btn/reset-btn.component';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -26,6 +27,7 @@ describe('AppComponent', () => {
         PokerCardComponent,
         MemberslistComponent,
         ShareComponent,
+        ResetBtnComponent,
       ],
       imports: [
         AppRoutingModule,
