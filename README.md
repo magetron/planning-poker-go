@@ -6,10 +6,9 @@ Powered by Interns
 
 ### Deployment
 
-To deploy to AWS EC2 instance, run `./dockerize.sh`. Make sure there is `./deploy-docker.sh` on the server side.
+CodePipeline will fetch the source and deploy it to `http://planning-poker-nlb-ec2-e86c54390baa9c80.elb.eu-west-1.amazonaws.com:8080/#/new`
 
-TODO :
-* AWS fargate
+Production environment CI is on it's way.
 
 ### Development
 
@@ -25,6 +24,6 @@ Once you are satisfied, run `make build-prod` to build for the current platform 
 
 Or if you are too lazy, run `make dev` to test and build the no-production static version of angular, run `make prod` to test and build the production static version of angular. 
 
-Lastly, before deployment, try `make docker` to see if the docker version of the product is building.
+Lastly, before deployment, try `make deploy` to see if the docker version of the product is building.
 
 What to do when the folder gets messy and you cannot distinguish what's been built? Try `make clean` and all tmp build files will be gone. 
