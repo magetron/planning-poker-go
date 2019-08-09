@@ -27,5 +27,4 @@ phases:
 "}]' > imagedefinitions.json
 
 artifacts:
-  files:
-    - 'imagedefinitions.json'
+  files: imagedefinitions.json
