@@ -18,7 +18,6 @@ import { WebsocketService } from 'src/app/services/websocket.service';
 import { WebSocketServiceSpy } from 'src/app/services/websocketspy';
 import { ElapsedTimerComponent } from '../elapsed-timer/elapsed-timer.component';
 
-
 xdescribe('PokerControlComponent', () => {
   let component: PokerControlComponent;
   let fixture: ComponentFixture<PokerControlComponent>;
@@ -33,7 +32,7 @@ xdescribe('PokerControlComponent', () => {
 
     TestBed.configureTestingModule({
       providers: [
-        {
+        { 
           provide: Router,
           useValue: routerSpy
         },

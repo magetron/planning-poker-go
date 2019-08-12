@@ -28,7 +28,6 @@ export class MemberslistComponent extends Cardify implements OnInit {
   displayedColumns: string[] = ['NAME', 'VOTE'];
 
   constructor(
-    private router: Router,
     private socket: WebsocketService,
     private comms: CommsService,
     private internal: InternalService) {
