@@ -50,7 +50,6 @@
             </mat-list>
           </mat-card-content>
         </mat-card>
-        <br>
         <ng-template [ngIf]="user?.Admin">
             <mat-card class="background-third">
               <mat-card-content>
@@ -71,12 +70,12 @@
       <table mat-table [dataSource]=rounds class="mat-elevation-z8">
         <!-- Position Column -->
         <ng-container matColumnDef="ROUNDS">
-          <th mat-header-cell *matHeaderCellDef> ROUNDS </th>
+          <th mat-header-cell *matHeaderCellDef> Rounds </th>
           <td mat-cell *matCellDef="let rounds"> {{rounds.Name}} </td>
         </ng-container>
         <ng-container matColumnDef="RESULT">
-          <th mat-header-cell *matHeaderCellDef> RESULT </th>
-          <td mat-cell *matCellDef="let rounds"> {{hideLastElementinList(rounds)}} </td>
+          <th mat-header-cell *matHeaderCellDef> Result </th>
+          <td mat-cell *matCellDef="let rounds"> {{hideLastElementInList(rounds)}} </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
@@ -88,7 +87,7 @@
 <br>
 
 <footer class="container-fluid text-center">
-  <mat-toolbar fxLayout="row" color="primary" >
+  <mat-toolbar  color="primary" >
     Invitation Link: {{baseUrl}}/join/{{sprint_id}}
   </mat-toolbar>
 </footer>

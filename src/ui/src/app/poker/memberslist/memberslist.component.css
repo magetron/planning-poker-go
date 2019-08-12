@@ -2,9 +2,14 @@
   height: auto;
 }
 
+.mat-header-cell {
+	font-size: 15px;
+}
+
 .mat-cell {
+  font-size: 15px;
   padding: 8px 8px 8px 0;
-  text-align: center;
+  text-align: left;
 }
 
 .hideV {
@@ -13,4 +18,8 @@
 
 .showV{
   background-color: #F08080;
+}
+
+table {
+  width: 100%;
 }

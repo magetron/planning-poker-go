@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, Inject} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material';
 import { throwError, forkJoin, Subscription } from 'rxjs';
 import { catchError, first } from 'rxjs/operators';
 import { AssertionError } from 'assert';
@@ -21,6 +23,8 @@ import { WebsocketService } from 'src/app/services/websocket.service';
 })
 
 export class PokerControlComponent implements OnInit {
+
+  shouldRun = [/(^|\.)plnkr\.co$/, /(^|\.)stackblitz\.io$/].some(h => h.test(window.location.host));
 
   @Input() sprint_id: string;
   round: Round = {
@@ -148,11 +152,11 @@ export class PokerControlComponent implements OnInit {
     this.socketBroadcast();
   }
   
-  hideLastElementinList(title: Round, displayTitle: string): any{
+  hideLastElementInList(title: Round, displayTitle: string): any{
     if (title.Archived){
       return title.Final;
     } else if (title.Name == this.round.Name) {
-      return "voting";
+      return "--";
     } else {
       return title.Final;
     }

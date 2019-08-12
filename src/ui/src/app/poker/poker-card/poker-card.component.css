@@ -1,6 +1,10 @@
 .mat-raised-button {
   margin: 0.4em;
   height: 90px;
-  font-size: calc(1em + 1vw);
+  font-size: 2em;
+  max-width: 8%;
 }
 
+.card-deck {
+	width: 100%;
+}
