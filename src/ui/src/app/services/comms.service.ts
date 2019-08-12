@@ -6,6 +6,7 @@ import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { environment } from 'src/environments/environment';
 import { Sprint } from '../models/sprint';
 import { User } from '../models/user';
+import { SimpleResponse, ComplexResponse, StatusResponse, UserResponse } from 'src/app/models/responses'
 
 const HTTPOPTIONS = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -14,25 +15,6 @@ const HTTPOPTIONS = {
 const HTTPOPTIONS_NO_BODY = {
   headers: new HttpHeaders({'Content-Type': 'application/json'}),
   observe: "response" as 'body',
-}
-
-export interface SimpleResponse {
-  s: number;
-  d: string;
-}
-
-export interface ComplexResponse {
-  s: number;
-  d: object;
-}
-
-export interface StatusResponse {
-  status: number;
-}
-
-export interface UserResponse {
-  s: number;
-  d: User[];
 }
 
 @Injectable({

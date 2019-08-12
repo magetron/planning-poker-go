@@ -43,6 +43,6 @@ module.exports = function (config) {
 		}
 	},
     singleRun: true,
-    restartOnFileChange: true,
+    restartOnFileChange: false,
   });
 };

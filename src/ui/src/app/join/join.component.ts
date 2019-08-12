@@ -54,7 +54,7 @@ export class JoinComponent implements OnInit {
         console.log('Connection error', err);
         //TODO: Handle properly - notify the user, retry?
         this.router.navigateByUrl(`/new`);
-        return throwError(err);
+        throw(err);
       })
   }
 
@@ -75,7 +75,7 @@ export class JoinComponent implements OnInit {
         err => {
           console.log('Connection error', err);
           //TODO: Handle properly - notify the user, retry?
-          return throwError(err);
+          throw(err);
         }
       )
     } else {
