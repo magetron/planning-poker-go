@@ -1,62 +1,36 @@
 <app-poker-card></app-poker-card>
 <br>
 
-<div class="containerX">
-  <div class="box" fxlayout="row" style="flex-direction: row; box-sizing: border-box; display: flex;">
-    <div fxflex="50%" fxflex.gt-sm="25" fxhide.md="" style="cursor: pointer; flex-direction: row; box-sizing: border-box; display: flex; flex: 1 1 100%; max-width: 25%;">
-      <div fxflex="" style="flex: 1 1 0%; box-sizing: border-box;">
-       <app-memberslist [sprint_id]="sprint_id" ></app-memberslist>
-      </div>
-      <div fxflex="" style="flex: 1 1 0%; box-sizing: border-box;">
-          <table mat-table [dataSource]=rounds class="mat-elevation-z8">
-              <!-- Position Column -->
-              <ng-container matColumnDef="ROUNDS">
-                <th mat-header-cell *matHeaderCellDef> ROUNDS </th>
-                <td mat-cell *matCellDef="let rounds"> {{rounds.Name}} </td>
-              </ng-container>
-              <ng-container matColumnDef="RESULT">
-                <th mat-header-cell *matHeaderCellDef> RESULT </th>
-                <td mat-cell *matCellDef="let rounds"> {{hideLastElementinList(rounds)}} </td>
-              </ng-container>
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-            </table>
-      </div>
+
+<div class="container-fluid text-center">    
+  <div class="row content">
+    <div class="col-sm-2 sidenav">
+      <app-memberslist [sprint_id]="sprint_id" ></app-memberslist>
     </div>
-
-
-    <div fxflex="" style="cursor: pointer; flex-direction: column; box-sizing: border-box; display: flex; flex: 1 1 0%;">
-
-      <div fxflex="" style="flex: 1 1 1e-9px; box-sizing: border-box;" style="max-width: 98%">
-        <mat-card class="background-warn">
-            <mat-card-title fxLayoutAlign="center">
-              <div *ngIf="round.Archived; else notArchivedTitle"><h3>Story Title: none </h3></div>
-              <ng-template #notArchivedTitle>
-                <h3>Story Title: {{round.Name}}</h3>
-              </ng-template>
-            </mat-card-title>
-        </mat-card>
-        <br>
-
-        <mat-card class="background-secondary">
-          <mat-card-title>
-            Timer:
-          </mat-card-title>
-          <mat-card-content fxLayoutAlign="center">
-            <div *ngIf="round.Archived; else notArchived"> <h1>0:00</h1> </div>
-            <ng-template #notArchived>
-              <h1>{{secondsToClockString(timePassed)}}</h1>
+    <div class="col-sm-8 text-left"> 
+      <mat-card class="background-warn">
+          <mat-card-title fxLayoutAlign="center">
+            <div *ngIf="round.Archived; else notArchivedTitle"><h3>Story Title: none </h3></div>
+            <ng-template #notArchivedTitle>
+              <h3>Story Title: {{round.Name}}</h3>
             </ng-template>
-            <br>
-          </mat-card-content>
-        </mat-card>
-        <br>
-      </div>
-
-      <div fxflex="" style="flex: 1 1 1e-9px; box-sizing: border-box;">
-        <div class="containerX" style="flex-direction: row; box-sizing: border-box; display: flex;">
-          <div class="coloredContainerX box" fxflex="" fxlayout="row" fxlayout.sm="column" fxlayout.xs="column" style="flex-direction: row; box-sizing: border-box; display: flex; flex: 1 1 0%;">
-
+          </mat-card-title>
+      </mat-card>
+      <br>
+      <mat-card class="background-secondary">
+        <mat-card-title>
+          Timer:
+        </mat-card-title>
+        <mat-card-content fxLayoutAlign="center">
+          <div *ngIf="round.Archived; else notArchived"> <h1>0:00</h1> </div>
+          <ng-template #notArchived>
+            <h1>{{secondsToClockString(timePassed)}}</h1>
+          </ng-template>
+          <br>
+        </mat-card-content>
+      </mat-card>
+      <br>
+      <div class="coloredContainerX box" fxflex="" fxlayout="row" fxlayout.sm="column" fxlayout.xs="column" style="flex-direction: row; box-sizing: border-box; display: flex; flex: 1 1 0%;">
             <div fxflex="" style="flex: 1 1 0%; box-sizing: border-box;">
               <mat-card class="background-third" style="max-width: 90%">
                 <mat-card-header>
@@ -99,13 +73,29 @@
               </ng-template>
 
           </div>
-        </div>
-      </div>
+    </div>
+    <div class="col-sm-2 sidenav">
+      <table mat-table [dataSource]=rounds class="mat-elevation-z8">
+        <!-- Position Column -->
+        <ng-container matColumnDef="ROUNDS">
+          <th mat-header-cell *matHeaderCellDef> ROUNDS </th>
+          <td mat-cell *matCellDef="let rounds"> {{rounds.Name}} </td>
+        </ng-container>
+        <ng-container matColumnDef="RESULT">
+          <th mat-header-cell *matHeaderCellDef> RESULT </th>
+          <td mat-cell *matCellDef="let rounds"> {{hideLastElementinList(rounds)}} </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
     </div>
   </div>
 </div>
+
 <br>
 
-<mat-toolbar fxLayout="row" color="primary" >
-  Invitation Link: {{baseUrl}}/join/{{sprint_id}}
-</mat-toolbar>
+<footer class="container-fluid text-center">
+  <mat-toolbar fxLayout="row" color="primary" >
+    Invitation Link: {{baseUrl}}/join/{{sprint_id}}
+  </mat-toolbar>
+</footer>
