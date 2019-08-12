@@ -22,10 +22,11 @@
           Timer:
         </mat-card-title>
         <mat-card-content fxLayoutAlign="center">
-          <div *ngIf="round.Archived; else notArchived"> <h1>0:00</h1> </div>
+          <h1 *ngIf="round.Archived; else notArchived">0:00</h1>
           <ng-template #notArchived>
-            <h1>{{secondsToClockString(timePassed)}}</h1>
+              <h1>{{secondsToClockString(timePassed)}}</h1>
           </ng-template>
+          <app-elapsed-timer></app-elapsed-timer>
           <br>
         </mat-card-content>
       </mat-card>
