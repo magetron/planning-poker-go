@@ -16,6 +16,8 @@ import { InternalService } from 'src/app/services/internal.service';
 import { CommsService } from 'src/app/services/comms.service';
 import { WebsocketService } from 'src/app/services/websocket.service';
 import { WebSocketServiceSpy } from 'src/app/services/websocketspy';
+import { ElapsedTimerComponent } from '../elapsed-timer/elapsed-timer.component';
+
 
 xdescribe('PokerControlComponent', () => {
   let component: PokerControlComponent;
@@ -59,6 +61,7 @@ xdescribe('PokerControlComponent', () => {
         NewSprintComponent,
         JoinComponent,
         ShareComponent,
+        ElapsedTimerComponent,
        ],
        imports: [
         AppRoutingModule,
@@ -77,7 +80,7 @@ xdescribe('PokerControlComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(PokerControlComponent);
-    component = fixture.componentInstance;
+    component = fixture.componentInstance
     fixture.detectChanges();
   });
 
