@@ -37,10 +37,6 @@ describe('JoinComponent', () => {
             paramMap: convertToParamMap({'sprint_id': 'testSprint'})
           }}
         },
-        /*{
-          provide: Router,
-          useValue: routerSpy
-        },*/
       ],
       declarations: [
         NewSprintComponent,
@@ -54,7 +50,6 @@ describe('JoinComponent', () => {
       imports: [
         FormsModule,
         AppRoutingModule,
-        //HttpClientModule,
         HttpClientTestingModule,
         BrowserAnimationsModule,
         MatCardModule, 
@@ -125,9 +120,6 @@ describe('JoinComponent', () => {
 
       expect(router.navigateByUrl).toHaveBeenCalledTimes(0)
     })
-  );
-
     //TODO: verify other parameters for registerUser()
-
   });
 })
