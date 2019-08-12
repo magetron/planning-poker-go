@@ -2,11 +2,11 @@
 <table mat-table [dataSource]=users class="mat-elevation-z8">
   <!-- Position Column -->
   <ng-container matColumnDef="NAME">
-    <th mat-header-cell *matHeaderCellDef> NAME </th>
+    <th mat-header-cell *matHeaderCellDef> Name </th>
     <td mat-cell *matCellDef="let user"> {{crowned(user)}} </td>
   </ng-container>
   <ng-container matColumnDef="VOTE">
-    <th mat-header-cell *matHeaderCellDef> VOTE </th>
+    <th mat-header-cell *matHeaderCellDef> Vote </th>
     <td mat-cell *matCellDef="let user"> {{cardify(user.Vote, true)}} </td>
   </ng-container>
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

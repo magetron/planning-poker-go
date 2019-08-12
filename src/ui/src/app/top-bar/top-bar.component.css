@@ -1,3 +1,7 @@
 mat-toolbar{
   font-weight: normal;
 }
+
+.mat-button{
+	font-size: 20px;
+}

@@ -1,14 +1,15 @@
 <mat-toolbar fxLayout="row" color="primary">
   <div fxFlex fxLayoutAlign="left">
-    <mat-icon>loyalty</mat-icon><h1>Planning Poker</h1>
+    <mat-icon>loyalty</mat-icon>
+    <h1>Planning Poker</h1>
   </div>
   <div fxFlex fxLayoutAlign="center">
     <span>{{sprint?.Name}}</span>
   </div>
   <div fxFlex fxLayoutAlign="end">
-    <span margin-left=10em>{{user?.Name}}</span>
-  </div>
-  <div fxFlex fxLayoutAlign="end" *ngIf="user && user.Name !== ''">
-      <button mat-raised-button (click)="logOut()">Logout</button>
+    <button mat-button [matMenuTriggerFor]="menu">{{user?.Name}}</button>
+    <mat-menu #menu="matMenu">
+      <button *ngIf="user && user.Name !== ''" (click)="logOut()" mat-menu-item>Logout</button>
+    </mat-menu>
   </div>
 </mat-toolbar>
