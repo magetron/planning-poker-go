@@ -16,7 +16,7 @@ import { ShareComponent } from '../share/share.component';
 import { PokerControlComponent } from '../poker/poker-control/poker-control.component';
 import { PokerCardComponent } from '../poker/poker-card/poker-card.component';
 import { MemberslistComponent } from '../poker/memberslist/memberslist.component';
-
+import { ElapsedTimerComponent } from '../poker/elapsed-timer/elapsed-timer.component';
 
 describe('JoinComponent', () => {
   let joinComponent: JoinComponent;
@@ -39,7 +39,8 @@ describe('JoinComponent', () => {
         JoinComponent,
         PokerControlComponent,
         PokerCardComponent,
-        MemberslistComponent
+        MemberslistComponent,
+        ElapsedTimerComponent,
       ],
       imports: [
         FormsModule,

@@ -9,12 +9,14 @@ import { MatSidenavModule, MatListModule, MatTableModule, MatButtonModule, MatIn
 import { PokerCardComponent } from './poker-card/poker-card.component';
 import { MemberslistComponent } from './memberslist/memberslist.component';
 import { PokerControlComponent } from './poker-control/poker-control.component';
+import { ElapsedTimerComponent } from './elapsed-timer/elapsed-timer.component';
 
 @NgModule({
   declarations: [
     PokerCardComponent,
     MemberslistComponent,
-    PokerControlComponent
+    PokerControlComponent,
+    ElapsedTimerComponent
   ],
 
   //imports for mega data within other modules

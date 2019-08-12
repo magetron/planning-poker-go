@@ -6,9 +6,9 @@ Powered by Interns
 
 ### Deployment
 
-CodePipeline will be fetching source and deploy to `http://planning-poker-nlb-ec2-e86c54390baa9c80.elb.eu-west-1.amazonaws.com:8080/#/new`
+CodePipeline will fetch the source and deploy it to `http://planning-poker-nlb-ec2-e86c54390baa9c80.elb.eu-west-1.amazonaws.com:8080/#/new`
 
-Production environment CI is on its way.
+Production environment CI is on it's way.
 
 ### Development
 

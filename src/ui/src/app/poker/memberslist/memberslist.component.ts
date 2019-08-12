@@ -54,7 +54,6 @@ export class MemberslistComponent extends Cardify implements OnInit {
   }
 
   analysisVote(users: User[]): Array<number> {
-    console.info(users)
     let result = users.map((i: User) => i.Vote);
 
     //strip non-votes
