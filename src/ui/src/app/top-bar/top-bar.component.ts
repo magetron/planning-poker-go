@@ -18,6 +18,7 @@ import { Sprint } from '../models/sprint';
 export class TopBarComponent implements OnInit {
 
   user: User;
+  users: User[];
   sprint: Sprint;
   @Input() sprint_id: string;
   logoutAll: boolean;
@@ -33,7 +34,6 @@ export class TopBarComponent implements OnInit {
 
   ngOnInit() {
     this.sprint_id = this.route.snapshot.paramMap.get('sprint_id');
-    this.internal.user$.subscribe(user => this.user = user);
     this.internal.sprint$.subscribe(sprint => this.sprint = sprint);
     this.internal.logoutAll$.subscribe(msg => {
       if(msg){
@@ -44,6 +44,7 @@ export class TopBarComponent implements OnInit {
     });
     this.subscriber = this.webSocket.connect(this.sprint_id).subscribe();
     this.internal.user$.subscribe(msg => this.user = msg);
+    this.internal.users$.subscribe(msg => this.users = msg)
   }
 
   logOut() {
@@ -67,21 +68,29 @@ export class TopBarComponent implements OnInit {
   }
 
 
- @HostListener('window:unload', [ '$event' ])
-   unloadHandler(event) {
+ @HostListener('window:beforeunload', [ '$event' ])
+    unloadHandler(event) {
+    console.log("someone closes the window")
     if (this.user.Admin){
-      console.log("Admin logout");
-      this.comms.appointSuccessor(this.sprint_id, this.user.Id, "");
-      /*.subscribe(response => {
+
+      this.comms.appointSuccessor(this.sprint_id, this.user.Id , "").subscribe(response => {
         if (response && response.status === 200) {
-          console.log("Set new admin random successful")
-        } else {
-          console.log("All users log out")
-          this.internal.logoutAllUsers(true);
+          console.log("Set new admin randomly");
+  
+          this.comms.deleteUser(this.sprint_id, this.users[0].Id).subscribe(response => {
+            if (response == null) {
+              console.log("User logged out")
+              localStorage.removeItem("user");
+              this.webSocket.send("update")
+            }
+          });
         }
-      })*/
+      })
+
+    } else {
+      this.logOut()
+      this.webSocket.send("update")
     }
-    console.log("func ended");
   }
 
 }

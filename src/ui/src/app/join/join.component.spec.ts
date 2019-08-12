@@ -69,57 +69,53 @@ describe('JoinComponent', () => {
     });
   }));
 
-  //Somehow the request isn't made. No idea why. Does ngOnInit not run here somehow?
-  describe("without valid ID", () => {
+  beforeEach(() => {
+    spyOn(router, "navigateByUrl")
 
-    beforeEach(() => {
-      spyOn(router, "navigateByUrl")
-  
-      fixture = TestBed.createComponent(JoinComponent);
-      joinComponent = fixture.componentInstance;
-    });
-  
-    afterEach(() => {
-    });
-      
-    it('should create', () => {
-      fixture.detectChanges()
-      expect(joinComponent).toBeTruthy();
-    });
-      
-    it("should kick out users if the sprint doesn't exist", () => {
-
-      spyOn(comms, "getSprintDetails").and.returnValue(of({status: 404} as SprintResponse))
-
-      fixture.detectChanges()
-
-      expect(joinComponent.sprint.Id).toBe('testSprint')
-      expect(comms.getSprintDetails).toHaveBeenCalled()
-
-      expect(router.navigateByUrl).toHaveBeenCalledWith('/new')
-    });
-
-    it("should kick out users if errors are thrown", () => {
-
-      spyOn(comms, "getSprintDetails").and.returnValue(throwError("ObservableError"))
-
-      fixture.detectChanges()
-
-      expect(joinComponent.sprint.Id).toBe('testSprint')
-      expect(comms.getSprintDetails).toHaveBeenCalled()
-
-      expect(router.navigateByUrl).toHaveBeenCalledWith('/new')
-    });
-
-    it("should do nothing when users submit an empty name", () => {
-      fixture.detectChanges()
-
-      joinComponent.registerUser("")
-
-      fixture.detectChanges()
-
-      expect(router.navigateByUrl).toHaveBeenCalledTimes(0)
-    })
-    //TODO: verify other parameters for registerUser()
+    fixture = TestBed.createComponent(JoinComponent);
+    joinComponent = fixture.componentInstance;
   });
+
+  afterEach(() => {
+  });
+    
+  it('should create', () => {
+    fixture.detectChanges()
+    expect(joinComponent).toBeTruthy();
+  });
+    
+  it("should kick out users if the sprint doesn't exist", () => {
+
+    spyOn(comms, "getSprintDetails").and.returnValue(of({status: 404} as SprintResponse))
+
+    fixture.detectChanges()
+
+    expect(joinComponent.sprint.Id).toBe('testSprint')
+    expect(comms.getSprintDetails).toHaveBeenCalledWith('testSprint')
+
+    expect(router.navigateByUrl).toHaveBeenCalledWith('/new')
+  });
+
+  it("should kick out users if errors are thrown", () => {
+
+    spyOn(comms, "getSprintDetails").and.returnValue(throwError("ObservableError"))
+
+    fixture.detectChanges()
+
+    expect(joinComponent.sprint.Id).toBe('testSprint')
+    expect(comms.getSprintDetails).toHaveBeenCalled()
+
+    expect(router.navigateByUrl).toHaveBeenCalledWith('/new')
+  });
+
+  it("should do nothing when users submit an empty name", () => {
+    fixture.detectChanges()
+
+    joinComponent.registerUser("")
+
+    fixture.detectChanges()
+
+    expect(router.navigateByUrl).toHaveBeenCalledTimes(0)
+  })
+  //TODO: verify other parameters for registerUser()
 })
