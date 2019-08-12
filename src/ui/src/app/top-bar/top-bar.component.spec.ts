@@ -11,6 +11,7 @@ import { PokerControlComponent } from '../poker/poker-control/poker-control.comp
 import { ShareComponent } from '../share/share.component';
 import { PokerCardComponent } from '../poker/poker-card/poker-card.component';
 import { MemberslistComponent } from '../poker/memberslist/memberslist.component';
+import { ElapsedTimerComponent } from '../poker/elapsed-timer/elapsed-timer.component';
 
 
 describe('TopBarComponent', () => {
@@ -30,6 +31,7 @@ describe('TopBarComponent', () => {
          PokerCardComponent,
          MemberslistComponent,
          ShareComponent,
+         ElapsedTimerComponent,
         ],
       imports: [
         AppRoutingModule,
