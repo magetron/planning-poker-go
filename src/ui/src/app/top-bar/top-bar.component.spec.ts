@@ -38,6 +38,7 @@ describe('TopBarComponent', () => {
         MatIconModule,
         MatToolbarModule,
         MatCardModule,
+        MatMenuModule,
         MatFormFieldModule,
         MatButtonModule,
         MatTableModule,

@@ -2,6 +2,7 @@ import { Component, OnInit, Input, HostListener} from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
 
+import { MatCardModule, MatMenuModule, MatFormFieldModule, MatIconModule, MatListModule, MatTableModule, MatButtonModule, MatInputModule,  MatToolbarModule } from '@angular/material';
 import { CommsService } from 'src/app/services/comms.service';
 import { InternalService } from '../services/internal.service'; 
 import { WebsocketService } from '../services/websocket.service';

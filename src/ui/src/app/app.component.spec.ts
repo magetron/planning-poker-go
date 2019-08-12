@@ -1,5 +1,5 @@
 import { TestBed, async } from '@angular/core/testing';
-import { MatCardModule, MatFormFieldModule, MatIconModule, MatListModule, MatTableModule, MatButtonModule, MatInputModule,  MatToolbarModule } from '@angular/material';
+import { MatMenuModule, MatCardModule, MatFormFieldModule, MatIconModule, MatListModule, MatTableModule, MatButtonModule, MatInputModule,  MatToolbarModule } from '@angular/material';
 import { FormsModule } from '@angular/forms';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
@@ -37,6 +37,7 @@ describe('AppComponent', () => {
         MatInputModule,
         MatTableModule,
         MatListModule,
+        MatMenuModule,
       ]
     }).compileComponents();
   }));

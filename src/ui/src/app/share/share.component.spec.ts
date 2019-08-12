@@ -1,4 +1,4 @@
-import { MatCardModule, MatFormFieldModule, MatIconModule, MatListModule, MatTableModule, MatButtonModule, MatInputModule,  MatToolbarModule } from '@angular/material';
+import { MatMenuModule, MatCardModule, MatFormFieldModule, MatIconModule, MatListModule, MatTableModule, MatButtonModule, MatInputModule,  MatToolbarModule } from '@angular/material';
 import { FormsModule } from '@angular/forms';
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
@@ -42,7 +42,7 @@ describe('ShareComponent', () => {
         MatInputModule,
         MatTableModule,
         MatListModule,
-
+        MatMenuModule,
       ] 
     })
     .compileComponents().then();
