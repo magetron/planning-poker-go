@@ -11,7 +11,7 @@ import { ShareComponent } from './share/share.component';
 import { CommsService } from './services/comms.service';
 import { JoinComponent } from './join/join.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatMenuModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatCardModule, MatToolbarModule, MatIconModule } from '@angular/material';
+import { MatGridListModule, MatMenuModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatCardModule, MatToolbarModule, MatIconModule } from '@angular/material';
 import { TopBarComponent } from './top-bar/top-bar.component';
 import { FlexLayoutModule } from '@angular/flex-layout'
 import { AuthGuard } from './_guards/auth.guard';
@@ -35,6 +35,7 @@ import { AuthGuard } from './_guards/auth.guard';
     MatToolbarModule,
     MatIconModule,
     MatFormFieldModule,
+    MatGridListModule,
     MatMenuModule,
     MatInputModule,
     PokerModule,

@@ -1,7 +1,6 @@
-button {
-  margin: 0.2em;
-  cursor: pointer;
-  box-shadow: 10px 10px 8px #888888;
+.mat-raised-button {
+  margin: 0.4em;
+  height: 90px;
+  font-size: calc(1em + 1vw);
 }
-
 
