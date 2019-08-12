@@ -35,7 +35,7 @@
           <mat-card-header>
             <mat-card-title class="text-primary">
               Recommended: 
-              <button mat-raised-button class="button-secondary">
+              <button mat-raised-button class="button-secondary" style="height: 90px; font-size: 2em;max-width: 8%;">
                 <h1>
                   <span>{{stats[3]}} </span>
                 </h1>
@@ -43,11 +43,15 @@
             </mat-card-title>
           </mat-card-header>
           <mat-card-content>
-            <mat-list>
-              <mat-list-item>Mean: {{beautifyMean(stats[2])}}</mat-list-item>
-              <mat-list-item>Median: {{stats[1]}}</mat-list-item>
-              <mat-list-item>Mode: {{stats[0]}}</mat-list-item>
-            </mat-list>
+            <div fxFlex fxLayoutAlign="left">
+              Mean: {{beautifyMean(stats[2])}}
+            </div>
+            <div fxFlex fxLayoutAlign="center">
+              Median: {{stats[1]}}            
+            </div>
+            <div fxFlex fxLayoutAlign="end">
+              Mode: {{stats[0]}}
+            </div>
           </mat-card-content>
         </mat-card>
         <ng-template [ngIf]="user?.Admin">
@@ -84,10 +88,11 @@
   </div>
 </div>
 
-<br>
-
 <footer class="container-fluid text-center">
   <mat-toolbar  color="primary" >
-    Invitation Link: {{baseUrl}}/join/{{sprint_id}}
+    Invitation Link: <a (click)="copylink(baseUrl + '/join/' + sprint_id)" style="color:white">{{baseUrl}}/join/{{sprint_id}}</a>
+    <div fxFlex fxLayoutAlign="end">
+        <button (click)="copylink(baseUrl + '/join/' + sprint_id)" mat-flat-button color="accent"> COPY </button>
+    </div>
   </mat-toolbar>
 </footer>

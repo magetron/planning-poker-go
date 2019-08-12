@@ -44,6 +44,13 @@
   text-align: left;
 }
 
+button[name="recommend-card"] {
+  height: 90px;
+  font-size: 2em;
+  max-width: 8%;
+}
+
+
 table {
-  width: 120%;
+  width: 100%;
 }
