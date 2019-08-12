@@ -6,7 +6,7 @@ import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { environment } from 'src/environments/environment';
 import { Sprint } from '../models/sprint';
 import { User } from '../models/user';
-import { SimpleResponse, ComplexResponse, StatusResponse, UserResponse } from 'src/app/models/responses'
+import { SimpleResponse, ComplexResponse, StatusResponse, UserResponse, SprintResponse } from 'src/app/models/responses'
 
 const HTTPOPTIONS = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -40,9 +40,9 @@ export class CommsService {
     }
   }
 
-  getSprintDetails(id: string): Observable<ComplexResponse> {
-    const result = this.httpClient.get<ComplexResponse>(
-      `${environment.apiUrl}/sprints/${id}`, HTTPOPTIONS);
+  getSprintDetails(id: string): Observable<SprintResponse> {
+    const result = this.httpClient.get<SprintResponse>(
+      `${environment.apiUrl}/sprints/${id}`, HTTPOPTIONS_NO_BODY);
     return result;
   }
 

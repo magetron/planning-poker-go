@@ -53,7 +53,8 @@ describe('ShareComponent', () => {
     component = fixture.componentInstance;
     component.share = {
       "Id" : "testSprint",
-      "Name" : "Sprint 1"
+      "Name" : "Sprint 1",
+      "CreationTime": "2019-07-31T11:28:20.601309+01:00",
     }
     fixture.detectChanges();
     fixture.debugElement.query(By.css('button'));

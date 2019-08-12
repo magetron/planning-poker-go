@@ -29,15 +29,18 @@ export class JoinComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.intialize();
+    this.initialize();
     this.sprint.Id = this.route.snapshot.paramMap.get('sprint_id');
+
+    //TODO: this acts as a guard. Could be made into one
     //if you get a sprint title, set the sprint
     this.comms.getSprintDetails(this.sprint.Id)
       .subscribe(res => {
-        if (res && res.s === 200) {
-          if (res.d['Id'] === this.sprint.Id) {
-            this.sprint.Name = res.d['Name'];
-            this.internal.updateSprint(res.d as Sprint);
+        console.info(res)
+        if (res && res.status === 200) {
+          if (res.body.d.Id === this.sprint.Id) {
+            this.sprint.Name = res.body.d['Name'];
+            this.internal.updateSprint(res.body.d as Sprint);
 
             if (this.internal.reloadOrKickUser()) {
               this.router.navigateByUrl(`/table/${this.sprint.Id}`);
@@ -46,15 +49,15 @@ export class JoinComponent implements OnInit {
           } else {
             throw new AssertionError({message: "The server messed up"});
           }
-        } else if (res) { //response indicates the sprintID is invalid
-            console.log("Unexpected responce:" + res);
+        } else { //response indicates the sprintID is invalid
+          console.log("Unexpected responce:" + res);
+          this.router.navigateByUrl(`/new`);
         }
       },
       err => {
         console.log('Connection error', err);
         //TODO: Handle properly - notify the user, retry?
         this.router.navigateByUrl(`/new`);
-        throw(err);
       })
   }
 
@@ -83,11 +86,12 @@ export class JoinComponent implements OnInit {
     }
   }
 
-  intialize(): void {
+  initialize(): void {
     //console.log("intialize func is being called")
     this.sprint = {
       Name: "",
       Id: "",
+      CreationTime: Date.toString(),
     }
   }
 }

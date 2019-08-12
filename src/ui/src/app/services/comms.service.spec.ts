@@ -61,14 +61,13 @@ describe('CommsService', () => {
       (httpMock: HttpTestingController, service: CommsService) => {
     
       service.getSprintDetails("sprintId1").subscribe(data => {
-        expect(data).toEqual({
-          "d": {
-              "Id": "sprintId1",
-              "Name": "Sprint 1",
-              "CreationTime": "2019-07-31T11:28:20.601309+01:00"
-          },
-          "s": 200
-        });
+        expect(data.body.d).toEqual({
+          "Id": "sprintId1",
+          "Name": "Sprint 1",
+          "CreationTime": "2019-07-31T11:28:20.601309+01:00"
+        })
+        expect(data.body.s).toEqual(200)
+        expect(data.status).toEqual(200)
       });
 
       const req = httpMock.expectOne(environment.apiUrl + '/sprints/sprintId1');
@@ -90,7 +89,7 @@ describe('CommsService', () => {
     inject([HttpTestingController, CommsService], 
       (httpMock: HttpTestingController, service: CommsService) => {
 
-      let sprint: Sprint = ({Name: "Sprint 1", Id: "sprintId1"});
+      let sprint: Sprint = ({Name: "Sprint 1", Id: "sprintId1", CreationTime: "2019-07-31T11:28:20.601309+01:00"});
     
       service.joinSprint("User 1", sprint).subscribe(data => {
         expect(data).toEqual({

@@ -1,4 +1,5 @@
 import { User } from 'src/app/models/user'
+import { Sprint } from 'src/app/models/sprint'
 
 export interface SimpleResponse {
   s: number;
@@ -8,6 +9,14 @@ export interface SimpleResponse {
 export interface ComplexResponse {
   s: number;
   d: object;
+}
+
+export interface SprintResponse {
+  body: {
+    s: number;
+    d: Sprint;
+  }
+  status: number;
 }
   
 export interface StatusResponse {

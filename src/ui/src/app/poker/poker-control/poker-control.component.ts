@@ -56,9 +56,9 @@ export class PokerControlComponent implements OnInit {
 
     this.comms.getSprintDetails(this.sprint_id)
     .subscribe(res => {
-      if (res && res.s === 200) {
-        if (res.d['Id'] === this.sprint_id) {
-          this.internal.updateSprint(res.d as Sprint);
+      if (res && res.status === 200) {
+        if (res.body.d['Id'] === this.sprint_id) {
+          this.internal.updateSprint(res.body.d as Sprint);
         } else {
           throw new AssertionError({message: "The server messed up"});
         }
