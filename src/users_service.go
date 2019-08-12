@@ -190,20 +190,16 @@ func (us *UsersService) SetAdmin(ctx context.Context) error {
 
 	for _, users := range us.AllUsers {
 		if users.SprintId == sprintId && len(users.Users) >= 1 {
-			if (users.Users[0].Id != userId) && (!autoSet) {
+			if users.Users[0].Id != userId {
 				log.Printf("Forbidden non-admin trying to appoint successor from %s to %s", userId, successorId)
 				return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 			}
 			for index, user := range users.Users {
 				if successorId == user.Id || (autoSet && index != 0) {
-					x := index
-					if autoSet {
-						x = len(users.Users) - 1
-					}
-					users.Users[x].Admin = true
+					users.Users[index].Admin = true
 					users.Users[0].Admin = false
-					users.Users[0], users.Users[x] = users.Users[x], users.Users[0]
-					log.Printf("Transfered admin from %s to %s", users.Users[x].Id, users.Users[0].Id)
+					users.Users[0], users.Users[index] = users.Users[index], users.Users[0]
+					log.Printf("Transfered admin from %s to %s", users.Users[index].Id, users.Users[0].Id)
 					return goweb.Respond.WithOK(ctx)
 				}
 			}

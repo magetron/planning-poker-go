@@ -50,7 +50,6 @@ describe('JoinComponent', () => {
       imports: [
         FormsModule,
         AppRoutingModule,
-        HttpClientModule,
         HttpClientTestingModule,
         BrowserAnimationsModule,
         MatCardModule, 
