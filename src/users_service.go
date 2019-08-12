@@ -10,9 +10,9 @@ import (
 )
 
 type Users struct {
-	Users    	[]*User
-	SprintId 	string
-	VotesShown 	bool
+	Users      []*User
+	SprintId   string
+	VotesShown bool
 }
 
 type UsersService struct {
@@ -57,7 +57,7 @@ func (us *UsersService) Create(ctx context.Context) error {
 		users := new(Users)
 		users.SprintId = urlId
 		users.VotesShown = false
-		user.Admin = true;
+		user.Admin = true
 		users.Users = append(make([]*User, 0), user)
 		us.AllUsers = append(us.AllUsers, users)
 	}
@@ -173,7 +173,6 @@ func (us *UsersService) Replace(id string, ctx context.Context) error {
 	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 }
 
-
 func (us *UsersService) SetAdmin(ctx context.Context) error {
 	data, dataErr := ctx.RequestData()
 
@@ -191,16 +190,20 @@ func (us *UsersService) SetAdmin(ctx context.Context) error {
 
 	for _, users := range us.AllUsers {
 		if users.SprintId == sprintId && len(users.Users) >= 1 {
-			if users.Users[0].Id != userId {
+			if (users.Users[0].Id != userId) && (!autoSet) {
 				log.Printf("Forbidden non-admin trying to appoint successor from %s to %s", userId, successorId)
 				return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 			}
 			for index, user := range users.Users {
 				if successorId == user.Id || (autoSet && index != 0) {
-					users.Users[index].Admin = true
+					x := index
+					if autoSet {
+						x = len(users.Users) - 1
+					}
+					users.Users[x].Admin = true
 					users.Users[0].Admin = false
-					users.Users[0], users.Users[index] = users.Users[index], users.Users[0]
-					log.Printf("Transfered admin from %s to %s", users.Users[index].Id, users.Users[0].Id)
+					users.Users[0], users.Users[x] = users.Users[x], users.Users[0]
+					log.Printf("Transfered admin from %s to %s", users.Users[x].Id, users.Users[0].Id)
 					return goweb.Respond.WithOK(ctx)
 				}
 			}
