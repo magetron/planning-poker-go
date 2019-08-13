@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, tick, fakeAsync  } from '@angular/core/testing';
 import { MatCardModule } from '@angular/material';
 
 import { ElapsedTimerComponent } from './elapsed-timer.component';

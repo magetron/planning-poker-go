@@ -47,7 +47,7 @@ export class ElapsedTimerComponent implements OnInit {
     timer.addEventListener('secondsUpdated', function (e){
       let exist = document.getElementById("elapsedTime")
       if (exist){
-        exist.innerText = timer.getTimeValues().toString()
+        exist.innerText = timer.getTimeValues().toString().slice(3)
       }
     });
   }

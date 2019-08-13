@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 import { MatCardModule, MatFormFieldModule, MatIconModule, MatListModule, MatTableModule, MatButtonModule, MatInputModule,  MatToolbarModule } from '@angular/material';
@@ -17,6 +17,7 @@ import { CommsService } from 'src/app/services/comms.service';
 import { WebsocketService } from 'src/app/services/websocket.service';
 import { WebSocketServiceSpy } from 'src/app/services/websocketspy';
 import { ElapsedTimerComponent } from '../elapsed-timer/elapsed-timer.component';
+
 
 describe('PokerControlComponent', () => {
   let component: PokerControlComponent;
@@ -87,12 +88,12 @@ describe('PokerControlComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should display the correct value in the timer', () => {
-    let seconds : number[] = [0, 1, 59, 61, 120, 144, 244, 270, 298, 360,]
-    let clocks : Array<string> = new Array<string>()
-    for (let i of seconds) {
-      clocks.push(component.secondsToClockString(i))
-    }
-    expect(clocks).toEqual(["0:00", "0:01", "0:59", "1:01", "2:00", "2:24", "4:04", "4:30", "4:58", "6:00",])
-  })
+  it('should display time', fakeAsync(() => {
+    component.timePassed = 0
+    component.startTimer();
+    tick(4000);
+    expect(component.timer.getTimeValues().toString().slice(3)).toBe('00:04');
+    component.timer.stop();
+  }));
+
 });
