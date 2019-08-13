@@ -135,7 +135,7 @@ export class PokerControlComponent implements OnInit {
     this.timer.addEventListener('secondsUpdated', function (e){
       let exist = document.getElementById("roundTime")
       if (exist){
-        exist.innerText = self.timer.getTimeValues().toString()
+        exist.innerText = self.timer.getTimeValues().toString().slice(3)
       }
     });
   }

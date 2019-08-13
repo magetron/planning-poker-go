@@ -19,7 +19,7 @@ import { WebSocketServiceSpy } from 'src/app/services/websocketspy';
 import { ElapsedTimerComponent } from '../elapsed-timer/elapsed-timer.component';
 
 
-fdescribe('PokerControlComponent', () => {
+describe('PokerControlComponent', () => {
   let component: PokerControlComponent;
   let fixture: ComponentFixture<PokerControlComponent>;
 
@@ -92,8 +92,7 @@ fdescribe('PokerControlComponent', () => {
     component.timePassed = 0
     component.startTimer();
     tick(4000);
-    console.log("after time passed",component.timer.getTimeValues().toString())
-    expect(component.timer.getTimeValues().toString()).toBe('00:00:04');
+    expect(component.timer.getTimeValues().toString().slice(3)).toBe('00:04');
     component.timer.stop();
   }));
 
