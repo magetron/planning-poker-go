@@ -15,6 +15,7 @@ export class ElapsedTimerComponent implements OnInit {
   rounds: Round[];
   referenceTime: number;
   gettingRefTime = true;
+  timer: Timer = new Timer();
 
   constructor(
     private internal: InternalService,
@@ -42,12 +43,12 @@ export class ElapsedTimerComponent implements OnInit {
   }
 
   startTimer(){
-    const timer = new Timer();
-    timer.start({precision: 'seconds', startValues: {seconds: this.timePassed} });
-    timer.addEventListener('secondsUpdated', function (e){
+    let self = this;
+    this.timer.start({precision: 'seconds', startValues: {seconds: this.timePassed} });
+    this.timer.addEventListener('secondsUpdated', function (e){
       let exist = document.getElementById("elapsedTime")
       if (exist){
-        exist.innerText = timer.getTimeValues().toString().slice(3)
+        exist.innerText = self.timer.getTimeValues().toString().slice(3)
       }
     });
   }

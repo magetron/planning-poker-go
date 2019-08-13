@@ -28,4 +28,14 @@ describe('ElapsedTimerComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should display time', fakeAsync(() => {
+    component.timePassed = 0
+    component.startTimer();
+    tick(4000);
+    expect(component.timer.getTimeValues().toString().slice(3)).toBe('00:04');
+    component.timer.stop();
+  }));
+
+
 });
