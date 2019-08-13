@@ -33,7 +33,7 @@ describe('PokerControlComponent', () => {
 
     TestBed.configureTestingModule({
       providers: [
-        /*{
+        /*{ 
           provide: Router,
           useValue: routerSpy
         },*/

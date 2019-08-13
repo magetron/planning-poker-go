@@ -58,12 +58,14 @@ describe('InternalService', () => {
 
     let sprintIn: Sprint = {
       Name : "sprint",
-      Id : "sprintId"
+      Id : "sprintId",
+      CreationTime: "2019-07-31T11:28:20.601309+01:00",
     };
   
     let sprintOut = new BehaviorSubject<Sprint> ({
       Name : "sprint",
-      Id : "sprintId"
+      Id : "sprintId",
+      CreationTime: "2019-07-31T11:28:20.601309+01:00"
     });
   
     const sprintPromise = new Promise ((resolve) => {
