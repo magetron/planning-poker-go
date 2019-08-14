@@ -7,10 +7,8 @@ Powered by Interns
 ### Deployment
 
 Now Deployment to RELEASE (INTEGRATION) EC2 environment shall be done automatically via CodePipeline.
-
-CodePipeline will be fetching source and deploy to `http://planning-poker-nlb-ec2-e86c54390baa9c80.elb.eu-west-1.amazonaws.com:8080/#/new`
-
-Production environment CI is on its way.
+CodePipeline will fetch the source and deploy it to `http://planning-poker-nlb-ec2-e86c54390baa9c80.elb.eu-west-1.amazonaws.com:8080/#/new`
+Production environment CI is on it's way.
 
 ### Development
 
