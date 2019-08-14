@@ -42,7 +42,9 @@ export class TopBarComponent implements OnInit {
         console.log("logging all user out");
       }
     });
-    this.subscriber = this.webSocket.connect(this.sprint_id).subscribe();
+    if (this.sprint_id){
+      this.subscriber = this.webSocket.connect(this.sprint_id).subscribe();
+    }
     this.internal.user$.subscribe(msg => this.user = msg);
     this.internal.users$.subscribe(msg => this.users = msg)
   }
