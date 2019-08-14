@@ -10,9 +10,9 @@ import (
 )
 
 type Users struct {
-	Users    	[]*User
-	SprintId 	string
-	VotesShown 	bool
+	Users      []*User
+	SprintId   string
+	VotesShown bool
 }
 
 type UsersService struct {
@@ -57,7 +57,7 @@ func (us *UsersService) Create(ctx context.Context) error {
 		users := new(Users)
 		users.SprintId = urlId
 		users.VotesShown = false
-		user.Admin = true;
+		user.Admin = true
 		users.Users = append(make([]*User, 0), user)
 		us.AllUsers = append(us.AllUsers, users)
 	}
@@ -172,7 +172,6 @@ func (us *UsersService) Replace(id string, ctx context.Context) error {
 	}
 	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 }
-
 
 func (us *UsersService) SetAdmin(ctx context.Context) error {
 	data, dataErr := ctx.RequestData()

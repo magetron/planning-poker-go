@@ -10,6 +10,7 @@ module.exports = function (config) {
       require('karma-chrome-launcher'),
       require('karma-jasmine-html-reporter'),
       require('karma-coverage-istanbul-reporter'),
+      require('karma-spec-reporter'),
       require('@angular-devkit/build-angular/plugins/karma'),
     ],
     client: {
@@ -23,7 +24,7 @@ module.exports = function (config) {
       reports: ['text-summary'],
       fixWebpackSourcePaths: true
     },
-    reporters: ['progress', 'dots'],
+    reporters: ['progress', 'spec'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_DEBUG,
@@ -42,6 +43,6 @@ module.exports = function (config) {
 		}
 	},
     singleRun: true,
-    restartOnFileChange: true,
+    restartOnFileChange: false,
   });
 };

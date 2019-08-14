@@ -12,8 +12,7 @@ phases:
        - cd src 
        - go get -v -t ./ 
        - apt-get update 
-       - apt-get -y install nodejs 
-       - npm install -g @angular/cli 
+       - apt-get -y install nodejs
        - cd ui && npm install
        - apt-get install -y chromium-browser 
        - cd .. && make integration
