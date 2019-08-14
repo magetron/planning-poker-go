@@ -65,7 +65,7 @@ build-front-far:
 
 test:
 	$(GOBUILD) -o $(BINARY_NAME) -v ./...
-	env PP_DEV=true ./$(BINARY_NAME) &
+	#env PP_DEV=true ./$(BINARY_NAME) &
 	$(GOTEST) --cover -v ./...
 	cd ui; $(NGTEST)
 	cd ui; $(NGE2E)
