@@ -19,7 +19,7 @@ func TestEmptyRound(t *testing.T) {
 	handler := handlers.NewHttpHandler(codecService)
 	goweb.SetDefaultHttpHandler(handler)
 
-	mapRoutes()
+	mapRoutesV2()
 
 	sprintId := ""
 	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
@@ -29,7 +29,7 @@ func TestEmptyRound(t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("POST", "sprints/", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -41,11 +41,11 @@ func TestEmptyRound(t *testing.T) {
 		sprintId = response.Output[6:15]
 	})
 
-	goweb.Test(t, "GET sprints/"+sprintId+"rounds/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "GET v2/sprints/"+sprintId+"rounds/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusNotFound, response.StatusCode, "Status code should be Not Found for Empty Round.")
 	})
 
-	goweb.Test(t, "DELETE sprints/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "DELETE v2/sprints/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for deleting Sprints.")
 	})
 }
@@ -55,7 +55,7 @@ func TestRoundErr(t *testing.T) {
 	handler := handlers.NewHttpHandler(codecService)
 	goweb.SetDefaultHttpHandler(handler)
 
-	mapRoutes()
+	mapRoutesV2()
 
 	sprintId := ""
 	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
@@ -65,7 +65,7 @@ func TestRoundErr(t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("POST", "sprints/", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -78,7 +78,7 @@ func TestRoundErr(t *testing.T) {
 	})
 
 	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
-		newReq, newErr := http.NewRequest("POST", "sprints/abcdef/rounds", bytes.NewBufferString(""))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/abcdef/rounds", bytes.NewBufferString(""))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -88,16 +88,16 @@ func TestRoundErr(t *testing.T) {
 		assert.Equal(t, http.StatusInternalServerError, response.StatusCode, "Status code should be Internal Server Error for no payload.")
 	})
 
-	goweb.Test(t, "GET sprints/"+sprintId+"/rounds/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "GET v2/sprints/"+sprintId+"/rounds/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, `{"d":[],"s":200}`, response.Output, "Should have no info for Rounds.")
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for Existing Round.")
 	})
 
-	goweb.Test(t, "GET sprints/abcdefg/rounds/1", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "GET v2/sprints/abcdefg/rounds/1", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusNotFound, response.StatusCode, "Status code should be Not found for non existing Sprints of Rounds.")
 	})
 
-	goweb.Test(t, "GET sprints/"+sprintId+"/rounds/abcde", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "GET v2/sprints/"+sprintId+"/rounds/abcde", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusInternalServerError, response.StatusCode, "Status code should be OK for Existing Round.")
 	})
 
@@ -108,7 +108,7 @@ func TestRoundErr(t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("POST", "sprints/"+sprintId+"/rounds/", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/"+sprintId+"/rounds/", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -118,7 +118,7 @@ func TestRoundErr(t *testing.T) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for New Round.")
 	})
 
-	goweb.Test(t, "GET sprints/"+sprintId+"/rounds/2", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "GET v2/sprints/"+sprintId+"/rounds/2", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusNotFound, response.StatusCode, "Status code should be Not found for non existing Round.")
 	})
 
@@ -131,7 +131,7 @@ func TestRoundErr(t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("PUT", "sprints/abcdef/rounds/5", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("PUT", "v2/sprints/abcdef/rounds/5", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -150,7 +150,7 @@ func TestRoundErr(t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("PUT", "sprints/abcdef/rounds/abcd", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("PUT", "v2/sprints/abcdef/rounds/abcd", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -161,7 +161,7 @@ func TestRoundErr(t *testing.T) {
 	})
 
 	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
-		newReq, newErr := http.NewRequest("PUT", "sprints/abcdef/rounds/abcd", bytes.NewBufferString(""))
+		newReq, newErr := http.NewRequest("PUT", "v2/sprints/abcdef/rounds/abcd", bytes.NewBufferString(""))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -171,7 +171,7 @@ func TestRoundErr(t *testing.T) {
 		assert.Equal(t, http.StatusInternalServerError, response.StatusCode, "Status code should be Internal Server Error for no payload.")
 	})
 
-	goweb.Test(t, "DELETE sprints/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "DELETE v2/sprints/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for deleting Sprints.")
 	})
 
@@ -183,7 +183,7 @@ func TestRoundCycle(t *testing.T) {
 	handler := handlers.NewHttpHandler(codecService)
 	goweb.SetDefaultHttpHandler(handler)
 
-	mapRoutes()
+	mapRoutesV2()
 
 	sprintId := ""
 	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
@@ -193,7 +193,7 @@ func TestRoundCycle(t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("POST", "sprints/", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -212,7 +212,7 @@ func TestRoundCycle(t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("POST", "sprints/"+sprintId+"/rounds/", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/"+sprintId+"/rounds/", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -229,7 +229,7 @@ func TestRoundCycle(t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("POST", "sprints/"+sprintId+"/rounds/", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/"+sprintId+"/rounds/", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -239,7 +239,7 @@ func TestRoundCycle(t *testing.T) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for New Round.")
 	})
 
-	goweb.Test(t, "GET sprints/"+sprintId+"/rounds/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "GET v2/sprints/"+sprintId+"/rounds/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, `{"d":{"Rounds":[{"Id":1,"Name":"Task 1","Med":0,"Avg":0,"Final":0,"Archived":false`, response.Output[:82], "Should have exact same information for new Round.")
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for Existing Round.")
 	})
@@ -253,7 +253,7 @@ func TestRoundCycle(t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("PUT", "sprints/"+sprintId+"/rounds/1", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("PUT", "v2/sprints/"+sprintId+"/rounds/1", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -272,7 +272,7 @@ func TestRoundCycle(t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("PUT", "sprints/"+sprintId+"/rounds/5", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("PUT", "v2/sprints/"+sprintId+"/rounds/5", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -282,7 +282,7 @@ func TestRoundCycle(t *testing.T) {
 		assert.Equal(t, http.StatusNotFound, response.StatusCode, "Status code should be Not found for non-existing Round.")
 	})
 
-	goweb.Test(t, "GET sprints/" + sprintId + "/users/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "GET v2/sprints/" + sprintId + "/users/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, `{"d":{},"s":200}`, response.Output, "Response should be empty for no Users.")
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for All Users.")
 	})
@@ -296,7 +296,7 @@ func TestRoundCycle(t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("POST", "sprints/"+sprintId+"/users/", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/"+sprintId+"/users/", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -315,7 +315,7 @@ func TestRoundCycle(t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("POST", "sprints/"+sprintId+"/users/", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/"+sprintId+"/users/", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -336,7 +336,7 @@ func TestRoundCycle(t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("PUT", "sprints/"+sprintId+"/rounds/1", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("PUT", "v2/sprints/"+sprintId+"/rounds/1", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -346,22 +346,22 @@ func TestRoundCycle(t *testing.T) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for existing Round.")
 	})
 
-	goweb.Test(t, "GET sprints/"+sprintId+"/rounds/1", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "GET v2/sprints/"+sprintId+"/rounds/1", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, `{"d":{"Id":1,"Name":"Task 1","Med":8,"Avg":0.5,"Final":5,"Archived":true`, response.Output[:72], "Should have exact same information for new Round.")
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for Existing Round.")
 	})
 
 
-	goweb.Test(t, "DELETE sprints/"+sprintId+"/rounds/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "DELETE v2/sprints/"+sprintId+"/rounds/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for deleting all rounds.")
 	})
 
-	goweb.Test(t, "GET sprints/"+sprintId+"/rounds/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "GET v2/sprints/"+sprintId+"/rounds/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for querying all rounds.")
 		assert.Equal(t, `{"d":[],"s":200}`, response.Output, "Should be empty after deleting all rounds.")
 	})
 
-	goweb.Test(t, "DELETE sprints/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "DELETE v2/sprints/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for deleting Sprints.")
 	})
 }

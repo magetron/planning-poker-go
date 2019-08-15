@@ -19,7 +19,7 @@ func TestEmptyUser(t *testing.T) {
 	handler := handlers.NewHttpHandler(codecService)
 	goweb.SetDefaultHttpHandler(handler)
 
-	mapRoutes()
+	mapRoutesV2()
 
 	sprintId := ""
 	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
@@ -29,7 +29,7 @@ func TestEmptyUser(t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("POST", "sprints/", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -41,11 +41,11 @@ func TestEmptyUser(t *testing.T) {
 		sprintId = response.Output[6:15]
 	})
 
-	goweb.Test(t, "GET sprints/"+sprintId+"/users/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "GET v2/sprints/"+sprintId+"/users/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for querying all Users.")
 	})
 
-	goweb.Test(t, "DELETE sprints/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "DELETE v2/sprints/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for deleting Sprints.")
 	})
 }
@@ -56,7 +56,7 @@ func TestUserErr (t *testing.T) {
 	handler := handlers.NewHttpHandler(codecService)
 	goweb.SetDefaultHttpHandler(handler)
 
-	mapRoutes()
+	mapRoutesV2()
 
 	sprintId := ""
 	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
@@ -66,7 +66,7 @@ func TestUserErr (t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("POST", "sprints/", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -79,7 +79,7 @@ func TestUserErr (t *testing.T) {
 	})
 
 	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
-		newReq, newErr := http.NewRequest("POST", "sprints/"+sprintId+"/users/", bytes.NewBufferString(""))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/"+sprintId+"/users/", bytes.NewBufferString(""))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -98,7 +98,7 @@ func TestUserErr (t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("POST", "sprints/"+sprintId+"/users/", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/"+sprintId+"/users/", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -117,7 +117,7 @@ func TestUserErr (t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("POST", "sprints/"+sprintId+"/users/", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/"+sprintId+"/users/", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -129,17 +129,17 @@ func TestUserErr (t *testing.T) {
 		assert.Equal(t, `{"d":{"Id":"`+userId2+`","Name":"New User 2","Vote":-1,"Admin":false},"s":200}`, response.Output, "Response should be User object.")
 	})
 
-	goweb.Test(t, "GET sprints/abcde/users/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "GET v2/sprints/abcde/users/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, `{"d":{},"s":200}`, response.Output, "Response should be empty for non existing Sprint id.")
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for All Users.")
 	})
 
-	goweb.Test(t, "GET sprints/" + sprintId + "/users/abcdef-ghijkl", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "GET v2/sprints/" + sprintId + "/users/abcdef-ghijkl", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusNotFound, response.StatusCode, "Status code should be not found for non-existing Users.")
 	})
 
 	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
-		newReq, newErr := http.NewRequest("PUT", "sprints/"+sprintId+"/users/"+userId1, bytes.NewBufferString(""))
+		newReq, newErr := http.NewRequest("PUT", "v2/sprints/"+sprintId+"/users/"+userId1, bytes.NewBufferString(""))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -149,7 +149,7 @@ func TestUserErr (t *testing.T) {
 		assert.Equal(t, http.StatusInternalServerError, response.StatusCode, "Status code should be Internal Server Error for no payload.")
 	})
 
-	goweb.Test(t, "DELETE sprints/"+sprintId+"/users/abcdef-ghijkl", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "DELETE v2/sprints/"+sprintId+"/users/abcdef-ghijkl", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusNotFound, response.StatusCode, "Status code should be Not Found for non-existing User.")
 	})
 
@@ -160,7 +160,7 @@ func TestUserErr (t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("PUT", "sprints/"+sprintId+"/users/abcdef-ghijkl", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("PUT", "v2/sprints/"+sprintId+"/users/abcdef-ghijkl", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -171,7 +171,7 @@ func TestUserErr (t *testing.T) {
 	})
 
 	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
-		newReq, newErr := http.NewRequest("POST", "sprints/"+sprintId+"/users/"+userId1+"/setadmin", bytes.NewBufferString(""))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/"+sprintId+"/users/"+userId1+"/setadmin", bytes.NewBufferString(""))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -188,7 +188,7 @@ func TestUserErr (t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("POST", "sprints/"+sprintId+"a/users/"+userId1+"/setadmin", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/"+sprintId+"a/users/"+userId1+"/setadmin", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -198,7 +198,7 @@ func TestUserErr (t *testing.T) {
 		assert.Equal(t, http.StatusNotFound, response.StatusCode, "Status code should be Not found for non existing Sprint.")
 	})
 
-	goweb.Test(t, "DELETE sprints/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "DELETE v2/sprints/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for deleting Sprints.")
 	})
 
@@ -209,7 +209,7 @@ func TestUserErr (t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("POST", "sprints/"+sprintId+"/users/"+userId1+"/setadmin", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/"+sprintId+"/users/"+userId1+"/setadmin", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -220,7 +220,7 @@ func TestUserErr (t *testing.T) {
 	})
 
 	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
-		newReq, newErr := http.NewRequest("POST", "sprints/"+sprintId+"/users/"+userId1+"/showvote/", bytes.NewBufferString(""))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/"+sprintId+"/users/"+userId1+"/showvote/", bytes.NewBufferString(""))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -230,7 +230,7 @@ func TestUserErr (t *testing.T) {
 		assert.Equal(t, http.StatusInternalServerError, response.StatusCode, "Status code Internal server error for no payload.")
 	})
 
-	goweb.Test(t, "DELETE sprints/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "DELETE v2/sprints/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for deleting Sprints.")
 	})
 
@@ -242,7 +242,7 @@ func TestUserCycle(t *testing.T) {
 	handler := handlers.NewHttpHandler(codecService)
 	goweb.SetDefaultHttpHandler(handler)
 
-	mapRoutes()
+	mapRoutesV2()
 
 	sprintId := ""
 	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
@@ -252,7 +252,7 @@ func TestUserCycle(t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("POST", "sprints/", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -273,7 +273,7 @@ func TestUserCycle(t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("POST", "sprints/"+sprintId+"/users/", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/"+sprintId+"/users/", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -292,7 +292,7 @@ func TestUserCycle(t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("POST", "sprints/"+sprintId+"/users/", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/"+sprintId+"/users/", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -304,12 +304,12 @@ func TestUserCycle(t *testing.T) {
 		assert.Equal(t, `{"d":{"Id":"`+userId2+`","Name":"New User 2","Vote":-1,"Admin":false},"s":200}`, response.Output, "Response should be User object.")
 	})
 
-	goweb.Test(t, "GET sprints/"+sprintId+"/users/"+userId1, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "GET v2/sprints/"+sprintId+"/users/"+userId1, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for Existing User.")
 		assert.Equal(t, `{"d":{"Id":"`+userId1+`","Name":"New User 1","Vote":-1,"Admin":true},"s":200}`, response.Output, "Response should be Existing User object.")
 	})
 
-	goweb.Test(t, "GET sprints/"+sprintId+"/users/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "GET v2/sprints/"+sprintId+"/users/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for All Users.")
 		assert.True(t, `{"d":{"Users":{"`+userId1+`":{"Id":"`+userId1+`","Name":"New User 1","Vote":-1,"Admin":true},"`+userId2+`":{"Id":"`+userId2+`","Name":"New User 2","Vote":-1,"Admin":false}},"SprintId":"`+sprintId+`","VotesShown":false,"AdminId":"`+userId1+`"},"s":200}` == response.Output || `{"d":{"Users":{"`+userId2+`":{"Id":"`+userId2+`","Name":"New User 2","Vote":-1,"Admin":false},"`+userId1+`":{"Id":"`+userId1+`","Name":"New User 1","Vote":-1,"Admin":true}},"SprintId":"`+sprintId+`","VotesShown":false,"AdminId":"`+userId1+`"},"s":200}` == response.Output, "Response should be Existing User object.")
 	})
@@ -321,7 +321,7 @@ func TestUserCycle(t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("PUT", "sprints/"+sprintId+"/users/"+userId1, bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("PUT", "v2/sprints/"+sprintId+"/users/"+userId1, bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -338,7 +338,7 @@ func TestUserCycle(t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("POST", "sprints/"+sprintId+"/users/"+userId2+"/showvote/", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/"+sprintId+"/users/"+userId2+"/showvote/", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -355,7 +355,7 @@ func TestUserCycle(t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("POST", "sprints/"+sprintId+"/users/"+userId1+"/showvote/", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/"+sprintId+"/users/"+userId1+"/showvote/", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -372,7 +372,7 @@ func TestUserCycle(t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("POST", "sprints/"+sprintId+"a"+"/users/"+userId1+"/showvote/", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/"+sprintId+"a"+"/users/"+userId1+"/showvote/", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -382,17 +382,17 @@ func TestUserCycle(t *testing.T) {
 		assert.Equal(t, http.StatusNotFound, response.StatusCode, "Status code should be Not found for non existing Sprints to Show Votes.")
 	})
 
-	goweb.Test(t, "GET sprints/"+sprintId+"/users/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "GET v2/sprints/"+sprintId+"/users/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for All Users.")
 		assert.True(t, `{"d":{"Users":{"`+userId1+`":{"Id":"`+userId1+`","Name":"New User 1","Vote":8,"Admin":true},"`+userId2+`":{"Id":"`+userId2+`","Name":"New User 2","Vote":-1,"Admin":false}},"SprintId":"`+sprintId+`","VotesShown":true,"AdminId":"`+userId1+`"},"s":200}` == response.Output || `{"d":{"Users":{"`+userId2+`":{"Id":"`+userId2+`","Name":"New User 2","Vote":-1,"Admin":false},"`+userId1+`":{"Id":"`+userId1+`","Name":"New User 1","Vote":8,"Admin":true}},"SprintId":"`+sprintId+`","VotesShown":true,"AdminId":"`+userId1+`"},"s":200}` == response.Output, "Response should be original user object.")
 	})
 
-	goweb.Test(t, "GET sprints/"+sprintId+"/users/"+userId1, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "GET v2/sprints/"+sprintId+"/users/"+userId1, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for Existing User.")
 		assert.Equal(t, `{"d":{"Id":"`+userId1+`","Name":"New User 1","Vote":8,"Admin":true},"s":200}`, response.Output, "Response should be Existing User object.")
 	})
 
-	goweb.Test(t, "GET sprints/"+sprintId+"/users/"+userId2, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "GET v2/sprints/"+sprintId+"/users/"+userId2, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for Existing User.")
 		assert.Equal(t, `{"d":{"Id":"`+userId2+`","Name":"New User 2","Vote":-1,"Admin":false},"s":200}`, response.Output, "Response should be Existing User object.")
 	})
@@ -404,7 +404,7 @@ func TestUserCycle(t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("POST", "sprints/"+sprintId+"/users/"+userId1+"/showvote/", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/"+sprintId+"/users/"+userId1+"/showvote/", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -414,12 +414,12 @@ func TestUserCycle(t *testing.T) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for master Hiding Votes.")
 	})
 
-	goweb.Test(t, "GET sprints/"+sprintId+"/users/"+userId1, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "GET v2/sprints/"+sprintId+"/users/"+userId1, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for Existing User.")
 		assert.Equal(t, `{"d":{"Id":"`+userId1+`","Name":"New User 1","Vote":-3,"Admin":true},"s":200}`, response.Output, "Response should be Existing User object.")
 	})
 
-	goweb.Test(t, "GET sprints/"+sprintId+"/users/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "GET v2/sprints/"+sprintId+"/users/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for All Users.")
 		assert.True(t, `{"d":{"Users":{"`+userId1+`":{"Id":"`+userId1+`","Name":"New User 1","Vote":-3,"Admin":true},"`+userId2+`":{"Id":"`+userId2+`","Name":"New User 2","Vote":-1,"Admin":false}},"SprintId":"`+sprintId+`","VotesShown":false,"AdminId":"`+userId1+`"},"s":200}` == response.Output || `{"d":{"Users":{"`+userId2+`":{"Id":"`+userId2+`","Name":"New User 2","Vote":-1,"Admin":false},"`+userId1+`":{"Id":"`+userId1+`","Name":"New User 1","Vote":-3,"Admin":true}},"SprintId":"`+sprintId+`","VotesShown":false,"AdminId":"`+userId1+`"},"s":200}` == response.Output, "Response should be Existing User object.")
 	})
@@ -431,7 +431,7 @@ func TestUserCycle(t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("POST", "sprints/"+sprintId+"/users/"+userId1+"/setadmin", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/"+sprintId+"/users/"+userId1+"/setadmin", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -448,7 +448,7 @@ func TestUserCycle(t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("POST", "sprints/"+sprintId+"/users/"+userId1+"/setadmin", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/"+sprintId+"/users/"+userId1+"/setadmin", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -458,23 +458,23 @@ func TestUserCycle(t *testing.T) {
 		assert.Equal(t, http.StatusUnauthorized, response.StatusCode, "Status code should be Unauthorized for non-master trying to set other user as master")
 	})
 
-	goweb.Test(t, "DELETE sprints/"+sprintId+"/users/"+userId1, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "DELETE v2/sprints/"+sprintId+"/users/"+userId1, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for Deleting User.")
 	})
 
-	goweb.Test(t, "DELETE sprints/"+sprintId+"/users/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "DELETE v2/sprints/"+sprintId+"/users/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for Deleting Users.")
 	})
 
-	goweb.Test(t, "GET sprints/"+sprintId+"/users/"+userId1, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "GET v2/sprints/"+sprintId+"/users/"+userId1, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusNotFound, response.StatusCode, "Status code should be Not Found for non-existing User.")
 	})
 
-	goweb.Test(t, "DELETE sprints/"+sprintId+"/users/"+userId2, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "DELETE v2/sprints/"+sprintId+"/users/"+userId2, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusNotFound, response.StatusCode, "Status code should be Not found for Deleting non-existing Users.")
 	})
 
-	goweb.Test(t, "DELETE sprints/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "DELETE v2/sprints/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for deleting Sprints.")
 	})
 }

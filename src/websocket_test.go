@@ -19,7 +19,7 @@ func TestUpdate(t *testing.T) {
 	codecService := goweb.DefaultHttpHandler().CodecService()
 	handler := handlers.NewHttpHandler(codecService)
 	goweb.SetDefaultHttpHandler(handler)
-	mapRoutes()
+	mapRoutesV2()
 	server := httptest.NewServer(goweb.DefaultHttpHandler())
 	defer server.Close()
 
@@ -31,7 +31,7 @@ func TestUpdate(t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("POST", "sprints/", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -50,7 +50,7 @@ func TestUpdate(t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("POST", "sprints/"+sprintId+"/users/", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/"+sprintId+"/users/", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -67,7 +67,7 @@ func TestUpdate(t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("POST", "sprints/"+sprintId+"/users/", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/"+sprintId+"/users/", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -85,7 +85,7 @@ func TestUpdate(t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("POST", "sprints/"+sprintId+"/rounds/", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/"+sprintId+"/rounds/", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -96,7 +96,7 @@ func TestUpdate(t *testing.T) {
 		log.Print(creationTime)
 	})
 
-	url := "ws" + strings.Trim(server.URL, "http") + "/info/" + sprintId
+	url := "ws" + strings.Trim(server.URL, "http") + "/v2/info/" + sprintId
 
 	ws, _, err := websocket.DefaultDialer.Dial(url, nil)
 	if err != nil {
@@ -116,7 +116,7 @@ func TestConnHub (t *testing.T) {
 	codecService := goweb.DefaultHttpHandler().CodecService()
 	handler := handlers.NewHttpHandler(codecService)
 	goweb.SetDefaultHttpHandler(handler)
-	mapRoutes()
+	mapRoutesV2()
 	server := httptest.NewServer(goweb.DefaultHttpHandler())
 	defer server.Close()
 
@@ -128,7 +128,7 @@ func TestConnHub (t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("POST", "sprints/", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -146,7 +146,7 @@ func TestConnHub (t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("POST", "sprints/", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -164,7 +164,7 @@ func TestConnHub (t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("POST", "sprints/" + sprintId1 + "/users/", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/" + sprintId1 + "/users/", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -182,7 +182,7 @@ func TestConnHub (t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("POST", "sprints/" + sprintId2 + "/users/", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/" + sprintId2 + "/users/", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -192,7 +192,7 @@ func TestConnHub (t *testing.T) {
 		userId2 = response.Output[12:48]
 	})
 
-	url1 := "ws" + strings.Trim(server.URL, "http") + "/info/" + sprintId1
+	url1 := "ws" + strings.Trim(server.URL, "http") + "/v2/info/" + sprintId1
 
 	ws1, _, err1 := websocket.DefaultDialer.Dial(url1, nil)
 	if err1 != nil {
@@ -216,7 +216,7 @@ func TestConnHub (t *testing.T) {
 	assert.Equal(t, `[[{"Id":"` + userId1 + `","Name":"New User Sprint 1","Vote":-1,"Admin":true}]]`, string(p1))
 
 
-	url2 := "ws" + strings.Trim(server.URL, "http") + "/info/" + sprintId2
+	url2 := "ws" + strings.Trim(server.URL, "http") + "/v2/info/" + sprintId2
 
 	ws2, _, err2 := websocket.DefaultDialer.Dial(url2, nil)
 	if err2 != nil {

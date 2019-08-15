@@ -48,7 +48,7 @@ Content-Type : application/json
 
 ### Getting a Specified Sprint
 
-* GET sprints/{id}
+* GET v2/sprints/{id}
 
 #### Sample Response
 
@@ -81,7 +81,7 @@ None (Status code 200)
 
 ### Deleting a Specified Sprint
 
-* DELETE sprints/{id}
+* DELETE v2/sprints/{id}
 
 #### Sample Response
 
@@ -97,7 +97,7 @@ None (Status code 404)
 
 ### Creating Users in a Sprint
 
-* POST sprints/[sprintId]/users
+* POST v2/sprints/[sprintId]/users
 * Name : "New User"
 
 #### Sample Response
@@ -116,7 +116,7 @@ None (Status code 404)
 
 ### Getting Users in a Sprint
 
-* GET sprints/[sprintId]/users
+* GET v2/sprints/[sprintId]/users
 
 #### Sample Response
 
@@ -147,7 +147,7 @@ None (Status code 404)
 
 ### Getting a Specified User in a Sprint
 
-* GET sprints/[sprintId]/users/{id}
+* GET v2/sprints/[sprintId]/users/{id}
 
 #### Sample Response
 
@@ -184,7 +184,7 @@ None (Status code 404)
 
 ### Deleting All Users in a Specified Sprint
 
-* DELETE sprints/[sprintId]/users
+* DELETE v2/sprints/[sprintId]/users
 
 #### Sample Response
 
@@ -194,7 +194,7 @@ None (Status code 200)
 
 ### Deleting a Specified User in a Specified Sprint
 
-* DELETE sprints/[sprintId]/users/{id}
+* DELETE v2/sprints/[sprintId]/users/{id}
 
 #### Sample Response
 
@@ -208,7 +208,7 @@ None (Status code 404)
 
 ### Setting User as Admin
 
-* POST sprints/[sprintId]/users/[userId]/setadmin
+* POST v2/sprints/[sprintId]/users/[userId]/setadmin
 * Successor : [userId]
 
 #### Sample Response
@@ -227,7 +227,7 @@ None (Status code 404)
 
 ### Show Vote in the current Sprint
 
-* POST sprints/[sprintId]/users/[userId]/showvote
+* POST v2/sprints/[sprintId]/users/[userId]/showvote
 * VoteShown : true / false
 
 #### Sample Response
@@ -249,7 +249,7 @@ None (Status code 404)
 
 ### Creating Rounds in a Sprint
 
-* GET sprints/[sprintId]/rounds
+* GET v2/sprints/[sprintId]/rounds
 * Name : "Task 1"
 
 #### Sample Response
@@ -271,7 +271,7 @@ None (Status code 404)
 
 ### Getting All Rounds in a Sprint
 
-* GET sprints/[sprintId]/rounds
+* GET v2/sprints/[sprintId]/rounds
 
 #### Sample Response
 
@@ -306,7 +306,7 @@ None (Status code 404)
 
 ### Getting a Specified Round in a Sprint
 
-* GET sprints/[sprintId]/rounds/{id}
+* GET v2/sprints/[sprintId]/rounds/{id}
 
 #### Sample Response
 
@@ -331,7 +331,7 @@ None (Status code 404)
 
 ### Deleting All Rounds in a Sprint
 
-* DELETE sprints/[sprintId]/rounds/{id}
+* DELETE v2/sprints/[sprintId]/rounds/{id}
 
 #### Sample Response
 

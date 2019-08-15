@@ -19,9 +19,9 @@ func TestEmptySprint(t *testing.T) {
 	handler := handlers.NewHttpHandler(codecService)
 	goweb.SetDefaultHttpHandler(handler)
 
-	mapRoutes()
+	mapRoutesV2()
 
-	goweb.Test(t, "GET sprints/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "GET v2/sprints/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for Empty Sprint.")
 	})
 
@@ -32,7 +32,7 @@ func TestEmptyNameSprint(t *testing.T) {
 	handler := handlers.NewHttpHandler(codecService)
 	goweb.SetDefaultHttpHandler(handler)
 
-	mapRoutes()
+	mapRoutesV2()
 
 	sprintId := ""
 	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
@@ -42,7 +42,7 @@ func TestEmptyNameSprint(t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("POST", "sprints/", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -54,7 +54,7 @@ func TestEmptyNameSprint(t *testing.T) {
 		sprintId = response.Output[6:15]
 	})
 
-	goweb.Test(t, "DELETE sprints/"+sprintId, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "DELETE v2/sprints/"+sprintId, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for Deleting Sprint.")
 	})
 }
@@ -65,10 +65,10 @@ func TestSprintErr (t *testing.T) {
 	handler := handlers.NewHttpHandler(codecService)
 	goweb.SetDefaultHttpHandler(handler)
 
-	mapRoutes()
+	mapRoutesV2()
 
 	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
-		newReq, newErr := http.NewRequest("POST", "sprints/", bytes.NewBufferString(""))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/", bytes.NewBufferString(""))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -86,7 +86,7 @@ func TestSprintCycle(t *testing.T) {
 	handler := handlers.NewHttpHandler(codecService)
 	goweb.SetDefaultHttpHandler(handler)
 
-	mapRoutes()
+	mapRoutesV2()
 
 	sprintId1 := ""
 	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
@@ -96,7 +96,7 @@ func TestSprintCycle(t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("POST", "sprints/", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -116,7 +116,7 @@ func TestSprintCycle(t *testing.T) {
 		if newReqBodyErr != nil {
 			log.Fatal(newReqBodyErr)
 		}
-		newReq, newErr := http.NewRequest("POST", "sprints/", bytes.NewBuffer(newReqBody))
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/", bytes.NewBuffer(newReqBody))
 		if newErr != nil {
 			log.Fatal(newErr)
 		}
@@ -128,29 +128,29 @@ func TestSprintCycle(t *testing.T) {
 		sprintId2 = response.Output[6:15]
 	})
 
-	goweb.Test(t, "GET sprints/"+sprintId1, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "GET v2/sprints/"+sprintId1, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for Existing Sprint.")
 		assert.Equal(t, `{"d":{"Id":"`+sprintId1+`","Name":"New Sprint 1",`, response.Output[:45], "Response should contain name New Sprint.")
 	})
 
-	goweb.Test(t, "GET sprints/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "GET v2/sprints/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for Existing Sprints.")
 		assert.True(t, `{"d":{"`+sprintId1+`":{"Id":"`+sprintId1+`","Name":"New Sprint 1",` == response.Output[:58] || `{"d":{"`+sprintId2+`":{"Id":"`+sprintId2+`","Name":"New Sprint 2",` == response.Output[:58], "Response should contain name New Sprint.")
 	})
 
-	goweb.Test(t, "DELETE sprints/"+sprintId1, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "DELETE v2/sprints/"+sprintId1, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for Deleting Sprint.")
 	})
 
-	goweb.Test(t, "DELETE sprints/"+sprintId1, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "DELETE v2/sprints/"+sprintId1, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusNotFound, response.StatusCode, "Status code should be Not found for Deleting non-existing Sprint.")
 	})
 
-	goweb.Test(t, "DELETE sprints/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "DELETE v2/sprints/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for Deleting Sprint.")
 	})
 
-	goweb.Test(t, "GET sprints/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+	goweb.Test(t, "GET v2/sprints/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for querying all Sprints.")
 		assert.Equal(t, `{"d":{},"s":200}`, response.Output, "Response will be empty after deleting sprints.")
 	})
