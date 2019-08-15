@@ -56,45 +56,49 @@ func (c *Client) readPump() {
 		sprintId := c.Hub.Id
 		if string(message) == "update" {
 			newMessage := []byte("[")
-			for _, users := range us.AllUsers {
-				if sprintId == users.SprintId {
-					var tmpReturnUserArray []User
-					if !users.VotesShown {
-						tmpReturnUserArray = make([]User, 0)
-						for _, user := range users.Users {
-							var tmpReturnUser User
-							tmpReturnUser = *user
-							if user.Vote != -1 {
-								tmpReturnUser.Vote = -3
-							}
-							tmpReturnUserArray = append(tmpReturnUserArray, tmpReturnUser)
+
+			users, exist := us.AllUsers[sprintId]
+			if exist {
+				if !users.VotesShown {
+					tmpReturnUserArray := new(Users)
+					tmpReturnUserArray.VotesShown = users.VotesShown
+					tmpReturnUserArray.AdminId = users.AdminId
+					tmpReturnUserArray.SprintId = users.SprintId
+					tmpReturnUserArray.Users = make(map[string]*User)
+					for _, user := range users.Users {
+						tmpReturnUser := new(User)
+						tmpReturnUser.Id = user.Id
+						tmpReturnUser.Admin = user.Admin
+						tmpReturnUser.Name = user.Name
+						if user.Vote != -1 {
+							tmpReturnUser.Vote = -3
+						} else {
+							tmpReturnUser.Vote = -1
 						}
+						tmpReturnUserArray.Users[user.Id] = tmpReturnUser
 					}
-					var usersStr []byte
-					var usersErr error
-					if users.VotesShown {
-						usersStr, usersErr = json.Marshal(users.Users)
-					} else {
-						usersStr, usersErr = json.Marshal(tmpReturnUserArray)
+					str, err := json.Marshal(tmpReturnUserArray)
+					if err == nil {
+						newMessage = append(newMessage, str...)
 					}
-					if usersErr != nil {
-						log.Println(usersErr)
+				} else {
+					str, err := json.Marshal(users)
+					if err == nil {
+						newMessage = append(newMessage, str...)
 					}
-					newMessage = append(newMessage, usersStr...)
-					break
 				}
 			}
-			for _, rounds := range rc.AllRounds {
-				if sprintId == rounds.SprintId {
-					jsonStr, jsonErr := json.Marshal(rounds)
-					if jsonErr != nil {
-						log.Println(jsonErr)
-					}
+
+			rounds, exist := rc.AllRounds[sprintId]
+
+			if exist {
+				str, err := json.Marshal(rounds)
+				if err == nil {
 					newMessage = append(newMessage, byte(','))
-					newMessage = append(newMessage, jsonStr...)
-					break
+					newMessage = append(newMessage, str...)
 				}
 			}
+
 			newMessage = append(newMessage, byte(']'))
 			c.Hub.Broadcast <- newMessage
 		}

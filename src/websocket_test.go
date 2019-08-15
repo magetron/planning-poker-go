@@ -108,6 +108,9 @@ func TestUpdate(t *testing.T) {
 		t.Fatalf("%v", err)
 	}
 	_, p, err := ws.ReadMessage()
+	
+	log.Print(string(p))
+	
 	assert.True(t, `[[{"Id":"`+userId1+`","Name":"New User 1","Vote":-1,"Admin":true},{"Id":"`+userId2+`","Name":"New User 2","Vote":-1,"Admin":false}],{"Rounds":[{"Id":1,"Name":"Task 1","Med":0,"Avg":0,"Final":0,"Archived":false,"CreationTime":` + creationTime + `}],"SprintId":"` + sprintId + `"}]` == string(p) || `[[{"Id":"`+userId2+`","Name":"New User 2","Vote":-1,"Admin":false},{"Id":"`+userId1+`","Name":"New User 1","Vote":-1,"Admin":true}],{"Rounds":[{"Id":1,"Name":"Task 1","Med":0,"Avg":0,"Final":0,"Archived":false,"CreationTime":` + creationTime + `}],"SprintId":"` + sprintId + `"}]` == string(p), "Websocket should be Two Users object.")
 
 }
@@ -210,7 +213,7 @@ func TestConnHub (t *testing.T) {
 		t.Fatalf("%v", err1)
 	}
 	_, p1, err1 := ws1.ReadMessage()
-	assert.Equal(t, `[[{"Id":"` + userId1 + `","Name":"New User Sprint 1","Vote":-1,"Admin":true}]]`, string(p1))
+	assert.Equal(t, `[{"Users":{"` + userId1 + `":{"Id":"` + userId1 + `","Name":"New User Sprint 1","Vote":-1,"Admin":true}},"SprintId":"` + sprintId1 + `","VotesShown":false,"AdminId":"` + userId1 + `"}]`, string(p1))
 
 	_, p1, err1 = ws1_1.ReadMessage()
 	assert.Equal(t, `[[{"Id":"` + userId1 + `","Name":"New User Sprint 1","Vote":-1,"Admin":true}]]`, string(p1))
