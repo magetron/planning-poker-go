@@ -19,7 +19,7 @@ func TestEmptyRound(t *testing.T) {
 	handler := handlers.NewHttpHandler(codecService)
 	goweb.SetDefaultHttpHandler(handler)
 
-	mapRoutesV2()
+	mapRoutes()
 
 	sprintId := ""
 	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
@@ -55,7 +55,7 @@ func TestRoundErr(t *testing.T) {
 	handler := handlers.NewHttpHandler(codecService)
 	goweb.SetDefaultHttpHandler(handler)
 
-	mapRoutesV2()
+	mapRoutes()
 
 	sprintId := ""
 	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
@@ -183,7 +183,7 @@ func TestRoundCycle(t *testing.T) {
 	handler := handlers.NewHttpHandler(codecService)
 	goweb.SetDefaultHttpHandler(handler)
 
-	mapRoutesV2()
+	mapRoutes()
 
 	sprintId := ""
 	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {

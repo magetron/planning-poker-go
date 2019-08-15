@@ -19,7 +19,7 @@ func TestEmptySprint(t *testing.T) {
 	handler := handlers.NewHttpHandler(codecService)
 	goweb.SetDefaultHttpHandler(handler)
 
-	mapRoutesV2()
+	mapRoutes()
 
 	goweb.Test(t, "GET sprints/", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for Empty Sprint.")
@@ -32,7 +32,7 @@ func TestEmptyNameSprint(t *testing.T) {
 	handler := handlers.NewHttpHandler(codecService)
 	goweb.SetDefaultHttpHandler(handler)
 
-	mapRoutesV2()
+	mapRoutes()
 
 	sprintId := ""
 	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
@@ -65,7 +65,7 @@ func TestSprintErr (t *testing.T) {
 	handler := handlers.NewHttpHandler(codecService)
 	goweb.SetDefaultHttpHandler(handler)
 
-	mapRoutesV2()
+	mapRoutes()
 
 	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
 		newReq, newErr := http.NewRequest("POST", "sprints/", bytes.NewBufferString(""))
@@ -86,7 +86,7 @@ func TestSprintCycle(t *testing.T) {
 	handler := handlers.NewHttpHandler(codecService)
 	goweb.SetDefaultHttpHandler(handler)
 
-	mapRoutesV2()
+	mapRoutes()
 
 	sprintId1 := ""
 	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {

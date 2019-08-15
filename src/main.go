@@ -24,7 +24,7 @@ var rc = new(RoundsController)
 var us = new(UsersService)
 var hc = new(HubsController)
 
-func mapRoutesV2() {
+func mapRoutes() {
 
 	if DEV {
 		_, _ = goweb.MapBefore(func(c context.Context) error {
@@ -36,21 +36,21 @@ func mapRoutesV2() {
 		})
 	}
 
-	_, _ = goweb.Map("GET", "v2", func(c context.Context) error {
-		return goweb.Respond.WithRedirect(c, "v2/index", "")
+	_, _ = goweb.Map("GET", "", func(c context.Context) error {
+		return goweb.Respond.WithRedirect(c, "index", "")
 	})
 
-	_ = goweb.MapController("v2", sc)
-	_ = goweb.MapController("v2/sprints/[sprintId]/rounds", rc)
-	_ = goweb.MapController("v2/sprints/[sprintId]/users", us)
+	_ = goweb.MapController("sprints/", sc)
+	_ = goweb.MapController("sprints/[sprintId]/rounds", rc)
+	_ = goweb.MapController("sprints/[sprintId]/users", us)
 
-	_, _ = goweb.Map("v2/info/[sprintId]", hc.handleHubs)
+	_, _ = goweb.Map("info/[sprintId]", hc.handleHubs)
 
-	_, _ = goweb.Map("POST", "v2/gc", garbageCollector)
+	_, _ = goweb.Map("POST", "gc", garbageCollector)
 
-	_, _ = goweb.Map("POST", "v2/sprints/[sprintId]/users/[userId]/setadmin", us.SetAdmin)
+	_, _ = goweb.Map("POST", "sprints/[sprintId]/users/[userId]/setadmin", us.SetAdmin)
 
-	_, _ = goweb.Map("POST", "v2/sprints/[sprintId]/users/[userId]/showvote", us.ShowVote)
+	_, _ = goweb.Map("POST", "sprints/[sprintId]/users/[userId]/showvote", us.ShowVote)
 
 	if !DEV {
 		root := "./static-ui"
@@ -81,10 +81,10 @@ func mapRoutesV1() {
 	}
 
 	_, _ = goweb.Map("GET", "v1", func(c context.Context) error {
-		return goweb.Respond.WithRedirect(c, "v2/index", "")
+		return goweb.Respond.WithRedirect(c, "v1/index", "")
 	})
 
-	_ = goweb.MapController("v1", sc)
+	_ = goweb.MapController("v1/sprints/", sc)
 	_ = goweb.MapController("v1/sprints/[sprintId]/rounds", rc)
 	_ = goweb.MapController("v1/sprints/[sprintId]/users", us)
 
@@ -114,7 +114,7 @@ func mapRoutesV1() {
 
 func main() {
 
-	mapRoutesV2()
+	mapRoutes()
 	mapRoutesV1()
 
 	log.Print("Staring server ...")

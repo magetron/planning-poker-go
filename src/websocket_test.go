@@ -19,7 +19,7 @@ func TestUpdate(t *testing.T) {
 	codecService := goweb.DefaultHttpHandler().CodecService()
 	handler := handlers.NewHttpHandler(codecService)
 	goweb.SetDefaultHttpHandler(handler)
-	mapRoutesV2()
+	mapRoutes()
 	server := httptest.NewServer(goweb.DefaultHttpHandler())
 	defer server.Close()
 
@@ -116,7 +116,7 @@ func TestConnHub (t *testing.T) {
 	codecService := goweb.DefaultHttpHandler().CodecService()
 	handler := handlers.NewHttpHandler(codecService)
 	goweb.SetDefaultHttpHandler(handler)
-	mapRoutesV2()
+	mapRoutes()
 	server := httptest.NewServer(goweb.DefaultHttpHandler())
 	defer server.Close()
 
