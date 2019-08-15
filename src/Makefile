@@ -10,7 +10,7 @@ NGCMD=npx ng
 NGSERVE=$(NGCMD) serve
 NGBUILD=$(NGCMD) build
 NGTEST=$(NGCMD) test --code-coverage --karma-config ./karma-headless.conf.js --progress false
-NGE2E=$(NGCMD) e2e
+NGE2E =$(NGCMD) e2e
 UINAME=ui
 UIPATH=../static-ui
 
@@ -64,9 +64,9 @@ build-front-far:
 	cd ui; $(NGBUILD) --configuration=fargate $(UINAME) --outputPath=$(UIPATH)
 
 test:
-	$(GOBUILD) -o $(BINARY_NAME) -v ./...
-	$(GOTEST) --cover -v ./...
 	cd ui; $(NGTEST)
+	$(GOTEST) --cover -v ./...
+	$(GOBUILD) -o $(BINARY_NAME) -v ./...
 	#env PP_DEV=true ./$(BINARY_NAME) &
 	#cd ui; $(NGE2E)
 
