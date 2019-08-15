@@ -2,9 +2,10 @@ import { Component, OnInit, Input, Inject} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { MatListModule } from '@angular/material';
-import { throwError, forkJoin, Subscription } from 'rxjs';
+import { throwError, forkJoin, Subscription, timer } from 'rxjs';
 import { catchError, first } from 'rxjs/operators';
 import { AssertionError } from 'assert';
+import { Timer } from 'easytimer.js';
 
 import { InternalService } from 'src/app/services/internal.service';
 import { User } from 'src/app/models/user';
@@ -43,7 +44,9 @@ export class PokerControlComponent implements OnInit {
   user: User;
   baseUrl: string;
   isVoteShown : boolean;
-  subscriber: Subscription
+  subscriber: Subscription;
+  referenceTime: number;
+  timer: Timer = new Timer();
 
   constructor(
     private router: Router,
@@ -59,9 +62,9 @@ export class PokerControlComponent implements OnInit {
 
     this.comms.getSprintDetails(this.sprint_id)
     .subscribe(res => {
-      if (res && res.s === 200) {
-        if (res.d['Id'] === this.sprint_id) {
-          this.internal.updateSprint(res.d as Sprint);
+      if (res && res.status === 200) {
+        if (res.body.d['Id'] === this.sprint_id) {
+          this.internal.updateSprint(res.body.d as Sprint);
         } else {
           throw new AssertionError({message: "The server messed up"});
         }
@@ -81,15 +84,13 @@ export class PokerControlComponent implements OnInit {
     this.internal.rounds$.subscribe(msg => {
       this.rounds = msg
       this.round = this.rounds[this.rounds.length - 1]
-      }
-    )
+    })
 
     this.internal.stats$.subscribe(msg => {
       this.stats = msg
     });
     this.internal.user$.subscribe(msg => this.user = msg);
     this.internal.isVoteShown$.subscribe(msg => this.isVoteShown = msg);
-    this.startTimer();
   }
 
   socketBroadcast() {
@@ -97,7 +98,6 @@ export class PokerControlComponent implements OnInit {
   }
 
   addStory (story: string): void {
-    this.startTimer();
 
     forkJoin(
       this.comms.addStory(this.sprint_id, story).pipe(first()),
@@ -110,24 +110,38 @@ export class PokerControlComponent implements OnInit {
         console.log("Server communication error");
       }
       if (response[1] && response[1].status === 200) {
-        console.log("Set Vote to be shown?", false);
         this.socketBroadcast();
+        this.getRefTime();
       } else {
         console.log("Set Vote to be shown failed");
       }
     });
   }
 
-  startTimer(): void {
+  getRefTime(){
     if (this.rounds && this.rounds[this.rounds.length - 1].CreationTime) {
-      setInterval(() => this.timePassed = new Date().getTime() / 1000 - this.rounds[this.rounds.length - 1].CreationTime, 1000)
+      this.referenceTime = this.rounds[this.rounds.length - 1].CreationTime
+      console.log("this.referenceTime", this.referenceTime )
     } else {
-      setTimeout(()=> this.startTimer(), 1000);
-      //Timer is updated every 1000ms.
+      this.referenceTime = new Date().getTime()/1000
     }
+    this.timePassed = (new Date().getTime()/1000 - this.referenceTime)/1000
+    this.startTimer();
+  }
+
+  startTimer(){
+    this.timer.start({precision: 'seconds', startValues: {seconds: this.timePassed} });
+    let self = this;
+    this.timer.addEventListener('secondsUpdated', function (e){
+      let exist = document.getElementById("roundTime")
+      if (exist){
+        exist.innerText = self.timer.getTimeValues().toString().slice(3)
+      }
+    });
   }
 
   archiveRound(): void {
+    this.timer.stop();
     this.comms.archiveRound(this.sprint_id, this.round.Id, this.stats[2],
        this.stats[1], this.stats[3]).subscribe(response => {
       if (response && response.status === 200) {
@@ -163,13 +177,6 @@ export class PokerControlComponent implements OnInit {
 
   beautifyMean(num: number): string{
     return num.toFixed(2);
-  }
-
-  secondsToClockString(seconds: number): string {
-    let min = (Math.trunc(seconds/60)).toFixed(0)
-    let sec = (seconds%60).toLocaleString("en", {minimumIntegerDigits: 2, maximumFractionDigits: 0})
-
-    return min + ":" + sec
   }
 
   copylink(link: string) {

@@ -13,7 +13,7 @@ import { Round } from '../models/round';
 export class InternalService {
 
   private user = new BehaviorSubject<User>(null);
-  private sprint = new BehaviorSubject<Sprint>({Name: "", Id: ""});
+  private sprint = new BehaviorSubject<Sprint>({Name: "", Id: "", CreationTime: Date.toString()});
   private stats = new BehaviorSubject<number[]>([0,0,0,0]); //Mode, Median Average, Final
   private isVoteShown = new BehaviorSubject<boolean>(false);
   private logoutAll = new BehaviorSubject<boolean>(false);

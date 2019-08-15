@@ -1,12 +1,13 @@
 import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 
+import { of, throwError } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from '../app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCardModule, MatFormFieldModule, MatIconModule, MatListModule, MatTableModule, MatButtonModule, MatInputModule,  MatToolbarModule } from '@angular/material';
-import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 
 import { CommsService } from '../services/comms.service'
 import { environment } from '../../environments/environment';
@@ -17,21 +18,25 @@ import { PokerControlComponent } from '../poker/poker-control/poker-control.comp
 import { PokerCardComponent } from '../poker/poker-card/poker-card.component';
 import { MemberslistComponent } from '../poker/memberslist/memberslist.component';
 import { ElapsedTimerComponent } from '../poker/elapsed-timer/elapsed-timer.component';
+import { SprintResponse } from 'src/app/models/responses';
+
 
 describe('JoinComponent', () => {
   let joinComponent: JoinComponent;
   let fixture: ComponentFixture<JoinComponent>;
-
-  let httpTestingController: HttpTestingController;
-  let commsService : CommsService;
+  let httpMock: HttpTestingController;
+  let comms: CommsService;
+  let router: Router;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       providers: [
         {
           provide: ActivatedRoute,
-          useValue: {snapshot: {paramMap: convertToParamMap({'sprint_id': 'testSprint'})}}
-        }
+          useValue: {snapshot: {
+            paramMap: convertToParamMap({'sprint_id': 'testSprint'})
+          }}
+        },
       ],
       declarations: [
         NewSprintComponent,
@@ -45,7 +50,6 @@ describe('JoinComponent', () => {
       imports: [
         FormsModule,
         AppRoutingModule,
-        HttpClientModule,
         HttpClientTestingModule,
         BrowserAnimationsModule,
         MatCardModule, 
@@ -55,49 +59,63 @@ describe('JoinComponent', () => {
         MatTableModule, 
         MatButtonModule, 
         MatInputModule,  
-        MatToolbarModule
+        MatToolbarModule,
       ]
     })
     .compileComponents().then(() => {
-      httpTestingController = TestBed.get(HttpTestingController);
-      commsService = TestBed.get(CommsService);
+      httpMock = TestBed.get(HttpTestingController);
+      comms = TestBed.get(CommsService);
+      router = TestBed.get(Router);
     });
   }));
 
-  beforeEach(inject([HttpTestingController, CommsService], 
-      (httpMock: HttpTestingController, service: CommsService) => {
+  beforeEach(() => {
+    spyOn(router, "navigateByUrl")
 
-        service.createSprint("Sprint 1").subscribe(respond => {
-          console.log(respond);
-          expect(respond).toEqual({
-            "d": "testSprint",
-            "s": 200
-          });
-        });
-  
-        //set the expectations for the HttpClient mock
-        const req = httpMock.expectOne(environment.apiUrl + '/sprints');
-        expect(req.request.method).toEqual('POST');
-  
-        //fake data to be returned by the mock
-        req.flush({
-          "d": "testSprint",
-          "s": 200
-        });
-      
-        fixture = TestBed.createComponent(JoinComponent);
-        joinComponent = fixture.componentInstance;
-        fixture.detectChanges();
-      
-    })
-  );
+    fixture = TestBed.createComponent(JoinComponent);
+    joinComponent = fixture.componentInstance;
+  });
 
   afterEach(() => {
   });
-
-
+    
   it('should create', () => {
+    fixture.detectChanges()
     expect(joinComponent).toBeTruthy();
   });
+    
+  it("should kick out users if the sprint doesn't exist", () => {
 
-});
+    spyOn(comms, "getSprintDetails").and.returnValue(of({status: 404} as SprintResponse))
+
+    fixture.detectChanges()
+
+    expect(joinComponent.sprint.Id).toBe('testSprint')
+    expect(comms.getSprintDetails).toHaveBeenCalledWith('testSprint')
+
+    expect(router.navigateByUrl).toHaveBeenCalledWith('/new')
+  });
+
+  it("should kick out users if errors are thrown", () => {
+
+    spyOn(comms, "getSprintDetails").and.returnValue(throwError("ObservableError"))
+
+    fixture.detectChanges()
+
+    expect(joinComponent.sprint.Id).toBe('testSprint')
+    expect(comms.getSprintDetails).toHaveBeenCalled()
+
+    expect(router.navigateByUrl).toHaveBeenCalledWith('/new')
+  });
+
+  it("should do nothing when users submit an empty name", () => {
+    fixture.detectChanges()
+
+    joinComponent.registerUser("")
+
+    fixture.detectChanges()
+
+    expect(router.navigateByUrl).toHaveBeenCalledTimes(0)
+  })
+  //TODO: verify other parameters for registerUser()
+})
