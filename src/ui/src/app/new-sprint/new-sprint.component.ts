@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { Sprint } from '../models/sprint';
 import { CommsService } from '../services/comms.service';
@@ -16,7 +17,11 @@ export class NewSprintComponent implements OnInit {
   sprint: Sprint;
   name: string = '';
 
-  constructor(private commsService: CommsService, private intern: InternalService) { }
+  constructor(
+    private commsService: CommsService, 
+    private intern: InternalService,
+    private router: Router,
+  ) { }
 
   ngOnInit() {
     this.sprint = {
@@ -38,6 +43,7 @@ export class NewSprintComponent implements OnInit {
             CreationTime: Date.toString(), 
           }
           this.intern.updateSprint(this.sprint);
+          this.router.navigateByUrl(`/join/${this.sprint.Id}`)
         }
       });
     } else {

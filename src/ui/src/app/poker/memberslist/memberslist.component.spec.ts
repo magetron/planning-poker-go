@@ -9,7 +9,7 @@ import { NewSprintComponent } from 'src/app/new-sprint/new-sprint.component';
 import { JoinComponent } from 'src/app/join/join.component';
 import { PokerCardComponent } from '../poker-card/poker-card.component';
 import { PokerControlComponent } from '../poker-control/poker-control.component';
-import { ShareComponent } from 'src/app/share/share.component';
+import { ShareComponent } from 'src/app/poker/share/share.component';
 import { ElapsedTimerComponent } from '../elapsed-timer/elapsed-timer.component';
 
 describe('MemberslistComponent', () => {

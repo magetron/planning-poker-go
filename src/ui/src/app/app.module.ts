@@ -7,7 +7,6 @@ import { PokerModule } from './poker/poker.module';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { NewSprintComponent } from './new-sprint/new-sprint.component';
-import { ShareComponent } from './share/share.component';
 import { CommsService } from './services/comms.service';
 import { JoinComponent } from './join/join.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -20,7 +19,6 @@ import { AuthGuard } from './_guards/auth.guard';
   declarations: [
     AppComponent,
     NewSprintComponent,
-    ShareComponent,
     JoinComponent,
     TopBarComponent,
   ],

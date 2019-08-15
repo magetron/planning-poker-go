@@ -8,7 +8,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCardModule, MatFormFieldModule, MatIconModule, MatListModule, MatTableModule, MatButtonModule, MatInputModule,  MatToolbarModule } from '@angular/material';
 
 import { NewSprintComponent } from './new-sprint.component';
-import { ShareComponent } from '../share/share.component';
+import { ShareComponent } from 'src/app/poker/share/share.component';
 import { JoinComponent } from '../join/join.component';
 import { PokerControlComponent } from '../poker/poker-control/poker-control.component';
 import { PokerCardComponent } from '../poker/poker-card/poker-card.component';
