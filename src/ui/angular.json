@@ -82,7 +82,7 @@
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.int.ts"
+                  "with": "src/environments/environment.far.ts"
                 }
               ],
               "optimization": true,
