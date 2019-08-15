@@ -3,6 +3,7 @@
 
 *.code-workspace
 static-ui/
+src/ui/package-lock.json
 
 # KDE
 .directory
