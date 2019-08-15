@@ -46,6 +46,15 @@ export class MemberslistComponent extends Cardify implements OnInit {
         this.internal.updateUser(this.updateMe())
       }
     });
+    this.internal.rounds$.subscribe((msg: Round[]) => {
+      if (msg) {
+        let archived = msg[msg.length-1].Archived
+        let button = document.getElementById("btn1")
+        if (archived && button.classList.contains("showV")) {
+          button.classList.toggle("showV")
+        }
+      }
+    })
   }
 
   socketBroadcast() {
@@ -109,29 +118,25 @@ export class MemberslistComponent extends Cardify implements OnInit {
 
   showVoteFunc(): void {
 
-    let btn = document.getElementById("btn1")
-    let state = btn.classList.toggle("showV")
-    btn.classList.toggle("hideV")
-
-    this.internal.showVote(state)
-    if (state) {
-      this.btn1text = "Hide Vote";
-    } else {
-      this.btn1text = "Show Vote";
-    }
-
-    for (let user of this.users){
-      if (user.Admin == true) {
-        this.comms.showVote(this.sprint_id, this.user.Id, state ).subscribe((response => {
-          if (response.status === 200) {
-            this.socketBroadcast();
-          } else {
-            console.log("Set Vote to be shown failed");
-          }
-        }))
+    if (this.user.Admin == true) {
+      let btn = document.getElementById("btn1")
+      let state = btn.classList.toggle("showV")
+      
+      this.internal.showVote(state)
+      if (state) {
+        this.btn1text = "Hide Vote";
+      } else {
+        this.btn1text = "Show Vote";
       }
+        
+      this.comms.showVote(this.sprint_id, this.user.Id, state).subscribe((response => {
+        if (response.status === 200) {
+          this.socketBroadcast();
+        } else {
+          console.log("Set Vote to be shown failed");
+        }
+      }))
     }
-
   }
 
   setNextAdmin(successor : User) : void{
