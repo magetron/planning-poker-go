@@ -14,10 +14,9 @@ phases:
        - go get -v -t ./ 
        - apt-get update 
        - apt-get -y install nodejs 
-       - npm install -g @angular/cli 
        - cd ui && npm install
        - apt-get install -y chromium-browser 
-       - cd .. && make prod
+       - cd .. && make deploy
        - cd .. && docker build -t planningpoker .
        - docker tag planningpoker:latest 137591602799.dkr.ecr.eu-west-1.amazonaws.com/planningpoker:latest
 
