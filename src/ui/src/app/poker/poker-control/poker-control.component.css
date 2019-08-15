@@ -1,0 +1,56 @@
+.cardList {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+}
+
+.cardList > * {
+	flex-grow: 1;
+	box-sizing: border-box;
+}
+
+.cardList > *:not(:last-child) {
+	margin-right: 32px;
+}
+
+.cardListItem {
+	flex: 0 1 calc(33.3% - 32px);
+}
+
+@media screen and (max-width: 1200px) {
+	.cardList {
+  		display: flex;
+  		flex-direction: column;
+  		justify-content: flex-start;
+	}
+	.cardList > *:not(:last-child) {
+  		margin-right: unset;
+  		margin-bottom: 8px;
+	}
+}
+
+.mat-row {
+  height: auto;
+}
+
+.mat-header-cell {
+	font-size: 15px;
+}
+
+.mat-cell {
+  font-size: 15px;
+  padding: 8px 8px 8px 0;
+  text-align: left;
+}
+
+button[name="recommend-card"] {
+  height: 90px;
+  font-size: 2em;
+  max-width: 8%;
+}
+
+
+table {
+  width: 100%;
+}

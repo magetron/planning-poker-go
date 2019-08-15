@@ -2,13 +2,24 @@
   height: auto;
 }
 
-.mat-cell {
-  padding: 8px 8px 8px 0;
+.mat-header-cell {
+	font-size: 15px;
 }
 
-.hideV{
+.mat-cell {
+  font-size: 15px;
+  padding: 8px 8px 8px 0;
+  text-align: left;
+}
+
+.hideV {
   background-color: #FFD700;
 }
+
 .showV{
   background-color: #F08080;
+}
+
+table {
+  width: 100%;
 }

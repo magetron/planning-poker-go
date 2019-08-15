@@ -1,111 +1,100 @@
 <app-poker-card></app-poker-card>
+
 <br>
 
-<div class="containerX">
-  <div class="box" fxlayout="row" style="flex-direction: row; box-sizing: border-box; display: flex;">
-    <div fxflex="50%" fxflex.gt-sm="25" fxhide.md="" style="cursor: pointer; flex-direction: row; box-sizing: border-box; display: flex; flex: 1 1 100%; max-width: 25%;">
-      <div fxflex="" style="flex: 1 1 0%; box-sizing: border-box;">
-       <app-memberslist [sprint_id]="sprint_id" ></app-memberslist>
-      </div>
-      <div fxflex="" style="flex: 1 1 0%; box-sizing: border-box;">
-          <table mat-table [dataSource]=rounds class="mat-elevation-z8">
-              <!-- Position Column -->
-              <ng-container matColumnDef="ROUNDS">
-                <th mat-header-cell *matHeaderCellDef> ROUNDS </th>
-                <td mat-cell *matCellDef="let rounds"> {{rounds.Name}} </td>
-              </ng-container>
-              <ng-container matColumnDef="RESULT">
-                <th mat-header-cell *matHeaderCellDef> RESULT </th>
-                <td mat-cell *matCellDef="let rounds"> {{hideLastElementinList(rounds)}} </td>
-              </ng-container>
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-            </table>
-      </div>
+<div class="container-fluid text-center">    
+  <div class="row content">
+    <div class="col-sm-2 sidenav">
+      <app-memberslist [sprint_id]="sprint_id" ></app-memberslist>
     </div>
-
-
-    <div fxflex="" style="cursor: pointer; flex-direction: column; box-sizing: border-box; display: flex; flex: 1 1 0%;">
-
-      <div fxflex="" style="flex: 1 1 1e-9px; box-sizing: border-box;" style="max-width: 98%">
-        <mat-card class="background-warn">
-            <mat-card-title fxLayoutAlign="center">
-              <div *ngIf="round.Archived; else notArchivedTitle"><h3>Story Title: none </h3></div>
-              <ng-template #notArchivedTitle>
-                <h3>Story Title: {{round.Name}}</h3>
-              </ng-template>
-            </mat-card-title>
-        </mat-card>
-        <br>
-
-        <mat-card class="background-secondary">
-          <mat-card-title>
-            Timer:
-          </mat-card-title>
-          <mat-card-content fxLayoutAlign="center">
-            <div *ngIf="round.Archived; else notArchived"> <h1>0:00</h1> </div>
-            <ng-template #notArchived>
-              <h1>{{(timePassed/60).toLocaleString("en", {maximumFractionDigits: 0}) + ":" + (timePassed%60).toLocaleString("en", {minimumIntegerDigits: 2, maximumFractionDigits: 0})}}</h1>
+    <div class="col-sm-8 text-left"> 
+      <mat-card class="background-warn">
+          <mat-card-title fxLayoutAlign="center">
+            <div *ngIf="round.Archived; else notArchivedTitle"><h3>Story Title: none </h3></div>
+            <ng-template #notArchivedTitle>
+              <h3>Story Title: {{round.Name}}</h3>
             </ng-template>
-            <br>
+          </mat-card-title>
+      </mat-card>
+      <br>
+      <mat-card class="background-secondary">
+        <mat-card-title>
+          Timer:
+        </mat-card-title>
+        <mat-card-content fxLayoutAlign="center">
+          <h1 *ngIf="round.Archived; else notArchived">00:00</h1>
+          <ng-template #notArchived>
+              <h1 id = "roundTime">00:00</h1>
+          </ng-template>
+          <app-elapsed-timer></app-elapsed-timer>
+          <br>
+        </mat-card-content>
+      </mat-card>
+      <br>
+      <div class="cardList">
+        <mat-card class="background-third">
+          <mat-card-header>
+            <mat-card-title class="text-primary">
+              Recommended: 
+              <button mat-raised-button class="button-secondary" style="height: 90px; font-size: 2em;max-width: 8%;">
+                <h1>
+                  <span>{{stats[3]}} </span>
+                </h1>
+              </button>
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div fxFlex fxLayoutAlign="left">
+              Mean: {{beautifyMean(stats[2])}}
+            </div>
+            <div fxFlex fxLayoutAlign="center">
+              Median: {{stats[1]}}            
+            </div>
+            <div fxFlex fxLayoutAlign="end">
+              Mode: {{stats[0]}}
+            </div>
           </mat-card-content>
         </mat-card>
-        <br>
+        <ng-template [ngIf]="user?.Admin">
+            <mat-card class="background-third">
+              <mat-card-content>
+                <mat-form-field>
+                  <mat-label>Next Story title</mat-label>
+                  <input matInput placeholder="Story" [(ngModel)]="nextStory">
+                </mat-form-field>
+              </mat-card-content>
+              <mat-card-actions>
+                <button mat-raised-button [disabled]="!(nextStory)" (click)="addStory(nextStory)">Add Round</button>
+                <button mat-raised-button [disabled]= "round.Name == 'none' || !isVoteShown " (click)="archiveRound()">Archive Current Round</button>
+              </mat-card-actions>
+            </mat-card>
+        </ng-template>
       </div>
-
-      <div fxflex="" style="flex: 1 1 1e-9px; box-sizing: border-box;">
-        <div class="containerX" style="flex-direction: row; box-sizing: border-box; display: flex;">
-          <div class="coloredContainerX box" fxflex="" fxlayout="row" fxlayout.sm="column" fxlayout.xs="column" style="flex-direction: row; box-sizing: border-box; display: flex; flex: 1 1 0%;">
-
-            <div fxflex="" style="flex: 1 1 0%; box-sizing: border-box;">
-              <mat-card class="background-third" style="max-width: 90%">
-                <mat-card-header>
-                  <mat-card-title class="text-primary">
-                    Recommended: 
-                    <button mat-raised-button class="button-secondary">
-                      <h1>
-                        <span>{{stats[3]}} </span>
-                      </h1>
-                    </button>
-                  </mat-card-title>
-                  <mat-card-subtitle>
-                  </mat-card-subtitle>
-                </mat-card-header>
-                <mat-card-content>
-                  <mat-list>
-                    <mat-list-item>Mean: {{beautifyMean(stats[2])}}</mat-list-item>
-                    <mat-list-item>Median: {{stats[1]}}</mat-list-item>
-                    <mat-list-item>Mode: {{stats[0]}}</mat-list-item>
-                  </mat-list>
-                </mat-card-content>
-              </mat-card>
-            </div>
-
-            <ng-template [ngIf]="user.Admin">
-                <div fxflex="" style="flex: 1 1 0%; box-sizing: border-box;">
-                  <mat-card class="background-third" style="max-width: 90%">
-                    <mat-card-content>
-                      <mat-form-field>
-                        <mat-label>Next Story title</mat-label>
-                        <input matInput placeholder="Story" [(ngModel)]="nextStory">
-                      </mat-form-field>
-                    </mat-card-content>
-                    <mat-card-actions>
-                      <button mat-raised-button [disabled]="!(nextStory)" (click)="addStory(nextStory)">Add Round</button>
-                      <button mat-raised-button [disabled]= "round.Name == 'none' || !isVoteShown " (click)="archiveRound()">Archive Current Round</button>
-                    </mat-card-actions>
-                  </mat-card>
-                </div>
-              </ng-template>
-
-          </div>
-        </div>
-      </div>
+    </div>
+    <div class="col-sm-2 sidenav">
+      <table mat-table [dataSource]=rounds class="mat-elevation-z8">
+        <!-- Position Column -->
+        <ng-container matColumnDef="ROUNDS">
+          <th mat-header-cell *matHeaderCellDef> Rounds </th>
+          <td mat-cell *matCellDef="let rounds"> {{rounds.Name}} </td>
+        </ng-container>
+        <ng-container matColumnDef="RESULT">
+          <th mat-header-cell *matHeaderCellDef> Result </th>
+          <td mat-cell *matCellDef="let rounds"> {{hideLastElementInList(rounds)}} </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
     </div>
   </div>
 </div>
 <br>
 
-<mat-toolbar fxLayout="row" color="primary" >
-  Invitation Link: {{baseUrl}}/join/{{sprint_id}}
-</mat-toolbar>
+<footer class="container-fluid text-center">
+  <mat-toolbar  color="primary" >
+    Invitation Link: <a (click)="copylink(baseUrl + '/join/' + sprint_id)" style="color:white">{{baseUrl}}/join/{{sprint_id}}</a>
+    <div fxFlex fxLayoutAlign="end">
+        <button (click)="copylink(baseUrl + '/join/' + sprint_id)" mat-flat-button color="accent"> COPY </button>
+    </div>
+  </mat-toolbar>
+</footer>

@@ -1,9 +1,11 @@
 import { Component, OnInit, Input, Inject} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import { throwError, forkJoin } from 'rxjs';
+import { MatListModule } from '@angular/material';
+import { throwError, forkJoin, Subscription, timer } from 'rxjs';
 import { catchError, first } from 'rxjs/operators';
 import { AssertionError } from 'assert';
+import { Timer } from 'easytimer.js';
 
 import { InternalService } from 'src/app/services/internal.service';
 import { User } from 'src/app/models/user';
@@ -11,7 +13,7 @@ import { Sprint } from 'src/app/models/sprint';
 import { Round } from '../../models/round';
 import { CommsService } from 'src/app/services/comms.service';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
-import * as globals from '../../services/globals.service';
+import { environment } from 'src/environments/environment';
 import { WebsocketService } from 'src/app/services/websocket.service';
 
 @Component({
@@ -21,6 +23,8 @@ import { WebsocketService } from 'src/app/services/websocket.service';
 })
 
 export class PokerControlComponent implements OnInit {
+
+  shouldRun = [/(^|\.)plnkr\.co$/, /(^|\.)stackblitz\.io$/].some(h => h.test(window.location.host));
 
   @Input() sprint_id: string;
   round: Round = {
@@ -36,11 +40,13 @@ export class PokerControlComponent implements OnInit {
   rounds: Round[];
   stats: number[];
   timePassed = 0;
-  displayedColumns: string[] = ['ROUNDS', 'RESULT'];
+  displayedColumns: string[] = ['RESULT', 'ROUNDS'];
   user: User;
   baseUrl: string;
   isVoteShown : boolean;
-  subscriber
+  subscriber: Subscription;
+  referenceTime: number;
+  timer: Timer = new Timer();
 
   constructor(
     private router: Router,
@@ -52,28 +58,25 @@ export class PokerControlComponent implements OnInit {
 
   ngOnInit() {
     this.sprint_id = this.route.snapshot.paramMap.get('sprint_id');
-    this.baseUrl = globals.baseUrl;
+    this.baseUrl = environment.baseUrl;
 
     this.comms.getSprintDetails(this.sprint_id)
-    .pipe(
-      catchError(err => {
-        console.log('Connection error', err);
-        //TODO: Handle properly - notify the user, retry?
-        this.router.navigateByUrl(`/join/${this.sprint_id}`);
-        //TODO: delete user from local storage?
-        return throwError(err);
-      })
-    )
     .subscribe(res => {
-      if (res && res.s === 200) {
-        if (res.d['Id'] === this.sprint_id) {
-          this.internal.updateSprint(res.d as Sprint);
+      if (res && res.status === 200) {
+        if (res.body.d['Id'] === this.sprint_id) {
+          this.internal.updateSprint(res.body.d as Sprint);
         } else {
           throw new AssertionError({message: "The server messed up"});
         }
       } else if (res) {
           console.log("Unexpected response:" + res);
       }
+    },
+    err => {
+      console.log('Connection error', err);
+      //TODO: Handle properly - notify the user, retry?
+      this.router.navigateByUrl(`/join/${this.sprint_id}`);
+      return throwError(err);
     })
 
     this.subscriber = this.webSocket.connect(this.sprint_id).subscribe();
@@ -81,15 +84,13 @@ export class PokerControlComponent implements OnInit {
     this.internal.rounds$.subscribe(msg => {
       this.rounds = msg
       this.round = this.rounds[this.rounds.length - 1]
-      }
-    )
+    })
 
     this.internal.stats$.subscribe(msg => {
       this.stats = msg
     });
     this.internal.user$.subscribe(msg => this.user = msg);
     this.internal.isVoteShown$.subscribe(msg => this.isVoteShown = msg);
-    this.startTimer();
   }
 
   socketBroadcast() {
@@ -97,7 +98,6 @@ export class PokerControlComponent implements OnInit {
   }
 
   addStory (story: string): void {
-    this.startTimer();
 
     forkJoin(
       this.comms.addStory(this.sprint_id, story).pipe(first()),
@@ -110,24 +110,38 @@ export class PokerControlComponent implements OnInit {
         console.log("Server communication error");
       }
       if (response[1] && response[1].status === 200) {
-        console.log("Set Vote to be shown?", false);
         this.socketBroadcast();
+        this.getRefTime();
       } else {
         console.log("Set Vote to be shown failed");
       }
     });
   }
 
-  startTimer(): void {
+  getRefTime(){
     if (this.rounds && this.rounds[this.rounds.length - 1].CreationTime) {
-      setInterval(() => this.timePassed = new Date().getTime() / 1000 - this.rounds[this.rounds.length - 1].CreationTime, 1000)
+      this.referenceTime = this.rounds[this.rounds.length - 1].CreationTime
+      console.log("this.referenceTime", this.referenceTime )
     } else {
-      setTimeout(()=> this.startTimer(), 1000);
-      //Timer is updated every 1000ms.
+      this.referenceTime = new Date().getTime()/1000
     }
+    this.timePassed = (new Date().getTime()/1000 - this.referenceTime)/1000
+    this.startTimer();
+  }
+
+  startTimer(){
+    this.timer.start({precision: 'seconds', startValues: {seconds: this.timePassed} });
+    let self = this;
+    this.timer.addEventListener('secondsUpdated', function (e){
+      let exist = document.getElementById("roundTime")
+      if (exist){
+        exist.innerText = self.timer.getTimeValues().toString().slice(3)
+      }
+    });
   }
 
   archiveRound(): void {
+    this.timer.stop();
     this.comms.archiveRound(this.sprint_id, this.round.Id, this.stats[2],
        this.stats[1], this.stats[3]).subscribe(response => {
       if (response && response.status === 200) {
@@ -151,11 +165,11 @@ export class PokerControlComponent implements OnInit {
     this.socketBroadcast();
   }
   
-  hideLastElementinList(title: Round, displayTitle: string): any{
+  hideLastElementInList(title: Round, displayTitle: string): any{
     if (title.Archived){
       return title.Final;
     } else if (title.Name == this.round.Name) {
-      return "voting";
+      return "--";
     } else {
       return title.Final;
     }
@@ -163,6 +177,20 @@ export class PokerControlComponent implements OnInit {
 
   beautifyMean(num: number): string{
     return num.toFixed(2);
+  }
+
+  copylink(link: string) {
+    let selBox = document.createElement('textarea');
+    selBox.style.position = 'fixed';
+    selBox.style.left = '0';
+    selBox.style.top = '0';
+    selBox.style.opacity = '0';
+    selBox.value = link;
+    document.body.appendChild(selBox);
+    selBox.focus();
+    selBox.select();
+    document.execCommand('copy');
+    document.body.removeChild(selBox);
   }
 
 }

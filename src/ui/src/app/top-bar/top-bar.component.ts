@@ -2,6 +2,7 @@ import { Component, OnInit, Input, HostListener} from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
 
+import { MatCardModule, MatMenuModule, MatFormFieldModule, MatIconModule, MatListModule, MatTableModule, MatButtonModule, MatInputModule,  MatToolbarModule } from '@angular/material';
 import { CommsService } from 'src/app/services/comms.service';
 import { InternalService } from '../services/internal.service'; 
 import { WebsocketService } from '../services/websocket.service';
@@ -17,21 +18,22 @@ import { Sprint } from '../models/sprint';
 export class TopBarComponent implements OnInit {
 
   user: User;
+  users: User[];
   sprint: Sprint;
   @Input() sprint_id: string;
   logoutAll: boolean;
+  subscriber
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private comms: CommsService,
     private internal: InternalService,
-    private socket: WebsocketService,
+    private webSocket: WebsocketService,
   ) { }
 
   ngOnInit() {
     this.sprint_id = this.route.snapshot.paramMap.get('sprint_id');
-    this.internal.user$.subscribe(user => this.user = user);
     this.internal.sprint$.subscribe(sprint => this.sprint = sprint);
     this.internal.logoutAll$.subscribe(msg => {
       if(msg){
@@ -40,6 +42,11 @@ export class TopBarComponent implements OnInit {
         console.log("logging all user out");
       }
     });
+    if (this.sprint_id){
+      this.subscriber = this.webSocket.connect(this.sprint_id).subscribe();
+    }
+    this.internal.user$.subscribe(msg => this.user = msg);
+    this.internal.users$.subscribe(msg => this.users = msg)
   }
 
   logOut() {
@@ -49,9 +56,9 @@ export class TopBarComponent implements OnInit {
       } else {
         this.comms.deleteUser(this.sprint.Id, this.user.Id).subscribe(response => {
           if (response == null) {
-            console.log("User logged out");
+            console.log("User logged out")
             localStorage.removeItem("user");
-            this.socket.send("update")
+            this.webSocket.send("update")
             this.internal.updateUser(null);
             this.router.navigateByUrl(`/new`);
           } else {
@@ -63,21 +70,29 @@ export class TopBarComponent implements OnInit {
   }
 
 
- @HostListener('window:unload', [ '$event' ])
-   unloadHandler(event) {
+ @HostListener('window:beforeunload', [ '$event' ])
+    unloadHandler(event) {
+    console.log("someone closes the window")
     if (this.user.Admin){
-      console.log("Admin logout");
-      this.comms.appointSuccessor(this.sprint_id, this.user.Id, "");
-      /*.subscribe(response => {
+
+      this.comms.appointSuccessor(this.sprint_id, this.user.Id , "").subscribe(response => {
         if (response && response.status === 200) {
-          console.log("Set new admin random successful")
-        } else {
-          console.log("All users log out")
-          this.internal.logoutAllUsers(true);
+          console.log("Set new admin randomly");
+  
+          this.comms.deleteUser(this.sprint_id, this.users[0].Id).subscribe(response => {
+            if (response == null) {
+              console.log("User logged out")
+              localStorage.removeItem("user");
+              this.webSocket.send("update")
+            }
+          });
         }
-      })*/
+      })
+
+    } else {
+      this.logOut()
+      this.webSocket.send("update")
     }
-    console.log("func ended");
   }
 
 }

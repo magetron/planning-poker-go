@@ -21,7 +21,8 @@ export class NewSprintComponent implements OnInit {
   ngOnInit() {
     this.sprint = {
       Id: '',
-      Name: ''
+      Name: '',
+      CreationTime: Date.toString()
     }
   }
 
@@ -32,7 +33,9 @@ export class NewSprintComponent implements OnInit {
         if (response) {
           this.sprint = {
             Id: response.d,
-            Name: name
+            Name: name,
+            //TODO: We should really return it from the server instead
+            CreationTime: Date.toString(), 
           }
           this.intern.updateSprint(this.sprint);
         }

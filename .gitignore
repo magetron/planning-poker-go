@@ -1,6 +1,11 @@
+# macOS
 .DS_Store
+
 *.code-workspace
 static-ui/
+src/ui/package-lock.json
+
+# KDE
 .directory
 
 #running go build would create this
@@ -18,6 +23,3 @@ planningpoker-kp.pem
 
 #Docker Image
 planningpoker.tar
-
-#compiled Go executable
-/planningpoker

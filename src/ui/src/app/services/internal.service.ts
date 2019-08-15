@@ -13,7 +13,7 @@ import { Round } from '../models/round';
 export class InternalService {
 
   private user = new BehaviorSubject<User>(null);
-  private sprint = new BehaviorSubject<Sprint>({Name: "", Id: ""});
+  private sprint = new BehaviorSubject<Sprint>({Name: "", Id: "", CreationTime: Date.toString()});
   private stats = new BehaviorSubject<number[]>([0,0,0,0]); //Mode, Median Average, Final
   private isVoteShown = new BehaviorSubject<boolean>(false);
   private logoutAll = new BehaviorSubject<boolean>(false);
@@ -42,6 +42,7 @@ export class InternalService {
     this.stats.next(stats);
   }
 
+  //TODO: currently doesn't seem used outside memberslist, which publishes it. However, I think we should use it to hide statistics is votes are hidden so I'm leaving it
   showVote(isVoteShown: boolean) {
     this.isVoteShown.next(isVoteShown);
   }
@@ -60,6 +61,7 @@ export class InternalService {
       return false
     }
   }
+  
   logoutAllUsers(logoutAll: boolean) {
     this.logoutAll.next(logoutAll);
   }

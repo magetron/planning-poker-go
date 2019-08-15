@@ -6,15 +6,17 @@ GOGET=$(GOCMD) get
 ARCH=amd64
 BINARY_NAME=planningpoker
 BINARY_UNIX=$(BINARY_NAME)_unix
-NGCMD=ng
+NGCMD=npx ng
 NGSERVE=$(NGCMD) serve
 NGBUILD=$(NGCMD) build
-NGPROD=$(NGCMD) build --prod
+NGTEST=$(NGCMD) test --code-coverage --karma-config ./karma-headless.conf.js --progress false
+NGE2E =$(NGCMD) e2e
 UINAME=ui
 UIPATH=../static-ui
 
 
-.PHONY: dev prod docker build-dev build-prod test clean run-dev run
+.PHONY: dev prod deploy integration build-dev build-prod build-linux \
+ build-back-linux build-back-int build-back-far test clean run-dev run
 
 dev: 
 	$(MAKE) test 
@@ -24,31 +26,49 @@ prod:
 	$(MAKE) test 
 	$(MAKE) build-prod
 
-docker:
+deploy:
 	$(MAKE) test
-	mv ui/src/app/services/globals.service.ts ui/src/app/services/globals.service.ts.tmp && \
-	cp ui/src/app/services/globals-docker.service.ts ui/src/app/services/globals.service.ts && \
-	$(MAKE) build-linux && \
-	mv ui/src/app/services/globals.service.ts.tmp ui/src/app/services/globals.service.ts || \
-	mv ui/src/app/services/globals.service.ts.tmp ui/src/app/services/globals.service.ts
+	$(MAKE) build-back-linux
+	$(MAKE) build-front-far
+
+integration:
+	$(MAKE) test
+	$(MAKE) build-back-linux
+	$(MAKE) build-front-int
 
 build-dev:
 	$(GOBUILD) -o $(BINARY_NAME) -v
-	cd ui; $(NGBUILD) $(UINAME) --outputPath=$(UIPATH)
 	cd _gc; $(GOBUILD) -o ../gc
+	cd ui; $(NGBUILD) $(UINAME) --outputPath=$(UIPATH)
 
 build-prod:
 	$(GOBUILD) -o $(BINARY_NAME) -v
-	cd ui; $(NGPROD) $(UINAME) --outputPath=$(UIPATH)
 	cd _gc; $(GOBUILD) -o ../gc
+	cd ui; $(NGBUILD) --configuration=production $(UINAME) --outputPath=$(UIPATH)
 
 build-linux:
+	$(MAKE) build-back-linux
+	cd ui; $(NGBUILD) --configuration=production $(UINAME) --outputPath=$(UIPATH)
+
+build-back-linux:
 	env GOOS=linux GOARCH=$(ARCH) $(GOBUILD) -o $(BINARY_NAME)
-	cd ui; $(NGPROD) $(UINAME) --outputPath=$(UIPATH)
 	cd _gc; env GOOS=linux GOARCH=$(ARCH) $(GOBUILD) -o ../gc
 
+build-front:
+	cd ui; $(NGBUILD) --configuration=production $(UINAME) --outputPath=$(UIPATH)
+
+build-front-int:
+	cd ui; $(NGBUILD) --configuration=integration $(UINAME) --outputPath=$(UIPATH)
+
+build-front-far:
+	cd ui; $(NGBUILD) --configuration=fargate $(UINAME) --outputPath=$(UIPATH)
+
 test:
+	cd ui; $(NGTEST)
 	$(GOTEST) --cover -v ./...
+	$(GOBUILD) -o $(BINARY_NAME) -v ./...
+	#env PP_DEV=true ./$(BINARY_NAME) &
+	#cd ui; $(NGE2E)
 
 clean:
 	$(GOCLEAN)
@@ -58,7 +78,7 @@ clean:
 
 run-dev:
 	$(GOBUILD) -o $(BINARY_NAME) -v ./...
-	./$(BINARY_NAME) &
+	env PP_DEV=true ./$(BINARY_NAME) &
 	cd ui; $(NGSERVE)
 
 run-prod:
