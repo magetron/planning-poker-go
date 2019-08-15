@@ -16,7 +16,7 @@ exports.config = {
     browserName: 'chrome',
     chromeOptions: {
       args: [ "--headless", "--disable-gpu", "--window-size=1600x900" ],
-      binary: "/usr/bin/chromium-browser",
+      //binary: "/usr/bin/chromium-browser",
     }
   },
   directConnect: true,
