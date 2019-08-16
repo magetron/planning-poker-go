@@ -11,7 +11,7 @@ import { MemberslistComponent } from '../memberslist/memberslist.component';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { NewSprintComponent } from 'src/app/new-sprint/new-sprint.component';
 import { JoinComponent } from 'src/app/join/join.component';
-import { ShareComponent } from 'src/app/share/share.component';
+import { ShareComponent } from 'src/app/poker/share/share.component';
 import { InternalService } from 'src/app/services/internal.service';
 import { CommsService } from 'src/app/services/comms.service';
 import { WebsocketService } from 'src/app/services/websocket.service';
