@@ -1,6 +1,6 @@
 <footer class="container-fluid text-center">
   <mat-toolbar  color="primary" >
-    Invitation Link: &nbsp; <a [routerLink]="['/join', 'test']" (click)="copylink(baseUrl + '/join/' + sprint_id)" style="color:white">{{baseUrl}}/join/{{sprint_id}}</a>
+    Invitation Link: &nbsp; <a [routerLink]="['/join', sprint_id]" (click)="copylink(baseUrl + '/join/' + sprint_id)" style="color:white">{{baseUrl}}/join/{{sprint_id}}</a>
     <div fxFlex fxLayoutAlign="end">
         <button (click)="copylink(baseUrl + '/join/' + sprint_id)" mat-flat-button color="accent"> COPY </button>
     </div>
