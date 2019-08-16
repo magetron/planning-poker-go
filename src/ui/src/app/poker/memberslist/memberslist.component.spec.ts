@@ -132,11 +132,10 @@ describe('MemberslistComponent', () => {
     let user: User = {
       "Id": "userId1",
       "Name": "User 1",
-      "Vote": -1,
+      "Vote": -3,
       "Admin": true
     }
-    let users: User[] = [
-      {
+    let users: User[] = [{
           "Id": "userId1",
           "Name": "User 1",
           "Vote": -3,
@@ -147,8 +146,7 @@ describe('MemberslistComponent', () => {
           "Name": "User 2",
           "Vote": -1,
           "Admin": false
-      }
-    ]
+      }]
     internal.updateUser(user)
     internal.updateUsers(users)
     fixture.detectChanges()
@@ -185,5 +183,40 @@ describe('MemberslistComponent', () => {
     expect(table_row_1.cells[0].innerHTML).toBe(" User 1 👑 ")
     expect(table_row_1.cells[1].innerHTML).toBe("   ")
     expect(show_btn.innerHTML).toBe("Show Vote")
+  })
+
+  it("should not allow transferring master to oneself", () => {
+    spyOn(comms, "appointSuccessor")
+    let user: User = {
+      "Id": "userId1",
+      "Name": "User 1",
+      "Vote": -3,
+      "Admin": true
+    }
+    let users: User[] = [
+      {
+          "Id": "userId1",
+          "Name": "User 1",
+          "Vote": -3,
+          "Admin": true
+      },
+      {
+          "Id": "userId2",
+          "Name": "User 2",
+          "Vote": -1,
+          "Admin": false
+      }
+    ]
+    internal.updateUser(user)
+    internal.updateUsers(users)
+    fixture.detectChanges()
+    let table_row_1: HTMLTableRowElement = fixture.debugElement.nativeElement.querySelector("tbody > tr")
+    table_row_1.click()
+
+    expect(comms.appointSuccessor).toHaveBeenCalledTimes(0)
+  })
+  
+  it("should transfer Admin status correctly", () => {
+    //TODO!
   })
 });

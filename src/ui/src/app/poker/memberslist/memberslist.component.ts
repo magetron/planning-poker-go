@@ -140,7 +140,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
   }
 
   setNextAdmin(successor : User) : void{
-    if (this.user.Admin){
+    if (this.user.Admin && successor.Id != this.user.Id){
       this.comms.appointSuccessor(this.sprint_id, this.user.Id, successor.Id).subscribe(response => {
         console.info(response);
         if (response && response.status === 200) {
