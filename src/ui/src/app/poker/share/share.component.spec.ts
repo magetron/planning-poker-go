@@ -70,12 +70,12 @@ describe('ShareComponent', () => {
 
   it('should show correct url', ()=> {
     let visible_link: string = fixture.debugElement.query(By.css("mat-toolbar a")).childNodes[0].nativeNode.data
-    expect(visible_link).toEqual('http://localhost:4200/#/join/test')
+    expect(visible_link).toEqual('http://localhost:4200/#/join/' + component.sprint_id)
   })
 
   it('should lead to correct url', ()=> {
     let link: string = fixture.debugElement.query(By.css("mat-toolbar a")).properties.href
-    expect(link).toEqual('#' + "/join/" + "test")
+    expect(link).toEqual('#' + "/join/" + component.sprint_id)
   })
 
   //TODO: actually test clipboard?
