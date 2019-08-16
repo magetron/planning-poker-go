@@ -114,6 +114,9 @@ func (c *Client) formMessage (sprintId string) []byte {
 func (c *Client) writePump() {
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
+		if us.AllUsers[c.Hub.Id].AdminId == c.Id {
+			//set another admin according to certain rules
+		}
 		delete(us.AllUsers[c.Hub.Id].Users, c.Id)
 		newMessage := c.formMessage(c.Hub.Id)
 		c.Hub.Broadcast <- newMessage
