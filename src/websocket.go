@@ -55,59 +55,67 @@ func (c *Client) readPump() {
 		}
 		sprintId := c.Hub.Id
 		if string(message) == "update" {
-			newMessage := []byte("[")
-
-			users, exist := us.AllUsers[sprintId]
-			if exist {
-				if !users.VotesShown {
-					tmpReturnUserArray := new(Users)
-					tmpReturnUserArray.VotesShown = users.VotesShown
-					tmpReturnUserArray.AdminId = users.AdminId
-					tmpReturnUserArray.SprintId = users.SprintId
-					tmpReturnUserArray.Users = make(map[string]*User)
-					for _, user := range users.Users {
-						tmpReturnUser := new(User)
-						tmpReturnUser.Id = user.Id
-						tmpReturnUser.Admin = user.Admin
-						tmpReturnUser.Name = user.Name
-						if user.Vote != -1 {
-							tmpReturnUser.Vote = -3
-						} else {
-							tmpReturnUser.Vote = -1
-						}
-						tmpReturnUserArray.Users[user.Id] = tmpReturnUser
-					}
-					str, err := json.Marshal(tmpReturnUserArray)
-					if err == nil {
-						newMessage = append(newMessage, str...)
-					}
-				} else {
-					str, err := json.Marshal(users)
-					if err == nil {
-						newMessage = append(newMessage, str...)
-					}
-				}
-			}
-
-			rounds, exist := rc.AllRounds[sprintId]
-
-			if exist {
-				str, err := json.Marshal(rounds)
-				if err == nil {
-					newMessage = append(newMessage, byte(','))
-					newMessage = append(newMessage, str...)
-				}
-			}
-
-			newMessage = append(newMessage, byte(']'))
-			c.Hub.Broadcast <- newMessage
+			c.Hub.Broadcast <- c.formMessage(sprintId)
 		}
 	}
+}
+
+
+func (c *Client) formMessage (sprintId string) []byte {
+	newMessage := []byte("[")
+
+	users, exist := us.AllUsers[sprintId]
+	if exist {
+		if !users.VotesShown {
+			tmpReturnUserArray := new(Users)
+			tmpReturnUserArray.VotesShown = users.VotesShown
+			tmpReturnUserArray.AdminId = users.AdminId
+			tmpReturnUserArray.SprintId = users.SprintId
+			tmpReturnUserArray.Users = make(map[string]*User)
+			for _, user := range users.Users {
+				tmpReturnUser := new(User)
+				tmpReturnUser.Id = user.Id
+				tmpReturnUser.Admin = user.Admin
+				tmpReturnUser.Name = user.Name
+				if user.Vote != -1 {
+					tmpReturnUser.Vote = -3
+				} else {
+					tmpReturnUser.Vote = -1
+				}
+				tmpReturnUserArray.Users[user.Id] = tmpReturnUser
+			}
+			str, err := json.Marshal(tmpReturnUserArray)
+			if err == nil {
+				newMessage = append(newMessage, str...)
+			}
+		} else {
+			str, err := json.Marshal(users)
+			if err == nil {
+				newMessage = append(newMessage, str...)
+			}
+		}
+	}
+
+	rounds, exist := rc.AllRounds[sprintId]
+
+	if exist {
+		str, err := json.Marshal(rounds)
+		if err == nil {
+			newMessage = append(newMessage, byte(','))
+			newMessage = append(newMessage, str...)
+		}
+	}
+
+	newMessage = append(newMessage, byte(']'))
+
+	return newMessage
 }
 
 func (c *Client) writePump() {
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
+		newMessage := c.formMessage(c.Hub.Id)
+		c.Hub.Broadcast <- newMessage;
 		ticker.Stop()
 		err := c.Conn.Close()
 		if err != nil {
