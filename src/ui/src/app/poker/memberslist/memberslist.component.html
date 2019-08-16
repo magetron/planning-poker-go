@@ -15,7 +15,7 @@
 </div>
 <br>
 
-<div>
-  <button mat-raised-button id="btn1" class="hideV" (click)="showVoteFunc()">{{btn1text}}</button>
+<div *ngIf="user?.Admin" >
+  <button mat-raised-button id="btn1" [ngClass]="{'showV': showVote}" (click)="showVoteFunc()">{{showVote ? 'Hide Votes' : 'Show Votes'}}</button>
 </div>
 
