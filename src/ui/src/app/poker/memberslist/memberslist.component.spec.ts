@@ -17,11 +17,12 @@ import { CommsService } from 'src/app/services/comms.service';
 import { InternalService } from 'src/app/services/internal.service';
 import { User } from 'src/app/models/user';
 
-fdescribe('MemberslistComponent', () => {
+describe('MemberslistComponent', () => {
   let component: MemberslistComponent;
   let fixture: ComponentFixture<MemberslistComponent>;
   let internal: InternalService
   let socket: WebSocketServiceSpy
+  let comms: CommsService
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -54,20 +55,22 @@ fdescribe('MemberslistComponent', () => {
         MatToolbarModule,
        ]
     })
-    .compileComponents().then(
+    .compileComponents().then( () => {
       internal = TestBed.get(InternalService),
-      socket = TestBed.get(WebsocketService)
-    );
+      socket = TestBed.get(WebsocketService),
+      comms = TestBed.get(CommsService)
+    });
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(MemberslistComponent);
     component = fixture.componentInstance;
+    component.sprint_id = "sprint_id1"
     fixture.detectChanges();
   });
 
-  afterEach(()=> {
-
+  afterEach(() => {
+    internal.updateUser(null)
   })
 
   it('should create', () => {
@@ -97,7 +100,7 @@ fdescribe('MemberslistComponent', () => {
   it('should show showVote button to admins only', () => {
     
     //Beginning - no user, no button
-    let show_btn: Element = fixture.debugElement.nativeElement.querySelector("button#btn1")
+    let show_btn: HTMLButtonElement = fixture.debugElement.nativeElement.querySelector("button#btn1")
     expect(show_btn).toBeNull()
     
     let userAdmin: User = {
@@ -107,7 +110,6 @@ fdescribe('MemberslistComponent', () => {
       Admin : true
     };
     internal.updateUser(userAdmin)
-    fixture.whenStable()
     fixture.detectChanges()
 
     //User admin - show button
@@ -117,11 +119,71 @@ fdescribe('MemberslistComponent', () => {
 
     userAdmin.Admin=false
     internal.updateUser(userAdmin)
-    fixture.whenStable()
     fixture.detectChanges()
     
     //User not admin - hide button
     show_btn = fixture.debugElement.nativeElement.querySelector("button#btn1")
     expect(show_btn).toBeNull()
+  })
+
+  it('should show/hide votes by press of a button', () => {
+    spyOn(comms, "showVote")
+
+    let user: User = {
+      "Id": "userId1",
+      "Name": "User 1",
+      "Vote": -1,
+      "Admin": true
+    }
+    let users: User[] = [
+      {
+          "Id": "userId1",
+          "Name": "User 1",
+          "Vote": -3,
+          "Admin": true
+      },
+      {
+          "Id": "userId2",
+          "Name": "User 2",
+          "Vote": -1,
+          "Admin": false
+      }
+    ]
+    internal.updateUser(user)
+    internal.updateUsers(users)
+    fixture.detectChanges()
+    
+    let table_row_1: HTMLTableRowElement = fixture.debugElement.nativeElement.querySelector("tbody > tr")
+
+    expect(table_row_1.cells[0].innerHTML).toBe(" User 1 👑 ")
+    expect(table_row_1.cells[1].innerHTML).toBe(" ✅ ")
+    
+    let show_btn: HTMLButtonElement = fixture.debugElement.nativeElement.querySelector("button#btn1")
+    show_btn.click()
+
+    for (let i of users) {
+      i.Vote = 3
+    }
+    internal.updateUsers(users)
+    fixture.detectChanges()
+
+    expect(comms.showVote).toHaveBeenCalledWith("sprint_id1", "userId1", true)
+    expect(show_btn.innerHTML).toBe("Hide Vote")
+    expect(table_row_1).toHaveClass("mat-row")
+
+    expect(table_row_1.cells[0].innerHTML).toBe(" User 1 👑 ")
+    expect(table_row_1.cells[1].innerHTML).toBe(" 3 ")
+
+    show_btn.click()
+    for (let i of users) {
+      i.Vote = -1
+    }
+    internal.updateUsers(users)
+    fixture.detectChanges()
+    
+    expect(comms.showVote).toHaveBeenCalledWith("sprint_id1", "userId1", false)
+    expect(table_row_1.cells[0].innerHTML).toBe(" User 1 👑 ")
+    expect(table_row_1.cells[1].innerHTML).toBe("   ")
+    expect(show_btn.innerHTML).toBe("Show Vote")
   })
 });
