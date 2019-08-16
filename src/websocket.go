@@ -114,8 +114,9 @@ func (c *Client) formMessage (sprintId string) []byte {
 func (c *Client) writePump() {
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
+		delete(us.AllUsers[c.Hub.Id].Users, c.Id)
 		newMessage := c.formMessage(c.Hub.Id)
-		c.Hub.Broadcast <- newMessage;
+		c.Hub.Broadcast <- newMessage
 		ticker.Stop()
 		err := c.Conn.Close()
 		if err != nil {
