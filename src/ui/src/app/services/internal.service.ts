@@ -74,5 +74,4 @@ export class InternalService {
   updateRounds(rounds: Round[]) {
     this.rounds.next(rounds);
   }
-
 }

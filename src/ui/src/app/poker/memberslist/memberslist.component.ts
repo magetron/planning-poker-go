@@ -26,6 +26,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
 
   btn1text: string;
   displayedColumns: string[] = ['NAME', 'VOTE'];
+  showVote: boolean = false;
 
   constructor(
     private socket: WebsocketService,
@@ -47,15 +48,11 @@ export class MemberslistComponent extends Cardify implements OnInit {
       }
     });
     this.internal.rounds$.subscribe((msg: Round[]) => {
-      if (msg) {
-        let archived = msg[msg.length-1].Archived
-        let button = document.getElementById("btn1")
-        if (archived && button.classList.contains("showV")) {
-          button.classList.toggle("showV")
+        if (msg && msg[msg.length-1].Archived) {
+          this.showVote = false
         }
-      }
     })
-  }
+}
 
   socketBroadcast() {
     this.socket.send("update");
@@ -117,19 +114,11 @@ export class MemberslistComponent extends Cardify implements OnInit {
   }
 
   showVoteFunc(): void {
-
+    this.showVote =! this.showVote;
     if (this.user.Admin == true) {
-      let btn = document.getElementById("btn1")
-      let state = btn.classList.toggle("showV")
-      
-      this.internal.showVote(state)
-      if (state) {
-        this.btn1text = "Hide Vote";
-      } else {
-        this.btn1text = "Show Vote";
-      }
-        
-      this.comms.showVote(this.sprint_id, this.user.Id, state).subscribe((response => {
+
+      this.internal.showVote(this.showVote) 
+      this.comms.showVote(this.sprint_id, this.user.Id, this.showVote).subscribe((response => {
         if (response.status === 200) {
           this.socketBroadcast();
         } else {

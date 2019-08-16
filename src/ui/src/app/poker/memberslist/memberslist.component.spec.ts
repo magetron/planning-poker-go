@@ -136,7 +136,7 @@ describe('MemberslistComponent', () => {
       //User admin - show button
       show_btn = fixture.debugElement.nativeElement.querySelector("button#btn1")
       expect(show_btn).toBeDefined()
-      expect(show_btn.innerHTML).toBe("Show Vote")
+      expect(show_btn.innerHTML).toBe("Show Votes")
   
       user.Admin=false
       internal.updateUser(user)
@@ -167,7 +167,7 @@ describe('MemberslistComponent', () => {
       fixture.detectChanges()
   
       expect(comms.showVote).toHaveBeenCalledWith("sprint_id1", "userId1", true)
-      expect(show_btn.innerHTML).toBe("Hide Vote")
+      expect(show_btn.innerHTML).toBe("Hide Votes")
       expect(table_row_1).toHaveClass("mat-row")
   
       expect(table_row_1.cells[0].innerHTML).toBe(" User 1 👑 ")
@@ -183,7 +183,7 @@ describe('MemberslistComponent', () => {
       expect(comms.showVote).toHaveBeenCalledWith("sprint_id1", "userId1", false)
       expect(table_row_1.cells[0].innerHTML).toBe(" User 1 👑 ")
       expect(table_row_1.cells[1].innerHTML).toBe("   ")
-      expect(show_btn.innerHTML).toBe("Show Vote")
+      expect(show_btn.innerHTML).toBe("Show Votes")
     })
   
     it("should not allow transferring master to oneself", () => {
