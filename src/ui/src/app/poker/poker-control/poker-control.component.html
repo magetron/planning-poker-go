@@ -90,11 +90,6 @@
 </div>
 <br>
 
-<footer class="container-fluid text-center">
-  <mat-toolbar  color="primary" >
-    Invitation Link: <a (click)="copylink(baseUrl + '/join/' + sprint_id)" style="color:white">{{baseUrl}}/join/{{sprint_id}}</a>
-    <div fxFlex fxLayoutAlign="end">
-        <button (click)="copylink(baseUrl + '/join/' + sprint_id)" mat-flat-button color="accent"> COPY </button>
-    </div>
-  </mat-toolbar>
-</footer>
+
+<app-share></app-share>
+

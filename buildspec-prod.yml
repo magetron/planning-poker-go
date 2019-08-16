@@ -13,7 +13,7 @@ phases:
        - cd src 
        - go get -v -t ./ 
        - apt-get update 
-       - apt-get -y install nodejs 
+       - apt-get -y install nodejs
        - cd ui && npm install
        - apt-get install -y chromium-browser 
        - cd .. && make deploy
