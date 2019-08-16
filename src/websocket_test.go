@@ -109,9 +109,7 @@ func TestUpdate(t *testing.T) {
 	}
 	_, p, err := ws.ReadMessage()
 	
-	log.Print(string(p))
-	
-	assert.True(t, `[[{"Id":"`+userId1+`","Name":"New User 1","Vote":-1,"Admin":true},{"Id":"`+userId2+`","Name":"New User 2","Vote":-1,"Admin":false}],{"Rounds":[{"Id":1,"Name":"Task 1","Med":0,"Avg":0,"Final":0,"Archived":false,"CreationTime":` + creationTime + `}],"SprintId":"` + sprintId + `"}]` == string(p) || `[[{"Id":"`+userId2+`","Name":"New User 2","Vote":-1,"Admin":false},{"Id":"`+userId1+`","Name":"New User 1","Vote":-1,"Admin":true}],{"Rounds":[{"Id":1,"Name":"Task 1","Med":0,"Avg":0,"Final":0,"Archived":false,"CreationTime":` + creationTime + `}],"SprintId":"` + sprintId + `"}]` == string(p), "Websocket should be Two Users object.")
+	assert.True(t, `[{"Users":{"` + userId1 + `":{"Id":"` + userId1 + `","Name":"New User 1","Vote":-1,"Admin":true},"` + userId2 + `":{"Id":"` + userId2 + `","Name":"New User 2","Vote":-1,"Admin":false}},"SprintId":"` + sprintId + `","VotesShown":false,"AdminId":"` + userId1 + `"},{"Rounds":[{"Id":1,"Name":"Task 1","Med":0,"Avg":0,"Final":0,"Archived":false,"CreationTime":` + creationTime + `}],"SprintId":"` + sprintId + `"}]` == string(p) || `[{"Users":{"` + userId2 + `":{"Id":"` + userId2 + `","Name":"New User 2","Vote":-1,"Admin":false},"` + userId1 + `":{"Id":"` + userId1 + `","Name":"New User 1","Vote":-1,"Admin":true}},"SprintId":"` + sprintId + `","VotesShown":false,"AdminId":"` + userId1 + `"},{"Rounds":[{"Id":1,"Name":"Task 1","Med":0,"Avg":0,"Final":0,"Archived":false,"CreationTime":` + creationTime + `}],"SprintId":"` + sprintId + `"}]` == string(p), "Websocket should be Two Users object.")
 
 }
 
@@ -217,7 +215,6 @@ func TestConnHub (t *testing.T) {
 
 	_, p1, err1 = ws1_1.ReadMessage()
 	assert.Equal(t, `[[{"Id":"` + userId1 + `","Name":"New User Sprint 1","Vote":-1,"Admin":true}]]`, string(p1))
-
 
 	url2 := "ws" + strings.Trim(server.URL, "http") + "/v2/info/" + sprintId2
 
