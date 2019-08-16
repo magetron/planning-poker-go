@@ -128,7 +128,11 @@ func (c *Client) writePump() {
 			if err != nil {
 				log.Print(err)
 			}
-			_, _ = w.Write(message)
+
+			_, err = w.Write(message)
+			if err != nil {
+				log.Print(err)
+			}
 
 			sendLen := len(c.Send)
 
