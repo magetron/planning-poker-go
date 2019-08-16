@@ -97,126 +97,109 @@ describe('MemberslistComponent', () => {
     expect(component.analysisVote(votes)).toEqual([0.5, (0.5+3)/2, (3+5+0.5+0.5)/4, 2])
   })
 
-  it('should show showVote button to admins only', () => {
-    
-    //Beginning - no user, no button
-    let show_btn: HTMLButtonElement = fixture.debugElement.nativeElement.querySelector("button#btn1")
-    expect(show_btn).toBeNull()
-    
-    let userAdmin: User = {
-      Name : "user",
-      Id : "userId",
-      Vote : -1,
-      Admin : true
-    };
-    internal.updateUser(userAdmin)
-    fixture.detectChanges()
+  describe('with users', () => {
+    beforeEach(()=> {
+      spyOn(comms, "appointSuccessor")
+      spyOn(comms, "showVote")
 
-    //User admin - show button
-    show_btn = fixture.debugElement.nativeElement.querySelector("button#btn1")
-    expect(show_btn).toBeDefined()
-    expect(show_btn.innerHTML).toBe("Show Vote")
-
-    userAdmin.Admin=false
-    internal.updateUser(userAdmin)
-    fixture.detectChanges()
-    
-    //User not admin - hide button
-    show_btn = fixture.debugElement.nativeElement.querySelector("button#btn1")
-    expect(show_btn).toBeNull()
-  })
-
-  it('should show/hide votes by press of a button', () => {
-    spyOn(comms, "showVote")
-
-    let user: User = {
-      "Id": "userId1",
-      "Name": "User 1",
-      "Vote": -3,
-      "Admin": true
-    }
-    let users: User[] = [{
-          "Id": "userId1",
-          "Name": "User 1",
-          "Vote": -3,
-          "Admin": true
-      },
-      {
-          "Id": "userId2",
-          "Name": "User 2",
-          "Vote": -1,
-          "Admin": false
-      }]
-    internal.updateUser(user)
-    internal.updateUsers(users)
-    fixture.detectChanges()
-    
-    let table_row_1: HTMLTableRowElement = fixture.debugElement.nativeElement.querySelector("tbody > tr")
-
-    expect(table_row_1.cells[0].innerHTML).toBe(" User 1 👑 ")
-    expect(table_row_1.cells[1].innerHTML).toBe(" ✅ ")
-    
-    let show_btn: HTMLButtonElement = fixture.debugElement.nativeElement.querySelector("button#btn1")
-    show_btn.click()
-
-    for (let i of users) {
-      i.Vote = 3
-    }
-    internal.updateUsers(users)
-    fixture.detectChanges()
-
-    expect(comms.showVote).toHaveBeenCalledWith("sprint_id1", "userId1", true)
-    expect(show_btn.innerHTML).toBe("Hide Vote")
-    expect(table_row_1).toHaveClass("mat-row")
-
-    expect(table_row_1.cells[0].innerHTML).toBe(" User 1 👑 ")
-    expect(table_row_1.cells[1].innerHTML).toBe(" 3 ")
-
-    show_btn.click()
-    for (let i of users) {
-      i.Vote = -1
-    }
-    internal.updateUsers(users)
-    fixture.detectChanges()
-    
-    expect(comms.showVote).toHaveBeenCalledWith("sprint_id1", "userId1", false)
-    expect(table_row_1.cells[0].innerHTML).toBe(" User 1 👑 ")
-    expect(table_row_1.cells[1].innerHTML).toBe("   ")
-    expect(show_btn.innerHTML).toBe("Show Vote")
-  })
-
-  it("should not allow transferring master to oneself", () => {
-    spyOn(comms, "appointSuccessor")
-    let user: User = {
-      "Id": "userId1",
-      "Name": "User 1",
-      "Vote": -3,
-      "Admin": true
-    }
-    let users: User[] = [
-      {
-          "Id": "userId1",
-          "Name": "User 1",
-          "Vote": -3,
-          "Admin": true
-      },
-      {
-          "Id": "userId2",
-          "Name": "User 2",
-          "Vote": -1,
-          "Admin": false
+      let user: User = {
+        "Id": "userId1",
+        "Name": "User 1",
+        "Vote": -3,
+        "Admin": true
       }
-    ]
-    internal.updateUser(user)
-    internal.updateUsers(users)
-    fixture.detectChanges()
-    let table_row_1: HTMLTableRowElement = fixture.debugElement.nativeElement.querySelector("tbody > tr")
-    table_row_1.click()
+      let users: User[] = [{
+            "Id": "userId1",
+            "Name": "User 1",
+            "Vote": -3,
+            "Admin": true
+        },
+        {
+            "Id": "userId2",
+            "Name": "User 2",
+            "Vote": -1,
+            "Admin": false
+        }]
+      internal.updateUser(user)
+      internal.updateUsers(users)
+    })
 
-    expect(comms.appointSuccessor).toHaveBeenCalledTimes(0)
-  })
+    it('should show showVote button to admins only', () => {
+    
+      //Beginning - no user, no button
+      let show_btn: HTMLButtonElement = fixture.debugElement.nativeElement.querySelector("button#btn1")
+      expect(show_btn).toBeNull()
+      
+      let user: User = component.user
+      fixture.detectChanges()
   
-  it("should transfer Admin status correctly", () => {
-    //TODO!
+      //User admin - show button
+      show_btn = fixture.debugElement.nativeElement.querySelector("button#btn1")
+      expect(show_btn).toBeDefined()
+      expect(show_btn.innerHTML).toBe("Show Vote")
+  
+      user.Admin=false
+      internal.updateUser(user)
+      fixture.detectChanges()
+      
+      //User not admin - hide button
+      show_btn = fixture.debugElement.nativeElement.querySelector("button#btn1")
+      expect(show_btn).toBeNull()
+    })
+  
+  
+    it('should show/hide votes by press of a button', () => {
+      fixture.detectChanges()
+      
+      let table_row_1: HTMLTableRowElement = fixture.debugElement.nativeElement.querySelector("tbody > tr")
+  
+      expect(table_row_1.cells[0].innerHTML).toBe(" User 1 👑 ")
+      expect(table_row_1.cells[1].innerHTML).toBe(" ✅ ")
+      
+      let show_btn: HTMLButtonElement = fixture.debugElement.nativeElement.querySelector("button#btn1")
+      show_btn.click()
+  
+      let users = component.users
+      for (let i of users) {
+        i.Vote = 3
+      }
+      internal.updateUsers(users)
+      fixture.detectChanges()
+  
+      expect(comms.showVote).toHaveBeenCalledWith("sprint_id1", "userId1", true)
+      expect(show_btn.innerHTML).toBe("Hide Vote")
+      expect(table_row_1).toHaveClass("mat-row")
+  
+      expect(table_row_1.cells[0].innerHTML).toBe(" User 1 👑 ")
+      expect(table_row_1.cells[1].innerHTML).toBe(" 3 ")
+  
+      show_btn.click()
+      for (let i of users) {
+        i.Vote = -1
+      }
+      internal.updateUsers(users)
+      fixture.detectChanges()
+      
+      expect(comms.showVote).toHaveBeenCalledWith("sprint_id1", "userId1", false)
+      expect(table_row_1.cells[0].innerHTML).toBe(" User 1 👑 ")
+      expect(table_row_1.cells[1].innerHTML).toBe("   ")
+      expect(show_btn.innerHTML).toBe("Show Vote")
+    })
+  
+    it("should not allow transferring master to oneself", () => {
+      fixture.detectChanges()
+      let table_row_1: HTMLTableRowElement = fixture.debugElement.nativeElement.querySelector("tbody > tr")
+      table_row_1.click()
+  
+      expect(comms.appointSuccessor).toHaveBeenCalledTimes(0)
+    })
+    
+    it("should transfer Admin status correctly", () => {
+      fixture.detectChanges()
+      let table_row_1: HTMLTableRowElement = fixture.debugElement.nativeElement.querySelector("tbody > tr:nth-child(2)")
+      table_row_1.click()
+  
+      expect(comms.appointSuccessor).toHaveBeenCalledWith('sprint_id1', 'userId1', 'userId2')
+    })
   })
 });
