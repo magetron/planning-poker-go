@@ -214,7 +214,7 @@ func TestConnHub (t *testing.T) {
 	assert.Equal(t, `[{"Users":{"` + userId1 + `":{"Id":"` + userId1 + `","Name":"New User Sprint 1","Vote":-1,"Admin":true}},"SprintId":"` + sprintId1 + `","VotesShown":false,"AdminId":"` + userId1 + `"}]`, string(p1))
 
 	_, p1, err1 = ws1_1.ReadMessage()
-	assert.Equal(t, `[[{"Id":"` + userId1 + `","Name":"New User Sprint 1","Vote":-1,"Admin":true}]]`, string(p1))
+	assert.Equal(t, `[{"Users":{"` + userId1 + `":{"Id":"` + userId1 + `","Name":"New User Sprint 1","Vote":-1,"Admin":true}},"SprintId":"` + sprintId1 + `","VotesShown":false,"AdminId":"` + userId1 + `"}]`, string(p1))
 
 	url2 := "ws" + strings.Trim(server.URL, "http") + "/v2/info/" + sprintId2
 
@@ -234,5 +234,5 @@ func TestConnHub (t *testing.T) {
 	}
 
 	_, p2, err2 := ws2.ReadMessage()
-	assert.Equal(t, `[[{"Id":"` + userId2 + `","Name":"New User Sprint 2","Vote":-1,"Admin":true}]]`, string(p2))
+	assert.Equal(t, `[{"Users":{"` + userId2 +`":{"Id":"` + userId2 + `","Name":"New User Sprint 2","Vote":-1,"Admin":true}},"SprintId":"` + sprintId2 + `","VotesShown":false,"AdminId":"` + userId2 + `"}]`, string(p2))
 }
