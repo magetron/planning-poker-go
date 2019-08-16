@@ -111,6 +111,57 @@ func TestUpdate(t *testing.T) {
 	
 	assert.True(t, `[{"Users":{"` + userId1 + `":{"Id":"` + userId1 + `","Name":"New User 1","Vote":-1,"Admin":true},"` + userId2 + `":{"Id":"` + userId2 + `","Name":"New User 2","Vote":-1,"Admin":false}},"SprintId":"` + sprintId + `","VotesShown":false,"AdminId":"` + userId1 + `"},{"Rounds":[{"Id":1,"Name":"Task 1","Med":0,"Avg":0,"Final":0,"Archived":false,"CreationTime":` + creationTime + `}],"SprintId":"` + sprintId + `"}]` == string(p) || `[{"Users":{"` + userId2 + `":{"Id":"` + userId2 + `","Name":"New User 2","Vote":-1,"Admin":false},"` + userId1 + `":{"Id":"` + userId1 + `","Name":"New User 1","Vote":-1,"Admin":true}},"SprintId":"` + sprintId + `","VotesShown":false,"AdminId":"` + userId1 + `"},{"Rounds":[{"Id":1,"Name":"Task 1","Med":0,"Avg":0,"Final":0,"Archived":false,"CreationTime":` + creationTime + `}],"SprintId":"` + sprintId + `"}]` == string(p), "Websocket should be Two Users object.")
 
+	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
+		newReqBody, newReqBodyErr := json.Marshal(map[string]float64{
+			"Vote": 8,
+		})
+		if newReqBodyErr != nil {
+			log.Fatal(newReqBodyErr)
+		}
+		newReq, newErr := http.NewRequest("PUT", "v2/sprints/"+sprintId+"/users/"+userId1, bytes.NewBuffer(newReqBody))
+		if newErr != nil {
+			log.Fatal(newErr)
+		}
+		newReq.Header.Set("Content-Type", "application/json")
+		return newReq
+	}), func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for User voting.")
+	})
+
+	if err := ws.WriteMessage(websocket.TextMessage, []byte("update")); err != nil {
+		t.Fatalf("%v", err)
+	}
+	_, p, err = ws.ReadMessage()
+
+	assert.True(t, `[{"Users":{"` + userId1 + `":{"Id":"` + userId1 + `","Name":"New User 1","Vote":-3,"Admin":true},"` + userId2 + `":{"Id":"` + userId2 + `","Name":"New User 2","Vote":-1,"Admin":false}},"SprintId":"` + sprintId + `","VotesShown":false,"AdminId":"` + userId1 + `"},{"Rounds":[{"Id":1,"Name":"Task 1","Med":0,"Avg":0,"Final":0,"Archived":false,"CreationTime":` + creationTime + `}],"SprintId":"` + sprintId + `"}]` == string(p) || `[{"Users":{"` + userId2 + `":{"Id":"` + userId2 + `","Name":"New User 2","Vote":-1,"Admin":false},"` + userId1 + `":{"Id":"` + userId1 + `","Name":"New User 1","Vote":-3,"Admin":true}},"SprintId":"` + sprintId + `","VotesShown":false,"AdminId":"` + userId1 + `"},{"Rounds":[{"Id":1,"Name":"Task 1","Med":0,"Avg":0,"Final":0,"Archived":false,"CreationTime":` + creationTime + `}],"SprintId":"` + sprintId + `"}]` == string(p), "Websocket should be Two Users object.")
+
+	goweb.Test(t, goweb.RequestBuilderFunc(func() *http.Request {
+		newReqBody, newReqBodyErr := json.Marshal(map[string]bool{
+			"VoteShown": true,
+		})
+		if newReqBodyErr != nil {
+			log.Fatal(newReqBodyErr)
+		}
+		newReq, newErr := http.NewRequest("POST", "v2/sprints/"+sprintId+"/users/"+userId1+"/showvote/", bytes.NewBuffer(newReqBody))
+		if newErr != nil {
+			log.Fatal(newErr)
+		}
+		newReq.Header.Set("Content-Type", "application/json")
+		return newReq
+	}), func(t *testing.T, response *testifyhttp.TestResponseWriter) {
+		assert.Equal(t, http.StatusOK, response.StatusCode, "Status code should be OK for master Showing Votes.")
+	})
+
+	if err := ws.WriteMessage(websocket.TextMessage, []byte("update")); err != nil {
+		t.Fatalf("%v", err)
+	}
+	_, p, err = ws.ReadMessage()
+
+	log.Print(string(p))
+
+	assert.True(t, `[{"Users":{"` + userId1 + `":{"Id":"` + userId1 + `","Name":"New User 1","Vote":8,"Admin":true},"` + userId2 + `":{"Id":"` + userId2 + `","Name":"New User 2","Vote":-1,"Admin":false}},"SprintId":"` + sprintId + `","VotesShown":true,"AdminId":"` + userId1 + `"},{"Rounds":[{"Id":1,"Name":"Task 1","Med":0,"Avg":0,"Final":0,"Archived":false,"CreationTime":` + creationTime + `}],"SprintId":"` + sprintId + `"}]` == string(p) || `[{"Users":{"` + userId2 + `":{"Id":"` + userId2 + `","Name":"New User 2","Vote":-1,"Admin":false},"` + userId1 + `":{"Id":"` + userId1 + `","Name":"New User 1","Vote":8,"Admin":true}},"SprintId":"` + sprintId + `","VotesShown":true,"AdminId":"` + userId1 + `"},{"Rounds":[{"Id":1,"Name":"Task 1","Med":0,"Avg":0,"Final":0,"Archived":false,"CreationTime":` + creationTime + `}],"SprintId":"` + sprintId + `"}]` == string(p), "Websocket should be Two Users object.")
+
+
 }
 
 func TestConnHub (t *testing.T) {
