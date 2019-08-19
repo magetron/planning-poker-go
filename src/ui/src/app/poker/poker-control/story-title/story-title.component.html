@@ -1,8 +1,0 @@
-<mat-card class="background-warn">
-  <mat-card-title fxLayoutAlign="center">
-    <div *ngIf="round.Archived; else notArchivedTitle"><h3>Story Title: none </h3></div>
-    <ng-template #notArchivedTitle>
-      <h3>Story Title: {{round.Name}}</h3>
-    </ng-template>
-  </mat-card-title>
-</mat-card>
