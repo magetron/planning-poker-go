@@ -44,7 +44,7 @@ func mapRoutesV2() {
 	_ = goweb.MapController("v2/sprints/[sprintId]/rounds", rc)
 	_ = goweb.MapController("v2/sprints/[sprintId]/users", us)
 
-	_, _ = goweb.Map("v2/info/[sprintId]", hc.handleHubs)
+	_, _ = goweb.Map("v2/info/[sprintId]/users/[userId]", hc.handleHubs)
 
 	_, _ = goweb.Map("POST", "v2/gc", garbageCollector)
 
