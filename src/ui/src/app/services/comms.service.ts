@@ -32,7 +32,12 @@ export interface StatusResponse {
 
 export interface UserResponse {
   s: number;
-  d: User[];
+  d: {
+    "Users" : {[key: string]: User},
+    "SprintId" : string,
+    "VotesShown" : boolean,
+    "AdminId" : string
+  };
 }
 
 @Injectable({
@@ -74,8 +79,8 @@ export class CommsService {
     return result;
   }
 
-  getSprintUsers(sprint_id: string) : Observable<ComplexResponse>{
-    const result = this.httpClient.get<ComplexResponse>(
+  getSprintUsers(sprint_id: string) : Observable<UserResponse>{
+    const result = this.httpClient.get<UserResponse>(
       `${globals.apiUrl}/sprints/${sprint_id}/users`, HTTPOPTIONS);
     return result;
   }
