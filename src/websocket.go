@@ -114,13 +114,33 @@ func (c *Client) formMessage (sprintId string) []byte {
 func (c *Client) writePump() {
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
-		log.Print("did execute close down")
-		if us.AllUsers[c.Hub.Id].AdminId == c.Id {
-			//set another admin according to certain rules
+		_, exist := us.AllUsers[c.Hub.Id]
+		if exist {
+			_, exist := us.AllUsers[c.Hub.Id].Users[c.Id]
+			if exist {
+				if us.AllUsers[c.Hub.Id].AdminId == c.Id {
+					setSuccess := false
+					for _, user := range us.AllUsers[c.Hub.Id].Users {
+						if user.Id != us.AllUsers[c.Hub.Id].AdminId {
+							us.AllUsers[c.Hub.Id].Users[us.AllUsers[c.Hub.Id].AdminId].Admin = false
+							user.Admin = true
+							us.AllUsers[c.Hub.Id].AdminId = user.Id
+							setSuccess = true
+							break
+						}
+					}
+					if !setSuccess {
+						us.AllUsers[c.Hub.Id].Users = nil
+					} else {
+						delete(us.AllUsers[c.Hub.Id].Users, c.Id)
+					}
+				} else {
+					delete(us.AllUsers[c.Hub.Id].Users, c.Id)
+				}
+				newMessage := c.formMessage(c.Hub.Id)
+				c.Hub.Broadcast <- newMessage
+			}
 		}
-		delete(us.AllUsers[c.Hub.Id].Users, c.Id)
-		newMessage := c.formMessage(c.Hub.Id)
-		c.Hub.Broadcast <- newMessage
 		ticker.Stop()
 		err := c.Conn.Close()
 		if err != nil {
