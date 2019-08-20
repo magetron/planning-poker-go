@@ -371,22 +371,45 @@ None (Status code 404)
 [
    {
       "Users":{
-         "6558248d-2b64-4ca4-b926-ea52b520e6ca":{
-            "Id":"6558248d-2b64-4ca4-b926-ea52b520e6ca",
-            "Name":"User 2",
-            "Vote":-1,
-            "Admin":false
-         },
-         "758598f8-2439-4e3f-95e6-9396a274c573":{
-            "Id":"758598f8-2439-4e3f-95e6-9396a274c573",
+         "3a80c841-a17d-41e6-bad9-c391d5842b22":{
+            "Id":"3a80c841-a17d-41e6-bad9-c391d5842b22",
             "Name":"User 1",
             "Vote":-1,
             "Admin":true
+         },
+         "5c741402-5089-4e43-a2e9-372fbc1a682c":{
+            "Id":"5c741402-5089-4e43-a2e9-372fbc1a682c",
+            "Name":"User 2",
+            "Vote":-1,
+            "Admin":false
          }
       },
-      "SprintId":"YrgNwGZ0M",
+      "SprintId":"lDx9LJS0M",
       "VotesShown":false,
-      "AdminId":"758598f8-2439-4e3f-95e6-9396a274c573"
+      "AdminId":"3a80c841-a17d-41e6-bad9-c391d5842b22"
+   },
+   {
+      "Rounds":[
+         {
+            "Id":1,
+            "Name":"Round 1",
+            "Med":0,
+            "Avg":0,
+            "Final":0,
+            "Archived":false,
+            "CreationTime":1566292602
+         },
+         {
+            "Id":2,
+            "Name":"Round 2",
+            "Med":0,
+            "Avg":0,
+            "Final":0,
+            "Archived":false,
+            "CreationTime":1566292609
+         }
+      ],
+      "SprintId":"lDx9LJS0M"
    }
 ]
 ```
