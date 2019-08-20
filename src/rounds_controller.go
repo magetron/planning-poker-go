@@ -156,3 +156,37 @@ func (rc *RoundsController) Replace (id string, ctx context.Context) error {
 	return goweb.Respond.WithOK(ctx)
 
 }
+
+
+func (rc *RoundsController) SetTitle (ctx context.Context) error {
+	titleData, err := ctx.RequestData()
+
+	if err != nil {
+		return goweb.API.RespondWithError(ctx, http.StatusInternalServerError, err.Error())
+	}
+
+	sprintId := ctx.PathValue("sprintId")
+	roundIdStr := ctx.PathValue("roundId")
+
+	roundId, convErr := strconv.Atoi(roundIdStr)
+	if convErr != nil {
+		return goweb.API.RespondWithError(ctx, http.StatusInternalServerError, convErr.Error())
+	}
+
+	titleMap := titleData.(map[string]interface{})
+	title := titleMap["Name"].(string)
+
+	rounds, exist := rc.AllRounds[sprintId]
+	if !exist {
+		return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
+	}
+
+	if roundId > len(rounds.Rounds) || roundId < 1 {
+		return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
+	}
+
+	round := rounds.Rounds[roundId - 1]
+	round.Name = title
+	log.Printf("Round %d in Sprint %s is renamed to %s", round.Id, rounds.SprintId, title)
+	return goweb.Respond.WithOK(ctx)
+}
