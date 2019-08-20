@@ -115,6 +115,8 @@ func mapRoutesV1() {
 
 func main() {
 
+	DEV, _ = strconv.ParseBool(os.Getenv("PP_DEV"))
+
 	mapRoutesV2()
 	mapRoutesV1()
 
