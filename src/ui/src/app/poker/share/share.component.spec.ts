@@ -5,18 +5,19 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser'
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { DebugElement } from '@angular/core'
+import { ActivatedRoute, convertToParamMap } from '@angular/router';
 
-import { Sprint } from '../models/sprint';
-import { ShareComponent } from './share.component';
-import { TopBarComponent } from '../top-bar/top-bar.component';
-import { AppRoutingModule } from '../app-routing.module';
-import { NewSprintComponent } from '../new-sprint/new-sprint.component';
-import { JoinComponent } from '../join/join.component';
-import { PokerCardComponent } from '../poker/poker-card/poker-card.component';
-import { PokerControlComponent } from '../poker/poker-control/poker-control.component';
-import { MemberslistComponent } from '../poker/memberslist/memberslist.component';
+import { Sprint } from 'src/app/models/sprint';
+import { ShareComponent } from 'src/app/poker/share/share.component';
+import { TopBarComponent } from 'src/app/top-bar/top-bar.component';
+import { AppRoutingModule } from 'src/app/app-routing.module';
+import { NewSprintComponent } from 'src/app/new-sprint/new-sprint.component';
+import { JoinComponent } from 'src/app/join/join.component';
+import { PokerCardComponent } from 'src/app/poker/poker-card/poker-card.component';
+import { PokerControlComponent } from 'src/app/poker/poker-control/poker-control.component';
+import { MemberslistComponent } from 'src/app/poker/memberslist/memberslist.component';
 import { environment } from 'src/environments/environment';
-import { ElapsedTimerComponent } from '../poker/elapsed-timer/elapsed-timer.component';
+import { ElapsedTimerComponent } from 'src/app/poker/elapsed-timer/elapsed-timer.component';
 
 describe('ShareComponent', () => {
   let component: ShareComponent;
@@ -24,6 +25,12 @@ describe('ShareComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: ActivatedRoute,
+          useValue: {snapshot: {paramMap: convertToParamMap({'sprint_id': 'test'})}}
+        }
+      ],
       declarations: [
          ShareComponent,
          TopBarComponent,
@@ -53,11 +60,6 @@ describe('ShareComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ShareComponent);
     component = fixture.componentInstance;
-    component.share = {
-      "Id" : "testSprint",
-      "Name" : "Sprint 1",
-      "CreationTime": "2019-07-31T11:28:20.601309+01:00",
-    }
     fixture.detectChanges();
     fixture.debugElement.query(By.css('button'));
   });
@@ -66,19 +68,14 @@ describe('ShareComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should show correct sprint name', ()=> {
-    let visible_link: string = fixture.debugElement.query(By.css("mat-card-title")).childNodes[0].nativeNode.data
-    expect(visible_link).toEqual(" A session has been created for " + "Sprint 1" + ". ")
-  })
-
   it('should show correct url', ()=> {
-    let visible_link: string = fixture.debugElement.query(By.css("mat-card-subtitle a p")).childNodes[0].nativeNode.data
-    expect(visible_link).toEqual(" " + environment.baseUrl + "/join/" + "testSprint" + " ")
+    let visible_link: string = fixture.debugElement.query(By.css("mat-toolbar a")).childNodes[0].nativeNode.data
+    expect(visible_link).toEqual('http://localhost:4200/#/join/' + component.sprint_id)
   })
 
   it('should lead to correct url', ()=> {
-    let link: string = fixture.debugElement.query(By.css("mat-card-subtitle a")).properties.href
-    expect(link).toEqual('#' + "/join/" + "testSprint")
+    let link: string = fixture.debugElement.query(By.css("mat-toolbar a")).properties.href
+    expect(link).toEqual('#' + "/join/" + component.sprint_id)
   })
 
   //TODO: actually test clipboard?

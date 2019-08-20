@@ -11,7 +11,7 @@ import { NewSprintComponent } from '../../new-sprint/new-sprint.component';
 import { JoinComponent } from '../../join/join.component';
 import { PokerControlComponent } from '../poker-control/poker-control.component';
 import { MemberslistComponent } from '../memberslist/memberslist.component';
-import { ShareComponent } from 'src/app/share/share.component';
+import { ShareComponent } from 'src/app/poker/share/share.component';
 import { ElapsedTimerComponent } from '../elapsed-timer/elapsed-timer.component';
 
 describe('PokerCardComponent', () => {
