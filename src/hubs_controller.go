@@ -5,20 +5,26 @@ import (
 )
 
 type HubsController struct {
-	Hubs []*ConnHub
+	Hubs map[string]*ConnHub
 }
 
 func (hc *HubsController) handleHubs (ctx context.Context) error {
-	sprintId := ctx.PathValue("sprintId");
-	for _, hub := range hc.Hubs {
-		if hub.Id == sprintId {
-			err := wsHandler(sprintId, hub, ctx)
-			return err
-		}
+	if hc.Hubs == nil {
+		hc.Hubs = make(map[string]*ConnHub)
 	}
-	hub := NewConnHub(sprintId)
-	go hub.Run()
-	hc.Hubs = append(hc.Hubs, hub)
-	err := wsHandler(sprintId, hub, ctx)
-	return err
+
+	sprintId := ctx.PathValue("sprintId")
+	userId := ctx.PathValue("userId")
+	hub, exist := hc.Hubs[sprintId]
+
+	if exist {
+		err := wsHandler(sprintId, userId, hub, ctx)
+		return err
+	} else {
+		hub := NewConnHub(sprintId)
+		go hub.Run()
+		hc.Hubs[sprintId] = hub
+		err := wsHandler(sprintId, userId, hub, ctx)
+		return err
+	}
 }

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
 	"time"
@@ -12,7 +11,7 @@ import (
 )
 
 type SprintsController struct {
-	Sprints []*Sprint
+	Sprints map[string]*Sprint
 }
 
 func (sc *SprintsController) Before(ctx context.Context) error {
@@ -22,97 +21,70 @@ func (sc *SprintsController) Before(ctx context.Context) error {
 
 func (sc *SprintsController) Create(ctx context.Context) error {
 	data, dataErr := ctx.RequestData()
+
 	if dataErr != nil {
 		return goweb.API.RespondWithError(ctx, http.StatusInternalServerError, dataErr.Error())
 	}
 
-	sid, idErr := shortid.New(1, shortid.DefaultABC, 2342)
-	if idErr != nil {
-		return goweb.API.RespondWithError(ctx, http.StatusInternalServerError, idErr.Error())
-	}
+	sid, _ := shortid.New(1, shortid.DefaultABC, 2342)
 
 	dataMap := data.(map[string]interface{})
 
+	if sc.Sprints == nil {
+		sc.Sprints = make(map[string]*Sprint)
+	}
+
 	sprint := new(Sprint)
-	newid, _ := sid.Generate()
-	sprint.Id = newid
+	newId, _ := sid.Generate()
+	sprint.Id = newId
 	sprint.Name = dataMap["Name"].(string)
 	sprint.CreationTime = time.Now()
 
-	sc.Sprints = append(sc.Sprints, sprint)
-	log.Printf("New Sprint with SprintId %s", sprint.Id)
+	sc.Sprints[newId] = sprint
+	log.Printf("New Sprint with SprintId %s", newId)
 
-	return goweb.API.RespondWithData(ctx, newid)
+	return goweb.API.RespondWithData(ctx, newId)
 }
 
 func (sc *SprintsController) ReadMany(ctx context.Context) error {
 
 	if sc.Sprints == nil {
-		sc.Sprints = make([]*Sprint, 0)
+		return goweb.API.RespondWithData(ctx, make(map[string]*Sprint))
 	}
 
-	if DEV {
-		log.Print("Accessed all Sprints Information")
-	}
+	log.Print("Accessed all Sprints Information")
 
 	return goweb.API.RespondWithData(ctx, sc.Sprints)
 }
 
 func (sc *SprintsController) Read(id string, ctx context.Context) error {
 
-	for _, sprint := range sc.Sprints {
-		if sprint.Id == id {
-			return goweb.API.RespondWithData(ctx, sprint)
-		}
+	sprint, exist := sc.Sprints[id]
+
+	if !exist {
+		return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 	}
 
-	if DEV {
-		log.Printf("Accessed Sprint %s Information", id)
-	}
-
-	return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
+	log.Printf("Accessed Sprint %s Information", id)
+	return goweb.API.RespondWithData(ctx, sprint)
 }
 
 func (sc *SprintsController) DeleteMany(ctx context.Context) error {
-	sc.Sprints = make([]*Sprint, 0)
+	sc.Sprints = nil
 	log.Print("IMPORTANT : Deleted All Sprints")
 	return goweb.Respond.WithOK(ctx)
 }
 
 func (sc *SprintsController) Delete(id string, ctx context.Context) error {
-	newList := make([]*Sprint, 0)
-	for _, sprint := range sc.Sprints {
-		if sprint.Id != id {
-			newList = append(newList, sprint)
-		}
+
+	_, exist := sc.Sprints[id]
+
+	if !exist {
+		return goweb.Respond.WithStatus(ctx, http.StatusNotFound)
 	}
-	sc.Sprints = newList
+
+	delete(sc.Sprints, id)
 	log.Printf("Deleted Sprint %s", id)
 
 	return goweb.Respond.WithOK(ctx)
-}
-
-func (sc *SprintsController) Update (conn websocket.Conn) {
-	for {
-		messageType, p, err := conn.ReadMessage()
-		if err != nil {
-			log.Println(err)
-			return
-		}
-		log.Printf("Sprint coffee websocket received id: %s", string(p))
-		for _, sprint := range sc.Sprints {
-			if sprint.Id == string(p) {
-				statusStr := ""
-				if time.Now().Sub(sprint.CreationTime).Seconds() > 15 {
-					statusStr = "true"
-				} else {
-					statusStr = "false"
-				}
-				if err := conn.WriteMessage(messageType, []byte(statusStr)); err != nil {
-					log.Println(err)
-					return
-				}
-			}
-		}
-	}
 }

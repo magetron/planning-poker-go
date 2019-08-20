@@ -17,6 +17,31 @@ const HTTPOPTIONS_NO_BODY = {
   observe: "response" as 'body',
 }
 
+export interface SimpleResponse {
+  s: number;
+  d: string;
+}
+
+export interface ComplexResponse {
+  s: number;
+  d: object;
+}
+
+export interface StatusResponse {
+  status: number;
+}
+
+export interface UserResponse {
+  s: number;
+  d: {
+    Users : {[key: string]: User},
+    Rounds : {[key: number]: Round},
+    SprintId : string,
+    VotesShown : boolean,
+    AdminId : string
+  };
+}
+
 @Injectable({
   providedIn: 'root'
 })
