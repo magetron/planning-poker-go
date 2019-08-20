@@ -114,6 +114,7 @@ func (c *Client) formMessage (sprintId string) []byte {
 func (c *Client) writePump() {
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
+		log.Print("did execute close down")
 		if us.AllUsers[c.Hub.Id].AdminId == c.Id {
 			//set another admin according to certain rules
 		}
@@ -164,7 +165,7 @@ func (c *Client) writePump() {
 	}
 }
 
-func wsHandler (sprintId string, hub *ConnHub, ctx context.Context) error {
+func wsHandler (sprintId string, userId string, hub *ConnHub, ctx context.Context) error {
 	r := ctx.HttpRequest()
 	w := ctx.HttpResponseWriter()
 	conn, err := wsUpgrader.Upgrade(w, r, nil)
@@ -173,7 +174,7 @@ func wsHandler (sprintId string, hub *ConnHub, ctx context.Context) error {
 	}
 
 	client := &Client{
-		Id: sprintId,
+		Id: userId,
 		Hub: hub,
 		Conn: conn,
 		Send: make(chan []byte, 256),
