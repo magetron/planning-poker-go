@@ -19,7 +19,9 @@ import { WebsocketService } from 'src/app/services/websocket.service';
 
 export class MemberslistComponent extends Cardify implements OnInit {
 
-  users: User[];
+  tabledata: object[];
+  admin: string;
+  users: {[key: string]: User};
   user: User;
   round: Round;
   @Input() sprint_id: string;
@@ -45,7 +47,15 @@ export class MemberslistComponent extends Cardify implements OnInit {
       if (this.users) {
         let stats = this.analysisVote()
         this.internal.updateStats(stats)
-        this.internal.updateUser(this.updateMe())
+        this.tabledata = Object.values(this.users)
+      }
+    });
+    this.internal.admin$.subscribe(msg => {
+      this.admin = msg
+      if (this.user.Id == this.admin) {
+        this.user.Admin = true
+      } else {
+        this.user.Admin = false
       }
     });
   }
@@ -55,7 +65,8 @@ export class MemberslistComponent extends Cardify implements OnInit {
   }
 
   analysisVote(): Array<number> {
-    let result = this.users.map(i => i.Vote);
+
+    let result = Object.values(this.users).map(user => user.Vote)
 
     //strip non-votes
     result = result.filter(i => ![-1, -2, -3].includes(i));
@@ -139,7 +150,12 @@ export class MemberslistComponent extends Cardify implements OnInit {
         console.info(response);
         if (response && response.status === 200) {
           console.log("Set successor");
+          this.user.Admin = false
+          this.users[this.user.Id].Admin = false
+          this.users[successor.Id].Admin = true
           this.internal.updateUser(this.user);
+          this.internal.updateUsers(this.users);
+          this.internal.updateAdmin(successor.Id);
           this.socketBroadcast();
         } else {
           console.log("Set successor failed");
@@ -148,13 +164,10 @@ export class MemberslistComponent extends Cardify implements OnInit {
     }
   }
 
-  updateMe(): User {
-    if (this.users.length >1 &&
-     this.users[0].Id == this.user.Id &&
-     this.users[0].Admin) {
-      return (this.users[0])
+  dataForTable(): void {
+    for (const [ key, value ] of Object.entries(this.users)) {
+      this.tabledata.push({name: value.Name , vote : value.Vote})
     }
-    return this.user;    
   }
 
   crowned (user: User): string {

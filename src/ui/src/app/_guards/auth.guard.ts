@@ -39,7 +39,7 @@ export class AuthGuard implements CanActivate {
 
           if (res[0] && res[0].s == 200 && //got response with status 200
              res[0].d && //there is a list of users in the response
-             res[0].d.find(user => user.Id === res[1].Id)
+             res[0].d.Users[res[1].Id]
           ) {
             return true
           } else {

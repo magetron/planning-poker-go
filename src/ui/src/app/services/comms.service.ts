@@ -6,6 +6,7 @@ import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import * as globals from './globals.service';
 import { Sprint } from '../models/sprint';
 import { User } from '../models/user';
+import { Round } from 'src/app/models/round';
 
 const HTTPOPTIONS = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -32,7 +33,13 @@ export interface StatusResponse {
 
 export interface UserResponse {
   s: number;
-  d: User[];
+  d: {
+    Users : {[key: string]: User},
+    Rounds : {[key: number]: Round},
+    SprintId : string,
+    VotesShown : boolean,
+    AdminId : string
+  };
 }
 
 @Injectable({
