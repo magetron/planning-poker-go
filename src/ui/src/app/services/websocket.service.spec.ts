@@ -23,8 +23,8 @@ describe('WebsocketService', () => {
 
   it('should connect', () => {
     const service: WebsocketService = TestBed.get(WebsocketService);
-    service.connect("sprintId").subscribe(data => {
-      expect(data).toEqual([ [ Object({"Id":"sprintId","Name":"sprintName","Vote":-1,"Admin":true}) ] ])
+    service.connect("sprintId", "userId1").subscribe(data => {
+      expect(data).toEqual([{"userId1":{"Id":"userId1","Name":"User 1","Vote":-1,"Admin":true }}])
     })
   });
 

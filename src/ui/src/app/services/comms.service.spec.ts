@@ -9,8 +9,8 @@ import { HttpResponse } from '@angular/common/http';
 
 describe('CommsService', () => {
 
-  let httpTestingController: HttpTestingController;
-  let commsService : CommsService;
+  let httpMock: HttpTestingController;
+  let comms : CommsService;
 
   beforeEach(() => TestBed.configureTestingModule({
     providers: [
@@ -21,25 +21,22 @@ describe('CommsService', () => {
       ]
     })
     .compileComponents().then(() => {
-      httpTestingController = TestBed.get(HttpTestingController);
-      commsService = TestBed.get(CommsService);
+      httpMock = TestBed.get(HttpTestingController);
+      comms = TestBed.get(CommsService);
     })
   );
 
   afterEach(() => {
-    httpTestingController.verify();
+    httpMock.verify();
   });
 
   it('should create comms service', () => {
-    expect(commsService).toBeTruthy();
+    expect(comms).toBeTruthy();
   });
 
 
-  it('should create new sprint',
-    inject([HttpTestingController, CommsService], 
-      (httpMock: HttpTestingController, service: CommsService) => {
-    
-      service.createSprint("sprintId1").subscribe(data => {
+  it('should create new sprint', () => {
+      comms.createSprint("sprintId1").subscribe(data => {
         expect(data).toEqual({
           "d": "sprintId1",
           "s": 200
@@ -53,14 +50,10 @@ describe('CommsService', () => {
         "d": "sprintId1",
         "s": 200
       });
-    })
-  );
+    });
 
-  it('should return sprint details',
-    inject([HttpTestingController, CommsService], 
-      (httpMock: HttpTestingController, service: CommsService) => {
-    
-      service.getSprintDetails("sprintId1").subscribe(data => {
+  it('should return sprint details', () => {
+    comms.getSprintDetails("sprintId1").subscribe(data => {
         expect(data.body.d).toEqual({
           "Id": "sprintId1",
           "Name": "Sprint 1",
@@ -82,16 +75,12 @@ describe('CommsService', () => {
         },
         "s": 200
       });
-    })
-  );
+    });
 
-  it('should allow user to join sprint',
-    inject([HttpTestingController, CommsService], 
-      (httpMock: HttpTestingController, service: CommsService) => {
-
+  it('should allow user to join sprint', () => {
       let sprint: Sprint = ({Name: "Sprint 1", Id: "sprintId1", CreationTime: "2019-07-31T11:28:20.601309+01:00"});
     
-      service.joinSprint("User 1", sprint).subscribe(data => {
+      comms.joinSprint("User 1", sprint).subscribe(data => {
         expect(data).toEqual({
           "d": {
               "Id": "userId1",
@@ -115,29 +104,30 @@ describe('CommsService', () => {
         },
         "s": 200
       });
-    })
-  );
+    });
 
-  it('should return users details',
-    inject([HttpTestingController, CommsService], 
-      (httpMock: HttpTestingController, service: CommsService) => {
-    
-      service.getSprintUsers("sprintId1").subscribe(data => {
+  it('should return users details', () => {
+    comms.getSprintUsers("sprintId1").subscribe(data => {
         expect(data).toEqual({
-          "d": [
-              {
-                  "Id": "userId1",
-                  "Name": "User 1",
-                  "Vote": -1,
-                  "Admin": true
+          "d": {
+            "Users": {
+              "userId1":{
+                    "Id": "userId1",
+                    "Name": "User 1",
+                    "Vote": -1,
+                    "Admin": true
+                },
+                "userId2":{
+                    "Id": "userId2",
+                    "Name": "User 2",
+                    "Vote": -1,
+                    "Admin": false
+                }
               },
-              {
-                  "Id": "userId2",
-                  "Name": "User 2",
-                  "Vote": -1,
-                  "Admin": false
-              }
-          ],
+              "SprintId": "sprintId1",
+              "VotesShown": false,
+              "AdminId": "userId1"
+            },
           "s": 200
         });
       });
@@ -162,13 +152,10 @@ describe('CommsService', () => {
         ],
         "s": 200
       });
-    })
-  );
+  });
 
-  it('should allow user to vote',
-    inject([HttpTestingController, CommsService], 
-      (httpMock: HttpTestingController, service: CommsService) => {
-      service.selectCard("sprintId1","userId1",333).subscribe(data => {
+  it('should allow user to vote',() => {
+    comms.selectCard("sprintId1","userId1",333).subscribe(data => {
         expect(data.status).toEqual(200);
       });
 
@@ -176,13 +163,10 @@ describe('CommsService', () => {
       expect(req.request.method).toEqual('PUT');
 
       req.flush("");
-    })
-  );
+  });
 
-  it('should allow admin to set next admin',
-    inject([HttpTestingController, CommsService], 
-      (httpMock: HttpTestingController, service: CommsService) => {
-      service.appointSuccessor("sprintId1","userId1","userId2").subscribe(data => {
+  it('should allow admin to set next admin',() => {
+      comms.appointSuccessor("sprintId1","userId1","userId2").subscribe(data => {
         expect(data.status).toEqual(200);
       });
 
@@ -190,13 +174,10 @@ describe('CommsService', () => {
       expect(req.request.method).toEqual('POST');
 
       req.flush("");
-    })
-  );
+    });
 
-  it('should allow add story',
-    inject([HttpTestingController, CommsService], 
-      (httpMock: HttpTestingController, service: CommsService) => {
-      service.addStory("sprintId1","Story 1").subscribe(data => {
+  it('should allow adding a story', () => {
+      comms.addStory("sprintId1","Story 1").subscribe(data => {
         expect(data.status).toEqual(200);
       });
 
@@ -204,13 +185,10 @@ describe('CommsService', () => {
       expect(req.request.method).toEqual('POST');
 
       req.flush("");
-    })
-  );
+  });
 
-  it('should allow archive round',
-    inject([HttpTestingController, CommsService], 
-      (httpMock: HttpTestingController, service: CommsService) => {
-      service.archiveRound("sprintId1",1 , -3, -3, -3 ).subscribe(data => {
+  it('should allow archive round', () => {
+      comms.archiveRound("sprintId1",1 , -3, -3, -3 ).subscribe(data => {
         expect(data.status).toEqual(200);
       });
 
@@ -218,13 +196,10 @@ describe('CommsService', () => {
       expect(req.request.method).toEqual('PUT');
 
       req.flush("");
-    })
-  );
+  });
 
-  it('should allow delete user',
-    inject([HttpTestingController, CommsService], 
-      (httpMock: HttpTestingController, service: CommsService) => {
-      service.deleteUser("sprintId1", "userId1" ).subscribe(data => {
+  it('should allow delete user', () => {
+      comms.deleteUser("sprintId1", "userId1" ).subscribe(data => {
         expect(data).toEqual("");
       });
 
@@ -232,13 +207,10 @@ describe('CommsService', () => {
       expect(req.request.method).toEqual('DELETE');
 
       req.flush("");
-    })
-  );
+    });
 
- it('should get user details',
-    inject([HttpTestingController, CommsService], 
-      (httpMock: HttpTestingController, service: CommsService) => {
-      service.getUserDetails("sprintId1", "userId1" ).subscribe(data => {
+ it('should get user details', () => {
+    comms.getUserDetails("sprintId1", "userId1" ).subscribe(data => {
         expect(data).toEqual({
           "d": {
               "Id": "af4ce453-6c84-483e-a55a-7f55669c0839",
@@ -262,13 +234,10 @@ describe('CommsService', () => {
         },
         "s": 200
       });
-    })
-  );
+  });
   
-  it('should allow admin to set vote to be shown',
-    inject([HttpTestingController, CommsService], 
-      (httpMock: HttpTestingController, service: CommsService) => {
-      service.showVote("sprintId1", "userId1", true ).subscribe(data => {
+  it('should allow admin to set vote to be shown', () => {
+      comms.showVote("sprintId1", "userId1", true ).subscribe(data => {
         expect(data.status).toEqual(200);
       });
 
@@ -276,8 +245,5 @@ describe('CommsService', () => {
       expect(req.request.method).toEqual('POST');
 
       req.flush("");
-    })
-  );
-  
-
+  });
 });

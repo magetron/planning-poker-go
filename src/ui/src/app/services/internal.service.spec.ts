@@ -189,31 +189,24 @@ describe('InternalService', () => {
     });
   });
 
-  it('should update users list', (done:DoneFn) => {
+  it('should update users list', (done: DoneFn) => {
 
-    let usersIn: User[] = [{
+    let usersIn: {
+      "user1Id":{
       Name : "user1",
       Id : "user1Id",
       Vote : -1,
       Admin : true
-    },{
+    },
+    "user2Id": {
       Name : "user2",
       Id : "user2Id",
       Vote : -1,
       Admin : false
-    }];
+    }
+  };
 
-    let usersOut = new BehaviorSubject<User[]> ([{
-      Name : "user1",
-      Id : "user1Id",
-      Vote : -1,
-      Admin : true
-    },{
-      Name : "user2",
-      Id : "user2Id",
-      Vote : -1,
-      Admin : false
-    }]);
+    let usersOut = new BehaviorSubject<{[key: string]: User}> (usersIn);
 
     const userPromise = new Promise ((resolve) => {
       internalService.updateUsers(usersIn);
