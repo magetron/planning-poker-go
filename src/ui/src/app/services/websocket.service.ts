@@ -30,9 +30,9 @@ export class WebsocketService {
     private internal: InternalService,
   ) { }
 
-  connect(sprint_id: string): Observable<any> {
+  connect(sprint_id: string, user_id: string): Observable<any> {
     this.infoSocket$ = webSocket({
-      url: globals.infoSocket + sprint_id,
+      url: globals.infoSocket + sprint_id + "/users/" + user_id,
       serializer: msg => msg,
       deserializer: ({ data }) => {
         let j = JSON.parse(data);
