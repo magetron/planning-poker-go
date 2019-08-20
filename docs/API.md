@@ -361,6 +361,30 @@ OR
 None (Status code 404)
 ```
 
+### Setting a Specified Round title in a Sprint
+
+* POST sprints/[sprintId]/rounds/[roundId]/settitle
+
+```
+{
+    "Name" : "New Round Title"
+}
+```
+
+#### Sample Response
+
+```
+None (Status code 200)
+
+OR
+
+None (Status code 404)
+
+OR
+
+None (Status code 500)
+```
+
 ## Websocket
 
 * ws://{server_address}/v2/info/[sprintId]/users/[userId]
