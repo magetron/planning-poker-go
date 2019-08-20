@@ -361,6 +361,34 @@ OR
 None (Status code 404)
 ```
 
+## Websocket
 
+* ws://{server_address}/v2/info/[sprintId]/users/[userId]
+* Send `update` to request a broadcast
+* Will automatically push when users drop connection
+
+```
+[
+   {
+      "Users":{
+         "6558248d-2b64-4ca4-b926-ea52b520e6ca":{
+            "Id":"6558248d-2b64-4ca4-b926-ea52b520e6ca",
+            "Name":"User 2",
+            "Vote":-1,
+            "Admin":false
+         },
+         "758598f8-2439-4e3f-95e6-9396a274c573":{
+            "Id":"758598f8-2439-4e3f-95e6-9396a274c573",
+            "Name":"User 1",
+            "Vote":-1,
+            "Admin":true
+         }
+      },
+      "SprintId":"YrgNwGZ0M",
+      "VotesShown":false,
+      "AdminId":"758598f8-2439-4e3f-95e6-9396a274c573"
+   }
+]
+```
 
 
