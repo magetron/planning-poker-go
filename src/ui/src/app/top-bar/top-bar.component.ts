@@ -18,7 +18,7 @@ import { Sprint } from '../models/sprint';
 export class TopBarComponent implements OnInit {
 
   user: User;
-  users: User[];
+  users: {[key: string]: User};
   sprint: Sprint;
   @Input() sprint_id: string;
   logoutAll: boolean;
@@ -45,8 +45,11 @@ export class TopBarComponent implements OnInit {
     if (this.sprint_id) {
       this.internal.user$.pipe(first()).subscribe(msg => {
         this.subscriber = this.webSocket.connect(this.sprint_id, msg.Id).subscribe();
-    }
-    this.internal.user$.subscribe(msg => this.user = msg);
+      })
+    };
+    this.internal.user$.subscribe(msg => 
+      this.user = msg
+    );
     this.internal.users$.subscribe(msg => this.users = msg)
   }
 

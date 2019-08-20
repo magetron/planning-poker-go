@@ -24,8 +24,6 @@ import { WebsocketService } from 'src/app/services/websocket.service';
 
 export class PokerControlComponent implements OnInit {
 
-  shouldRun = [/(^|\.)plnkr\.co$/, /(^|\.)stackblitz\.io$/].some(h => h.test(window.location.host));
-
   @Input() sprint_id: string;
   round: Round = {
     "Name": "none",
@@ -90,7 +88,9 @@ export class PokerControlComponent implements OnInit {
     });
     this.internal.user$.subscribe(msg => {
       this.user = msg
-      this.subscriber = this.webSocket.connect(this.sprint_id, this.user.Id).subscribe();
+    });
+    this.internal.user$.pipe(first()).subscribe(msg => {
+        this.subscriber = this.webSocket.connect(this.sprint_id, msg.Id).subscribe();
     });
     this.internal.isVoteShown$.subscribe(msg => this.isVoteShown = msg);
   }

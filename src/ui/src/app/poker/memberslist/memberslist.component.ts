@@ -68,9 +68,9 @@ export class MemberslistComponent extends Cardify implements OnInit {
     this.socket.send("update");
   }
 
-  analysisVote(): Array<number> {
+  analysisVote(users: {[key: string]: User}): Array<number> {
 
-    let result = Object.values(this.users).map(user => user.Vote)
+    let result = Object.values(users).map(user => user.Vote)
 
     //strip non-votes
     result = result.filter((i: number) => ![-1, -2, -3].includes(i));
