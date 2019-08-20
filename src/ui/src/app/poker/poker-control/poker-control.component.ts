@@ -24,11 +24,9 @@ import { WebsocketService } from 'src/app/services/websocket.service';
 
 export class PokerControlComponent implements OnInit {
 
-  shouldRun = [/(^|\.)plnkr\.co$/, /(^|\.)stackblitz\.io$/].some(h => h.test(window.location.host));
-
   @Input() sprint_id: string;
   round: Round = {
-    "Name": "none",
+    "Name": "Enter Story Title",
     "Id" : 0,
     "Avg" : 0,
     "Med" : 0,
@@ -45,7 +43,6 @@ export class PokerControlComponent implements OnInit {
   baseUrl: string;
   isVoteShown : boolean;
   subscriber: Subscription;
-  referenceTime: number;
   timer: Timer = new Timer();
 
   constructor(
@@ -119,13 +116,12 @@ export class PokerControlComponent implements OnInit {
   }
 
   getRefTime(){
-    if (this.rounds && this.rounds[this.rounds.length - 1].CreationTime) {
-      this.referenceTime = this.rounds[this.rounds.length - 1].CreationTime
-      console.log("this.referenceTime", this.referenceTime )
+    if (this.round && this.round.CreationTime != 0) {
+      console.log("this.referenceTime", this.round.CreationTime )
     } else {
-      this.referenceTime = new Date().getTime()/1000
+      this.round.CreationTime = new Date().getTime()/1000
     }
-    this.timePassed = (new Date().getTime()/1000 - this.referenceTime)/1000
+    this.timePassed = (new Date().getTime()/1000 - this.round.CreationTime)/1000
     this.startTimer();
   }
 

@@ -80,8 +80,17 @@ $dark-theme:   mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
 .card-primary {
   background: mat-color($tcl-palette, 50);
 }
+
 //selected poker card colour
 .card-secondary {
   background: mat-color($tcl-palette, 700);
   color: white;
+}
+
+.std-input {
+  color: black
+}
+
+.white-input {
+  color: white
 }

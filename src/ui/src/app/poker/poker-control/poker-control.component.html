@@ -4,17 +4,25 @@
 
 <div class="container-fluid text-center">    
   <div class="row content">
-    <div class="col-sm-2 sidenav">
+    <div class="col-sm-3 sidenav">
       <app-memberslist [sprint_id]="sprint_id" ></app-memberslist>
     </div>
-    <div class="col-sm-8 text-left"> 
+    <div class="col-sm-6 text-left"> 
       <mat-card class="background-warn">
           <mat-card-title fxLayoutAlign="center">
-            <div *ngIf="round.Archived; else notArchivedTitle"><h3>Story Title: none </h3></div>
-            <ng-template #notArchivedTitle>
-              <h3>Story Title: {{round.Name}}</h3>
+            <div *ngIf="user.Admin; else staticTitle">
+              <h3>
+                <input matInput placeholder="Enter Story Title" [(ngModel)]="nextStory" class="std-input">
+              </h3>
+            </div>
+            <ng-template #staticTitle>
+              <h3>{{round.Name}}</h3>
             </ng-template>
           </mat-card-title>
+          <mat-card-actions *ngIf="user.Admin">
+            <button mat-raised-button [disabled]="!(nextStory)" (click)="addStory(nextStory)">Add Round</button>
+            <button mat-raised-button [disabled]= "round.Name == 'none' || !isVoteShown " (click)="archiveRound()">Archive Current Round</button>
+          </mat-card-actions>
       </mat-card>
       <br>
       <mat-card class="background-secondary">
@@ -55,23 +63,9 @@
             </div>
           </mat-card-content>
         </mat-card>
-        <ng-template [ngIf]="user?.Admin">
-            <mat-card class="background-third">
-              <mat-card-content>
-                <mat-form-field>
-                  <mat-label>Next Story title</mat-label>
-                  <input matInput placeholder="Story" [(ngModel)]="nextStory">
-                </mat-form-field>
-              </mat-card-content>
-              <mat-card-actions>
-                <button mat-raised-button [disabled]="!(nextStory)" (click)="addStory(nextStory)">Add Round</button>
-                <button mat-raised-button [disabled]= "round.Name == 'none' || !isVoteShown " (click)="archiveRound()">Archive Current Round</button>
-              </mat-card-actions>
-            </mat-card>
-        </ng-template>
       </div>
     </div>
-    <div class="col-sm-2 sidenav">
+    <div class="col-sm-3 sidenav">
       <table mat-table [dataSource]=rounds class="mat-elevation-z8">
         <!-- Position Column -->
         <ng-container matColumnDef="ROUNDS">
