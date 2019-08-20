@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
 import { environment } from 'src/environments/environment';
-import { Sprint } from '../models/sprint';
-import { User } from '../models/user';
+import { Sprint } from 'src/app/models/sprint';
+import { User } from 'src/app/models/user';
 import { Round } from 'src/app/models/round';
 import { SimpleResponse, ComplexResponse, StatusResponse, UserResponse, SprintResponse } from 'src/app/models/responses'
 
@@ -16,31 +16,6 @@ const HTTPOPTIONS = {
 const HTTPOPTIONS_NO_BODY = {
   headers: new HttpHeaders({'Content-Type': 'application/json'}),
   observe: "response" as 'body',
-}
-
-export interface SimpleResponse {
-  s: number;
-  d: string;
-}
-
-export interface ComplexResponse {
-  s: number;
-  d: object;
-}
-
-export interface StatusResponse {
-  status: number;
-}
-
-export interface UserResponse {
-  s: number;
-  d: {
-    Users : {[key: string]: User},
-    Rounds : {[key: number]: Round},
-    SprintId : string,
-    VotesShown : boolean,
-    AdminId : string
-  };
 }
 
 @Injectable({
