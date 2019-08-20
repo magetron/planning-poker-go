@@ -5,12 +5,14 @@ import { webSocket, WebSocketSubject } from "rxjs/webSocket";
 import * as globals from './globals.service';
 import { InternalService } from './internal.service';
 import { User } from 'src/app/models/user';
+import { Round } from 'src/app/models/round';
 
 export interface UserResponse {
-  "Users" : {[key: string]: User},
-  "SprintId" : string,
-  "VotesShown" : boolean,
-  "AdminId" : string
+  Users : {[key: string]: User},
+  Rounds : {[key: number]: Round},
+  SprintId : string,
+  VotesShown : boolean,
+  AdminId : string
 }
 
 @Injectable({
