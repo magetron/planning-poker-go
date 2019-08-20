@@ -41,7 +41,7 @@ func mapRoutesV2() {
 		return goweb.Respond.WithRedirect(c, "v2/index", "")
 	})
 
-	_ = goweb.MapController("v2/sprints/", sc)
+	_ = goweb.MapController("v2/sprints", sc)
 	_ = goweb.MapController("v2/sprints/[sprintId]/rounds", rc)
 	_ = goweb.MapController("v2/sprints/[sprintId]/users", us)
 
@@ -52,6 +52,8 @@ func mapRoutesV2() {
 	_, _ = goweb.Map("POST", "v2/sprints/[sprintId]/users/[userId]/setadmin", us.SetAdmin)
 
 	_, _ = goweb.Map("POST", "v2/sprints/[sprintId]/users/[userId]/showvote", us.ShowVote)
+
+	_, _ = goweb.Map("POST", "v2/sprints/[sprintId]/rounds/[roundId]/settitle", rc.SetTitle)
 
 	if !DEV {
 		root := "./static-ui"
