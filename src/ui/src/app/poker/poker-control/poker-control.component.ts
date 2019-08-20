@@ -26,7 +26,7 @@ export class PokerControlComponent implements OnInit {
 
   @Input() sprint_id: string;
   round: Round = {
-    "Name": "Enter Story Title",
+    "Name": "",
     "Id" : 0,
     "Avg" : 0,
     "Med" : 0,
@@ -34,7 +34,6 @@ export class PokerControlComponent implements OnInit {
     "Archived" : false,
     "CreationTime" : 0,
   };
-  nextStory: string = "";
   rounds: Round[];
   stats: number[];
   timePassed = 0;
@@ -102,7 +101,6 @@ export class PokerControlComponent implements OnInit {
       ).subscribe(response => {
       if (response[0] && response[0].status === 200) {
         this.round.Name = story;
-        this.nextStory = "";
       } else {
         console.log("Server communication error");
       }

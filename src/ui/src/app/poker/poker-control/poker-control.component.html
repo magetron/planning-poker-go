@@ -12,7 +12,7 @@
           <mat-card-title fxLayoutAlign="center">
             <div *ngIf="user.Admin; else staticTitle">
               <h3>
-                <input matInput placeholder="Enter Story Title" [(ngModel)]="nextStory" class="std-input">
+                <input matInput placeholder="Enter Story Title" [(ngModel)]="round.Name" class="std-input">
               </h3>
             </div>
             <ng-template #staticTitle>
@@ -20,7 +20,7 @@
             </ng-template>
           </mat-card-title>
           <mat-card-actions *ngIf="user.Admin">
-            <button mat-raised-button [disabled]="!(nextStory)" (click)="addStory(nextStory)">Add Round</button>
+            <!-- <button mat-raised-button [disabled]="!(round.Name)" (click)="addStory(round.Name)">Add Round</button> -->
             <button mat-raised-button [disabled]= "round.Name == 'none' || !isVoteShown " (click)="archiveRound()">Archive Current Round</button>
           </mat-card-actions>
       </mat-card>
