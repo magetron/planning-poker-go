@@ -96,7 +96,7 @@ func TestUpdate(t *testing.T) {
 		log.Print(creationTime)
 	})
 
-	url := "ws" + strings.Trim(server.URL, "http") + "/v2/info/" + sprintId
+	url := "ws" + strings.Trim(server.URL, "http") + "/v2/info/" + sprintId + "/users/" + userId1
 
 	ws, _, err := websocket.DefaultDialer.Dial(url, nil)
 	if err != nil {
@@ -157,10 +157,7 @@ func TestUpdate(t *testing.T) {
 	}
 	_, p, err = ws.ReadMessage()
 
-	log.Print(string(p))
-
 	assert.True(t, `[{"Users":{"` + userId1 + `":{"Id":"` + userId1 + `","Name":"New User 1","Vote":8,"Admin":true},"` + userId2 + `":{"Id":"` + userId2 + `","Name":"New User 2","Vote":-1,"Admin":false}},"SprintId":"` + sprintId + `","VotesShown":true,"AdminId":"` + userId1 + `"},{"Rounds":[{"Id":1,"Name":"Task 1","Med":0,"Avg":0,"Final":0,"Archived":false,"CreationTime":` + creationTime + `}],"SprintId":"` + sprintId + `"}]` == string(p) || `[{"Users":{"` + userId2 + `":{"Id":"` + userId2 + `","Name":"New User 2","Vote":-1,"Admin":false},"` + userId1 + `":{"Id":"` + userId1 + `","Name":"New User 1","Vote":8,"Admin":true}},"SprintId":"` + sprintId + `","VotesShown":true,"AdminId":"` + userId1 + `"},{"Rounds":[{"Id":1,"Name":"Task 1","Med":0,"Avg":0,"Final":0,"Archived":false,"CreationTime":` + creationTime + `}],"SprintId":"` + sprintId + `"}]` == string(p), "Websocket should be Two Users object.")
-
 
 }
 
@@ -244,7 +241,7 @@ func TestConnHub (t *testing.T) {
 		userId2 = response.Output[12:48]
 	})
 
-	url1 := "ws" + strings.Trim(server.URL, "http") + "/v2/info/" + sprintId1
+	url1 := "ws" + strings.Trim(server.URL, "http") + "/v2/info/" + sprintId1 + "/users/" + userId1
 
 	ws1, _, err1 := websocket.DefaultDialer.Dial(url1, nil)
 	if err1 != nil {
@@ -267,7 +264,7 @@ func TestConnHub (t *testing.T) {
 	_, p1, err1 = ws1_1.ReadMessage()
 	assert.Equal(t, `[{"Users":{"` + userId1 + `":{"Id":"` + userId1 + `","Name":"New User Sprint 1","Vote":-1,"Admin":true}},"SprintId":"` + sprintId1 + `","VotesShown":false,"AdminId":"` + userId1 + `"}]`, string(p1))
 
-	url2 := "ws" + strings.Trim(server.URL, "http") + "/v2/info/" + sprintId2
+	url2 := "ws" + strings.Trim(server.URL, "http") + "/v2/info/" + sprintId2 + "/users/" + userId2
 
 	ws2, _, err2 := websocket.DefaultDialer.Dial(url2, nil)
 	if err2 != nil {
