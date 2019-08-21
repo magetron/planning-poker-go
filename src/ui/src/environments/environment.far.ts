@@ -4,6 +4,6 @@ export const environment = {
   
   baseUrl: location.origin + '/#',
   
-  apiUrl: "http://planning-poker-nlb-febe808a469ef781.elb.eu-west-1.amazonaws.com:8080",
-  infoSocket : "ws://planning-poker-nlb-febe808a469ef781.elb.eu-west-1.amazonaws.com:8080/info/"
+  apiUrl: "http://planning-poker-nlb-2f296abfc5666965.elb.eu-west-1.amazonaws.com:8080/",
+  infoSocket : "ws://planning-poker-nlb-2f296abfc5666965.elb.eu-west-1.amazonaws.com:8080/info/"
 };
