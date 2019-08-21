@@ -65,10 +65,9 @@ build-front-far:
 
 test:
 	$(GOBUILD) -o $(BINARY_NAME) -v ./...
-	#env PP_DEV=true ./$(BINARY_NAME) &
 	$(GOTEST) --cover -v ./...
-	cd ui; $(NGTEST)
-	#cd ui; $(NGE2E)
+	#cd ui; $(NGTEST)
+	./$(BINARY_NAME) & PID=$$! && cd ui; $(NGE2E) && kill $$PID
 
 clean:
 	$(GOCLEAN)
