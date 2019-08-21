@@ -130,18 +130,20 @@ describe('MemberslistComponent', () => {
     it('should show showVote button to admins only', () => {
     
       //Beginning - no user, no button
-      let show_btn: HTMLButtonElement = fixture.debugElement.nativeElement.querySelector("button#btn1")
-      expect(show_btn).toBeNull()
+      //let show_btn: HTMLButtonElement = fixture.debugElement.nativeElement.querySelector("button#btn1")
+      //expect(show_btn).toBeNull()
       
-      let user: User = component.user
       fixture.detectChanges()
   
       //User admin - show button
-      show_btn = fixture.debugElement.nativeElement.querySelector("button#btn1")
+      let show_btn = fixture.debugElement.nativeElement.querySelector("button#btn1")
       expect(show_btn).toBeDefined()
       expect(show_btn.innerHTML).toBe("Show Votes")
   
-      internal.updateAdmin("otherId")
+      internal.updateAdmin("userId2")
+      let user = component.user
+      user.Admin = false
+      internal.updateUser(user)
       fixture.detectChanges()
       
       //User not admin - hide button
