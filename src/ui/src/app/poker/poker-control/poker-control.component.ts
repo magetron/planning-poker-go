@@ -34,6 +34,7 @@ export class PokerControlComponent implements OnInit {
     "Archived" : false,
     "CreationTime" : 0,
   };
+  nextStory: string = "";
   rounds: Round[];
   stats: number[];
   timePassed = 0;
@@ -42,7 +43,9 @@ export class PokerControlComponent implements OnInit {
   baseUrl: string;
   isVoteShown : boolean;
   subscriber: Subscription;
+  referenceTime: number;
   timer: Timer = new Timer();
+  admin: string = ""
 
   constructor(
     private router: Router,
@@ -88,13 +91,15 @@ export class PokerControlComponent implements OnInit {
       this.user = msg
     });
     this.internal.user$.pipe(first()).subscribe(msg => {
+      if (msg && msg.Id) {
         this.subscriber = this.webSocket.connect(this.sprint_id, msg.Id).subscribe();
         if (msg.Admin){
           this.addStory ("")
         }
+      }
     });
     this.internal.isVoteShown$.subscribe(msg => this.isVoteShown = msg);
-    
+    this.internal.admin$.subscribe(msg => this.admin = msg);
   }
 
   socketBroadcast() {
@@ -109,6 +114,7 @@ export class PokerControlComponent implements OnInit {
       ).subscribe(response => {
       if (response[0] && response[0].status === 200) {
         this.round.Name = story;
+        this.nextStory = "";
       } else {
         console.log("Server communication error");
       }

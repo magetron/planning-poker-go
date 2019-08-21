@@ -28,7 +28,6 @@ export interface UserResponse {
   s: number;
   d: {
     Users : {[key: string]: User},
-    Rounds : {[key: number]: Round},
     SprintId : string,
     VotesShown : boolean,
     AdminId : string
