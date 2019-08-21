@@ -49,22 +49,15 @@ export class MemberslistComponent extends Cardify implements OnInit {
         this.tabledata = Object.values(this.users)
       }
     });
-    this.internal.admin$.subscribe(msg => {
-      this.admin = msg
-      if (this.user.Id == this.admin) {
-        this.user.Admin = true
-      } else {
-        this.user.Admin = false
-      }
-    });
+    this.internal.admin$.subscribe(msg => this.admin = msg)
     this.internal.rounds$.subscribe((msg: Round[]) => {
         if (msg && msg[msg.length-1].Archived) {
           this.showVote = false
         }
     })
-}
+  }
 
-  socketBroadcast() {
+  socketBroadcast(): void {
     this.socket.send("update");
   }
 
@@ -125,9 +118,8 @@ export class MemberslistComponent extends Cardify implements OnInit {
   }
 
   showVoteFunc(): void {
-    this.showVote =! this.showVote;
-    if (this.user.Admin == true) {
-
+    if (this.user.Id == this.admin) {
+      this.showVote =! this.showVote;
       this.internal.showVote(this.showVote) 
       this.comms.showVote(this.sprint_id, this.user.Id, this.showVote).subscribe((response => {
         if (response.status === 200) {
@@ -139,17 +131,12 @@ export class MemberslistComponent extends Cardify implements OnInit {
     }
   }
 
-  setNextAdmin(successor : User) : void{
-    if (this.user.Admin && successor.Id != this.user.Id){
+  setNextAdmin(successor : User) : void {    
+    if (this.user.Id == this.admin && successor.Id != this.user.Id) {
       this.comms.appointSuccessor(this.sprint_id, this.user.Id, successor.Id).subscribe(response => {
         console.info(response);
         if (response && response.status === 200) {
           console.log("Set successor");
-          this.user.Admin = false
-          this.users[this.user.Id].Admin = false
-          this.users[successor.Id].Admin = true
-          this.internal.updateUser(this.user);
-          this.internal.updateUsers(this.users);
           this.internal.updateAdmin(successor.Id);
           this.socketBroadcast();
         } else {
@@ -159,13 +146,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
     }
   }
 
-  dataForTable(): void {
-    for (const [ key, value ] of Object.entries(this.users)) {
-      this.tabledata.push({name: value.Name , vote : value.Vote})
-    }
-  }
-
   crowned (user: User): string {
-    return(user.Admin ? user.Name +" 👑" : user.Name)
+    return(user.Id == this.admin ? user.Name +" 👑" : user.Name)
   }
 }
