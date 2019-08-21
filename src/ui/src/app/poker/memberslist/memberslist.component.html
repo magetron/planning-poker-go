@@ -1,5 +1,5 @@
 <div>
-<table mat-table [dataSource]=users class="mat-elevation-z8">
+<table mat-table [dataSource]=tabledata class="mat-elevation-z8">
   <!-- Position Column -->
   <ng-container matColumnDef="NAME">
     <th mat-header-cell *matHeaderCellDef> Name </th>
@@ -15,7 +15,6 @@
 </div>
 <br>
 
-<div *ngIf="user?.Admin" >
+<div *ngIf="user?.Id == admin" >
   <button mat-raised-button id="btn1" [ngClass]="{'showV': showVote}" (click)="showVoteFunc()">{{showVote ? 'Hide Votes' : 'Show Votes'}}</button>
 </div>
-
