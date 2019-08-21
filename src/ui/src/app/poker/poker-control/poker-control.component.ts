@@ -45,6 +45,7 @@ export class PokerControlComponent implements OnInit {
   subscriber: Subscription;
   referenceTime: number;
   timer: Timer = new Timer();
+  admin: string = ""
 
   constructor(
     private router: Router,
@@ -98,7 +99,7 @@ export class PokerControlComponent implements OnInit {
       }
     });
     this.internal.isVoteShown$.subscribe(msg => this.isVoteShown = msg);
-    
+    this.internal.admin$.subscribe(msg => this.admin = msg);
   }
 
   socketBroadcast() {
