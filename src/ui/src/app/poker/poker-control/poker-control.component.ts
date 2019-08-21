@@ -91,6 +91,8 @@ export class PokerControlComponent implements OnInit {
         this.subscriber = this.webSocket.connect(this.sprint_id, msg.Id).subscribe();
     });
     this.internal.isVoteShown$.subscribe(msg => this.isVoteShown = msg);
+
+    this.addStory ("default")
   }
 
   socketBroadcast() {
@@ -147,6 +149,7 @@ export class PokerControlComponent implements OnInit {
         this.internal.updateRounds(this.rounds);
         this.socketBroadcast()
         console.log("Round archived: ", this.round.Id);
+        this.addStory ("default")
       } else {
         console.log("Server communication error");
       }
@@ -189,6 +192,20 @@ export class PokerControlComponent implements OnInit {
     selBox.select();
     document.execCommand('copy');
     document.body.removeChild(selBox);
+  }
+
+  setRoundTitle(title: string) {
+    this.comms.setRoundTitle(this.sprint_id, this.round.Id, title).subscribe(response => {
+      if (response && response.status === 200) {
+        this.round.Name = title
+        this.rounds[this.rounds.length - 1].Name = title;
+        this.internal.updateRounds(this.rounds);
+        this.socketBroadcast()
+        console.log("Updated round", this.round.Id, "title: ", title);
+      } else {
+        console.log("Server communication error");
+      }
+    });
   }
 
 }
