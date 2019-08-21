@@ -18,6 +18,7 @@ import { InternalService } from 'src/app/services/internal.service';
 import { CommsService } from 'src/app/services/comms.service';
 import { WebsocketService } from 'src/app/services/websocket.service';
 import { WebSocketServiceSpy } from 'src/app/services/websocketspy';
+import { Round } from 'src/app/models/round';
 
 describe('PokerCardComponent', () => {
   let component: PokerCardComponent;
@@ -96,5 +97,47 @@ describe('PokerCardComponent', () => {
     expect(comms.selectCard).toHaveBeenCalledWith('test_id', 'userId3', -2)
     expect(socket.send).toHaveBeenCalledWith("update");
     expect(show_btn.classList).toContain("card-secondary")
+  })
+
+  it('should clear votes on round switch', () => {
+    let user = {
+      "Id": "userId3",
+      "Name": "User 3",
+      "Vote": 7,
+      "Admin": false
+    }
+    internal.updateUser(user)
+
+    let rounds: Array<Round> = [{
+      "Id": 1,
+      "Name": "Task 1",
+      "Med": 0,
+      "Avg": 0,
+      "Final": 0,
+      "Archived": false,
+      "CreationTime": 1564664527
+    }]
+    internal.updateRounds(rounds)
+    component.myVote = 7    
+    fixture.detectChanges()
+    expect(component.myVote).toBe(7)
+    expect(component.user.Vote).toBe(7)
+
+    rounds[0].Archived = true
+    internal.updateRounds(rounds)
+    fixture.detectChanges()
+
+    expect(component.myVote).toBe(-1, "selected vote is cleared")
+    expect(component.user.Vote).toBe(7, "Poker card doesn't update the vote in the user object. Memeberslist does")
+
+    // rounds.concat({
+    //   "Id": 2,
+    //   "Name": "Task 2",
+    //   "Med": 0,
+    //   "Avg": 0,
+    //   "Final": 0,
+    //   "Archived": false,
+    //   "CreationTime": 1564664555
+    // })
   })
 });
