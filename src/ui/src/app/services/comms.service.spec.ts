@@ -136,20 +136,25 @@ describe('CommsService', () => {
       expect(req.request.method).toEqual('GET');
 
       req.flush({
-        "d": [
-            {
+        "d": {
+          "Users": {
+            "userId1": {
                 "Id": "userId1",
                 "Name": "User 1",
                 "Vote": -1,
                 "Admin": true
             },
-            {
+            "userId2": {
                 "Id": "userId2",
                 "Name": "User 2",
                 "Vote": -1,
                 "Admin": false
             }
-        ],
+          },
+            "SprintId": "sprintId1",
+            "VotesShown": false,
+            "AdminId": "userId1"
+        },
         "s": 200
       });
   });

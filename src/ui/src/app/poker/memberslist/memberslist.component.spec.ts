@@ -121,8 +121,10 @@ describe('MemberslistComponent', () => {
             "Vote": -1,
             "Admin": false
         }}
+      let adminId = "userId1"  
       internal.updateUser(user)
       internal.updateUsers(users)
+      internal.updateAdmin(adminId)
     })
 
     it('should show showVote button to admins only', () => {
@@ -139,8 +141,7 @@ describe('MemberslistComponent', () => {
       expect(show_btn).toBeDefined()
       expect(show_btn.innerHTML).toBe("Show Votes")
   
-      user.Admin=false
-      internal.updateUser(user)
+      internal.updateAdmin("otherId")
       fixture.detectChanges()
       
       //User not admin - hide button

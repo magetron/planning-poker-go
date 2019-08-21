@@ -24,7 +24,10 @@ describe('WebsocketService', () => {
   it('should connect', () => {
     const service: WebsocketService = TestBed.get(WebsocketService);
     service.connect("sprintId", "userId1").subscribe(data => {
-      expect(data).toEqual([{"userId1":{"Id":"userId1","Name":"User 1","Vote":-1,"Admin":true }}])
+      expect(data[0].Users).toEqual({"userId1":{"Id":"userId1","Name":"User 1","Vote":-1,"Admin":true }})
+      expect(data[0].VotesShown).toEqual(false, "VotesShown status")
+      expect(data[0].SprintId).toEqual("sprintId1")
+      expect(data[0].AdminId).toEqual("userId1")
     })
   });
 
