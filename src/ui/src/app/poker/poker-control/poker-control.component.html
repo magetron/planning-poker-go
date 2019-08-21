@@ -16,12 +16,12 @@
               </h3>
             </div>
             <ng-template #staticTitle>
-              <h3>{{round.Name}}</h3>
+                <h3>{{title_ify(round.Name)}}</h3>
             </ng-template>
           </mat-card-title>
           <mat-card-actions *ngIf="user.Admin">
             <!-- <button mat-raised-button [disabled]="!(round.Name)" (click)="addStory(round.Name)">Add Round</button> -->
-            <button mat-raised-button [disabled]= "!isVoteShown" (click)="archiveRound()">Next Round</button>
+            <button class="button-secondary" mat-raised-button [disabled]= "!isVoteShown" (click)="archiveRound()">Next Round</button>
           </mat-card-actions>
       </mat-card>
       <br>
@@ -44,7 +44,7 @@
           <mat-card-header>
             <mat-card-title class="text-primary">
               Recommended: 
-              <button mat-raised-button class="button-secondary" style="height: 90px; font-size: 2em;max-width: 8%;">
+              <button mat-raised-button style="height: 90px; font-size: 2em;max-width: 8%;">
                 <h1>
                   <span>{{stats[3]}} </span>
                 </h1>

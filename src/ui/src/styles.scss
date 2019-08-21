@@ -76,6 +76,12 @@ $dark-theme:   mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
   color: mat-color($tcl-palette, 50);
 }
 
+.button-secondary {
+  background: mat-color($mat-yellow);
+  color: mat-color($tcl-palette, 400);
+}
+
+
 //poker card colour
 .card-primary {
   background: mat-color($tcl-palette, 50);

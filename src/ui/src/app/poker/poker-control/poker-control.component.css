@@ -54,3 +54,7 @@ button[name="recommend-card"] {
 table {
   width: 100%;
 }
+
+input.mat-input-element {
+	text-align: center
+}

@@ -92,7 +92,7 @@ export class PokerControlComponent implements OnInit {
     });
     this.internal.isVoteShown$.subscribe(msg => this.isVoteShown = msg);
 
-    this.addStory ("default")
+    this.addStory ("")
   }
 
   socketBroadcast() {
@@ -149,7 +149,7 @@ export class PokerControlComponent implements OnInit {
         this.internal.updateRounds(this.rounds);
         this.socketBroadcast()
         console.log("Round archived: ", this.round.Id);
-        this.addStory ("default")
+        this.addStory ("")
       } else {
         console.log("Server communication error");
       }
@@ -206,6 +206,14 @@ export class PokerControlComponent implements OnInit {
         console.log("Server communication error");
       }
     });
+  }
+
+  title_ify (title: string) {
+    if (title == ""){
+      return "👑 " + "is typing ..."
+    } else {
+      return title
+    }
   }
 
 }
