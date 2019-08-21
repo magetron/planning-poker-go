@@ -68,7 +68,7 @@ test:
 	#env PP_DEV=true ./$(BINARY_NAME) &
 	$(GOTEST) --cover -v ./...
 	cd ui; $(NGTEST)
-	cd ui; $(NGE2E)
+	#cd ui; $(NGE2E)
 
 clean:
 	$(GOCLEAN)

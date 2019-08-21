@@ -75,7 +75,6 @@ export class PokerControlComponent implements OnInit {
       return throwError(err);
     })
 
-    this.subscriber = this.webSocket.connect(this.sprint_id).subscribe();
     
     this.internal.rounds$.subscribe(msg => {
       this.rounds = msg
@@ -85,7 +84,12 @@ export class PokerControlComponent implements OnInit {
     this.internal.stats$.subscribe(msg => {
       this.stats = msg
     });
-    this.internal.user$.subscribe(msg => this.user = msg);
+    this.internal.user$.subscribe(msg => {
+      this.user = msg
+    });
+    this.internal.user$.pipe(first()).subscribe(msg => {
+        this.subscriber = this.webSocket.connect(this.sprint_id, msg.Id).subscribe();
+    });
     this.internal.isVoteShown$.subscribe(msg => this.isVoteShown = msg);
   }
 
