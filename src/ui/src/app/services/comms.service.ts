@@ -94,16 +94,6 @@ export class CommsService {
     return result;
   }
 
-  renameStory (sprint_id: string, sprint_story: string): Observable<SimpleResponse> {
-    let jsonObject = {
-      "Name": sprint_story,
-    }
-    const result = this.httpClient.put<SimpleResponse>(
-      `${environment.apiUrl}/sprints/${sprint_id}/rounds`,
-       jsonObject, HTTPOPTIONS_NO_BODY);
-    return result;
-  }
-
   archiveRound (sprint_id: string, round_no: number, avg: number, med: number, fin: number): Observable<any>{
     let jsonObject = {
       "Average": avg,
