@@ -89,10 +89,12 @@ export class PokerControlComponent implements OnInit {
     });
     this.internal.user$.pipe(first()).subscribe(msg => {
         this.subscriber = this.webSocket.connect(this.sprint_id, msg.Id).subscribe();
+        if (msg.Admin){
+          this.addStory ("")
+        }
     });
     this.internal.isVoteShown$.subscribe(msg => this.isVoteShown = msg);
-
-    this.addStory ("")
+    
   }
 
   socketBroadcast() {
@@ -140,7 +142,8 @@ export class PokerControlComponent implements OnInit {
     });
   }
 
-  archiveRound(): void {
+  archiveRound(title: string): void {
+    this.setRoundTitle(title)
     this.timer.stop();
     this.comms.archiveRound(this.sprint_id, this.round.Id, this.stats[2],
        this.stats[1], this.stats[3]).subscribe(response => {
