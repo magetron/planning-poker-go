@@ -75,7 +75,7 @@ export class PokerControlComponent implements OnInit {
       console.log('Connection error', err);
       //TODO: Handle properly - notify the user, retry?
       this.router.navigateByUrl(`/join/${this.sprint_id}`);
-      return throwError(err);
+      throw (err);
     })
 
     
