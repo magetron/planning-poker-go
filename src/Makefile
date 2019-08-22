@@ -66,7 +66,7 @@ build-front-far:
 test:
 	$(GOBUILD) -o $(BINARY_NAME) -v ./...
 	$(GOTEST) --cover -v ./...
-	#cd ui; $(NGTEST)
+	cd ui; $(NGTEST)
 	./$(BINARY_NAME) & PID=$$! && cd ui; $(NGE2E) && kill $$PID
 
 clean:
