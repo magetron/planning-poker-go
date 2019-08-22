@@ -73,7 +73,7 @@ describe('ShareComponent', () => {
     expect(visible_link).toEqual('http://localhost:4200/#/join/' + component.sprint_id)
   })
 
-  it('should lead to correct url', ()=> {
+  xit('should lead to correct url', ()=> {
     let link: string = fixture.debugElement.query(By.css("mat-toolbar a")).properties.href
     expect(link).toEqual('#' + "/join/" + component.sprint_id)
   })
