@@ -71,56 +71,11 @@ func mapRoutesV2() {
 	}
 }
 
-func mapRoutesV1() {
-
-	if DEV {
-		_, _ = goweb.MapBefore(func(c context.Context) error {
-			c.HttpResponseWriter().Header().Set("Access-Control-Allow-Origin", "*")
-			c.HttpResponseWriter().Header().Set("Access-Control-Allow-Credentials", "true")
-			c.HttpResponseWriter().Header().Set("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,DELETE")
-			c.HttpResponseWriter().Header().Set("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers")
-			return nil
-		})
-	}
-
-	_, _ = goweb.Map("GET", "", func(c context.Context) error {
-		return goweb.Respond.WithRedirect(c, "index", "")
-	})
-
-	_ = goweb.MapController("sprints/", sc)
-	_ = goweb.MapController("sprints/[sprintId]/rounds", rc)
-	_ = goweb.MapController("sprints/[sprintId]/users", us)
-
-	_, _ = goweb.Map("info/[sprintId]", hc.handleHubs)
-
-	_, _ = goweb.Map("POST", "gc", garbageCollector)
-
-	_, _ = goweb.Map("POST", "sprints/[sprintId]/users/[userId]/setadmin", us.SetAdmin)
-
-	_, _ = goweb.Map("POST", "sprints/[sprintId]/users/[userId]/showvote", us.ShowVote)
-
-	if !DEV {
-		root := "./static-ui"
-		fileErr := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
-			if path != "./static-ui" {
-				_, _ = goweb.MapStaticFile(path[10:], path)
-			}
-			return nil
-		})
-
-		if fileErr != nil {
-			log.Fatalf("Could not scan static files %s", fileErr)
-		}
-
-	}
-}
-
 func main() {
 
 	DEV, _ = strconv.ParseBool(os.Getenv("PP_DEV"))
 
 	mapRoutesV2()
-	mapRoutesV1()
 
 	log.Print("Staring server ...")
 
