@@ -50,7 +50,7 @@ export class WebsocketService {
     return this.infoSocket$;
   }
 
-  send(data: any) {
+  send(data: string) {
     if (this.infoSocket$) {
       this.infoSocket$.next(data);
     } else {

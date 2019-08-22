@@ -4,6 +4,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { MatCardModule, MatFormFieldModule, MatIconModule, MatListModule, MatTableModule, MatButtonModule, MatInputModule,  MatToolbarModule } from '@angular/material';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
+import { of } from 'rxjs';
 
 import { PokerControlComponent } from './poker-control.component';
 import { PokerCardComponent } from '../poker-card/poker-card.component';
@@ -22,26 +23,39 @@ import { ElapsedTimerComponent } from '../elapsed-timer/elapsed-timer.component'
 describe('PokerControlComponent', () => {
   let component: PokerControlComponent;
   let fixture: ComponentFixture<PokerControlComponent>;
+  let router: Router;
 
   beforeEach(async(() => {
-    const routerSpy = jasmine.createSpyObj('Router', ['navigateByUrl']);
-    const internalSpy = jasmine.createSpyObj('InternalService', ['updateSprint', 'rounds$', 'stats$', 'user$', 'isVoteShown$', 'updateRounds'])
-    const commsSpy = jasmine.createSpyObj('CommsService', ['getSprintDetails', 'addStory', 'showVote', 'archiveRound', 'selectCard'])
-  
-    //getSprintDetailsSpy = commsSpy.getSprintDetails.and.returnValue(of())
-
+    /*const internalSpy = jasmine.createSpyObj('InternalService', {
+      'updateSprint': null,
+      'rounds$': of(null),
+      'stats$': of(null),
+      'user$': of(null),
+      'isVoteShown$': of(null),
+      'updateRounds': function() {},
+      })
+    const commsSpy = jasmine.createSpyObj('CommsService', {
+      'getSprintDetails': of({
+        "d": {
+          "Id": "5yojNtnjM",
+          "Name": "DEMO Sprint",
+          "CreationTime": "2019-07-31T11:57:20.338407+01:00"
+        },
+        "s": 200
+      }), 
+      'addStory': of({}), 
+      'showVote': of({}), 
+      'archiveRound': function() {}, 
+      'selectCard': function() {} 
+    })*/
 
     TestBed.configureTestingModule({
       providers: [
-        /*{ 
-          provide: Router,
-          useValue: routerSpy
-        },*/
         { 
           provide: ActivatedRoute,
           useValue: {snapshot: {paramMap: convertToParamMap({'sprint_id': 'test'})}}
-        },
-        /*{
+        },/*
+        {
           provide: InternalService,
           useValue: internalSpy
         },
@@ -75,17 +89,21 @@ describe('PokerControlComponent', () => {
         MatIconModule,
        ],
     })
-    .compileComponents();
+    .compileComponents().then(
+      router = TestBed.get(Router)
+    );
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(PokerControlComponent);
+    spyOn(router, "navigateByUrl")
     component = fixture.componentInstance
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+    expect(router.navigateByUrl).toHaveBeenCalledTimes(0);
   });
 
   it('should display time', fakeAsync(() => {
@@ -94,6 +112,7 @@ describe('PokerControlComponent', () => {
     tick(4000);
     expect(component.timer.getTimeValues().toString().slice(3)).toBe('00:04');
     component.timer.stop();
+    expect(router.navigateByUrl).toHaveBeenCalledTimes(0);
   }));
 
 });
