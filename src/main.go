@@ -38,7 +38,7 @@ func mapRoutesV2() {
 	}
 
 	_, _ = goweb.Map("GET", "", func(c context.Context) error {
-		return goweb.Respond.WithRedirect(c, "v2/index", "")
+		return goweb.Respond.WithRedirect(c, "index", "")
 	})
 
 	_ = goweb.MapController("v2/sprints", sc)
@@ -83,21 +83,21 @@ func mapRoutesV1() {
 		})
 	}
 
-	_, _ = goweb.Map("GET", "v1", func(c context.Context) error {
-		return goweb.Respond.WithRedirect(c, "v1/index", "")
+	_, _ = goweb.Map("GET", "", func(c context.Context) error {
+		return goweb.Respond.WithRedirect(c, "index", "")
 	})
 
-	_ = goweb.MapController("v1/sprints/", sc)
-	_ = goweb.MapController("v1/sprints/[sprintId]/rounds", rc)
-	_ = goweb.MapController("v1/sprints/[sprintId]/users", us)
+	_ = goweb.MapController("sprints/", sc)
+	_ = goweb.MapController("sprints/[sprintId]/rounds", rc)
+	_ = goweb.MapController("sprints/[sprintId]/users", us)
 
-	_, _ = goweb.Map("v1/info/[sprintId]", hc.handleHubs)
+	_, _ = goweb.Map("info/[sprintId]", hc.handleHubs)
 
-	_, _ = goweb.Map("POST", "v1/gc", garbageCollector)
+	_, _ = goweb.Map("POST", "gc", garbageCollector)
 
-	_, _ = goweb.Map("POST", "v1/sprints/[sprintId]/users/[userId]/setadmin", us.SetAdmin)
+	_, _ = goweb.Map("POST", "sprints/[sprintId]/users/[userId]/setadmin", us.SetAdmin)
 
-	_, _ = goweb.Map("POST", "v1/sprints/[sprintId]/users/[userId]/showvote", us.ShowVote)
+	_, _ = goweb.Map("POST", "sprints/[sprintId]/users/[userId]/showvote", us.ShowVote)
 
 	if !DEV {
 		root := "./static-ui"
@@ -128,7 +128,7 @@ func main() {
 		log.Print("In DEV mode, all CORS access will be allowed (UNSAFE).")
 		log.Print("DO NOT use in production.")
 	} else {
-		log.Print("In PROD mode, all pages will be statically mapped. Run ./build-static-ui.sh to build static ui with Angular.")
+		log.Print("In PROD mode, all pages will be statically mapped. Run make build-prod to build static ui with Angular.")
 	}
 
 	server := &http.Server{
