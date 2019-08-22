@@ -129,15 +129,5 @@ describe('PokerCardComponent', () => {
 
     expect(component.myVote).toBe(-1, "selected vote is cleared")
     expect(component.user.Vote).toBe(7, "Poker card doesn't update the vote in the user object. Memeberslist does")
-
-    // rounds.concat({
-    //   "Id": 2,
-    //   "Name": "Task 2",
-    //   "Med": 0,
-    //   "Avg": 0,
-    //   "Final": 0,
-    //   "Archived": false,
-    //   "CreationTime": 1564664555
-    // })
   })
 });
