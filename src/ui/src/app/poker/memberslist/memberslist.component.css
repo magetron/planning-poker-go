@@ -12,7 +12,7 @@
   text-align: left;
 }
 
-.hideV {
+#btn1:not(.showV) {
   background-color: #FFD700;
 }
 

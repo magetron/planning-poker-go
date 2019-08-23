@@ -24,11 +24,9 @@ import { WebsocketService } from 'src/app/services/websocket.service';
 
 export class PokerControlComponent implements OnInit {
 
-  shouldRun = [/(^|\.)plnkr\.co$/, /(^|\.)stackblitz\.io$/].some(h => h.test(window.location.host));
-
   @Input() sprint_id: string;
   round: Round = {
-    "Name": "none",
+    "Name": "",
     "Id" : 0,
     "Avg" : 0,
     "Med" : 0,
@@ -39,14 +37,14 @@ export class PokerControlComponent implements OnInit {
   nextStory: string = "";
   rounds: Round[];
   stats: number[];
-  timePassed = 0;
-  displayedColumns: string[] = ['RESULT', 'ROUNDS'];
+  displayedColumns: string[] = ['RESULT', 'ROUNDS', 'STARTED'];
   user: User;
   baseUrl: string;
   isVoteShown : boolean;
   subscriber: Subscription;
-  referenceTime: number;
   timer: Timer = new Timer();
+  admin: string = ""
+  roundTime: string = "00:00";
 
   constructor(
     private router: Router,
@@ -76,21 +74,36 @@ export class PokerControlComponent implements OnInit {
       console.log('Connection error', err);
       //TODO: Handle properly - notify the user, retry?
       this.router.navigateByUrl(`/join/${this.sprint_id}`);
-      return throwError(err);
+      throw (err);
     })
 
-    this.subscriber = this.webSocket.connect(this.sprint_id).subscribe();
     
     this.internal.rounds$.subscribe(msg => {
       this.rounds = msg
       this.round = this.rounds[this.rounds.length - 1]
+      this.timer.stop()
+      let timePassed = new Date().getTime()/1000 - this.round.CreationTime
+      this.startTimer(timePassed);
     })
 
     this.internal.stats$.subscribe(msg => {
       this.stats = msg
     });
-    this.internal.user$.subscribe(msg => this.user = msg);
+
+    this.internal.user$.subscribe(msg => {
+      this.user = msg
+    });
+
+    this.internal.user$.pipe(first()).subscribe(msg => {
+      if (msg && msg.Id != null) {
+        this.subscriber = this.webSocket.connect(this.sprint_id, msg.Id).subscribe();
+        if (msg.Admin){
+          this.addStory ("")
+        }
+      }
+    });
     this.internal.isVoteShown$.subscribe(msg => this.isVoteShown = msg);
+    this.internal.admin$.subscribe(msg => this.admin = msg);
   }
 
   socketBroadcast() {
@@ -111,36 +124,22 @@ export class PokerControlComponent implements OnInit {
       }
       if (response[1] && response[1].status === 200) {
         this.socketBroadcast();
-        this.getRefTime();
       } else {
         console.log("Set Vote to be shown failed");
       }
     });
   }
 
-  getRefTime(){
-    if (this.rounds && this.rounds[this.rounds.length - 1].CreationTime) {
-      this.referenceTime = this.rounds[this.rounds.length - 1].CreationTime
-      console.log("this.referenceTime", this.referenceTime )
-    } else {
-      this.referenceTime = new Date().getTime()/1000
-    }
-    this.timePassed = (new Date().getTime()/1000 - this.referenceTime)/1000
-    this.startTimer();
-  }
-
-  startTimer(){
-    this.timer.start({precision: 'seconds', startValues: {seconds: this.timePassed} });
+  startTimer(timePassed: number): void {
+    this.timer.start({precision: 'seconds', startValues: {seconds: timePassed} });
     let self = this;
-    this.timer.addEventListener('secondsUpdated', function (e){
-      let exist = document.getElementById("roundTime")
-      if (exist){
-        exist.innerText = self.timer.getTimeValues().toString().slice(3)
-      }
+    this.timer.addEventListener('secondsUpdated', function (e) {
+        self.roundTime = self.timer.getTimeValues().toString().slice(3)
     });
   }
 
-  archiveRound(): void {
+  archiveRound(title: string): void {
+    this.setRoundTitle(title)
     this.timer.stop();
     this.comms.archiveRound(this.sprint_id, this.round.Id, this.stats[2],
        this.stats[1], this.stats[3]).subscribe(response => {
@@ -149,6 +148,7 @@ export class PokerControlComponent implements OnInit {
         this.internal.updateRounds(this.rounds);
         this.socketBroadcast()
         console.log("Round archived: ", this.round.Id);
+        this.addStory ("")
       } else {
         console.log("Server communication error");
       }
@@ -193,4 +193,30 @@ export class PokerControlComponent implements OnInit {
     document.body.removeChild(selBox);
   }
 
+  setRoundTitle(title: string) {
+    this.comms.setRoundTitle(this.sprint_id, this.round.Id, title).subscribe(response => {
+      if (response && response.status === 200) {
+        this.round.Name = title
+        this.rounds[this.rounds.length - 1].Name = title;
+        this.internal.updateRounds(this.rounds);
+        this.socketBroadcast()
+        console.log("Updated round", this.round.Id, "title: ", title);
+      } else {
+        console.log("Server communication error");
+      }
+    });
+  }
+
+  title_ify (title: string) {
+    if (title == ""){
+      return "👑 " + "is typing ..."
+    } else {
+      return title
+    }
+  }
+
+  date_to_clock(epoch: number) {
+    let date: Date = new Date(epoch*1000)
+    return `${date.getHours().toString().padStart(2)}:${date.getMinutes().toString().padStart(2)}`
+  }
 }

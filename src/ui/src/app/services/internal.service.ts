@@ -17,8 +17,9 @@ export class InternalService {
   private stats = new BehaviorSubject<number[]>([0,0,0,0]); //Mode, Median Average, Final
   private isVoteShown = new BehaviorSubject<boolean>(false);
   private logoutAll = new BehaviorSubject<boolean>(false);
-  private users = new BehaviorSubject<User[]>(null);
+  private users = new BehaviorSubject<{[key: string]: User}>(null);
   private rounds = new BehaviorSubject<Round[]>([{Name: "default",Id : 0,Avg : 0,Med: 0,Final: 0,Archived : false,CreationTime : 0,}]);
+  private admin = new BehaviorSubject<string>(null);
 
   user$ = this.user.asObservable();
   sprint$ = this.sprint.asObservable();
@@ -27,6 +28,7 @@ export class InternalService {
   logoutAll$ = this.logoutAll.asObservable();
   users$ = this.users.asObservable();
   rounds$ = this.rounds.asObservable();
+  admin$ = this.admin.asObservable();
 
   constructor() { }
 
@@ -66,12 +68,17 @@ export class InternalService {
     this.logoutAll.next(logoutAll);
   }
 
-  updateUsers(users: User[]) {
+  updateUsers(users: {[key: string]: User}) {
     this.users.next(users);
   }
 
   updateRounds(rounds: Round[]) {
     this.rounds.next(rounds);
   }
+
+  updateAdmin(admin: string) {
+    this.admin.next(admin);
+  }
+
 
 }

@@ -1,6 +1,8 @@
 import { Component, OnInit, Input} from '@angular/core';
+import { ActivatedRoute} from '@angular/router';
 
-import { Sprint } from '../models/sprint';
+
+import { Sprint } from '../../models/sprint';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -11,12 +13,15 @@ import { environment } from 'src/environments/environment';
 
 export class ShareComponent implements OnInit {
 
-  @Input() share : Sprint;
+  @Input() sprint_id : string;
   baseUrl: string;
 
-  constructor() { }
+  constructor(
+    private route: ActivatedRoute,
+  ) { }
 
   ngOnInit() {
+    this.sprint_id = this.route.snapshot.paramMap.get('sprint_id');
     this.baseUrl = environment.baseUrl;
   }
 

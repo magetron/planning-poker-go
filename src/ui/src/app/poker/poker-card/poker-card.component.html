@@ -1,8 +1,8 @@
 <div class="container">
 	<div class="card-deck">
 		<div class="card text-center">
-		  	<button mat-raised-button class="card-primary" (click)="vote(point)" id={{point}} *ngFor="let point of points">
-		  		{{cardify(point, true)}}
+		  	<button mat-raised-button [ngClass]="{'card-secondary': myVote === point}" class="card-primary" (click)="vote(point)" id={{point}} *ngFor="let point of points">
+				  {{cardify(point, true)}}
 		  	</button>
 		</div>
 	</div>

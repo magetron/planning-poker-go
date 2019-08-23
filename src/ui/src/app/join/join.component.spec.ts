@@ -13,7 +13,7 @@ import { CommsService } from '../services/comms.service'
 import { environment } from '../../environments/environment';
 import { JoinComponent } from './join.component';
 import { NewSprintComponent } from '../new-sprint/new-sprint.component';
-import { ShareComponent } from '../share/share.component';
+import { ShareComponent } from 'src/app/poker/share/share.component';
 import { PokerControlComponent } from '../poker/poker-control/poker-control.component';
 import { PokerCardComponent } from '../poker/poker-card/poker-card.component';
 import { MemberslistComponent } from '../poker/memberslist/memberslist.component';

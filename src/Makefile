@@ -67,8 +67,9 @@ test:
 	cd ui; $(NGTEST)
 	$(GOTEST) --cover -v ./...
 	$(GOBUILD) -o $(BINARY_NAME) -v ./...
-	#env PP_DEV=true ./$(BINARY_NAME) &
-	#cd ui; $(NGE2E)
+	$(GOTEST) --cover -v ./...
+	cd ui; $(NGTEST)
+	./$(BINARY_NAME) & PID=$$! && cd ui; $(NGE2E) && kill $$PID
 
 clean:
 	$(GOCLEAN)

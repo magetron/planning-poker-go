@@ -4,8 +4,9 @@ import { Observable } from 'rxjs';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
 import { environment } from 'src/environments/environment';
-import { Sprint } from '../models/sprint';
-import { User } from '../models/user';
+import { Sprint } from 'src/app/models/sprint';
+import { User } from 'src/app/models/user';
+import { Round } from 'src/app/models/round';
 import { SimpleResponse, ComplexResponse, StatusResponse, UserResponse, SprintResponse } from 'src/app/models/responses'
 
 const HTTPOPTIONS = {
@@ -125,4 +126,14 @@ export class CommsService {
       `${environment.apiUrl}/sprints/${sprint_id}/users/${user_id}/showvote`, jsonObject, HTTPOPTIONS_NO_BODY);
     return result;
   }
+
+  setRoundTitle (sprint_id: string, round_id: number, title: string): Observable<StatusResponse>{
+    let jsonObject = {
+      "Name": title,
+    }
+    const result = this.httpClient.post<StatusResponse>(
+      `${environment.apiUrl}/sprints/${sprint_id}/rounds/${round_id}/settitle`, jsonObject, HTTPOPTIONS_NO_BODY);
+    return result;
+  }
+
 }

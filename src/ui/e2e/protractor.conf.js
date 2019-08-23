@@ -13,10 +13,9 @@ exports.config = {
     './src/**/*.e2e-spec.ts'
   ],
   capabilities: {
-    browserName: 'chrome',
-    chromeOptions: {
-      args: [ "--headless", "--disable-gpu", "--window-size=1600x900" ],
-      //binary: "/usr/bin/chromium-browser",
+    'browserName': 'chrome',
+	chromeOptions: {
+		args: ["--headless", "--disable-gpu", "--no-sandbox", "--remote-debugging-port=12345" ]
     }
   },
   directConnect: true,
