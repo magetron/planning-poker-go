@@ -1,9 +1,8 @@
-# Planning Poker in Go ![badge](https://codebuild.eu-west-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoicDhZeURYRDRiMlVscExLZGliSitwMlhMRHZkZDVzd1lmb3NzU2hpS0R0Nk5MSmpDblY5RkNwOFdXZFdKOWZraXlVdGhvZVVNQ2RESDczK0RWRC8yMjJ3PSIsIml2UGFyYW1ldGVyU3BlYyI6InBFaElZK1BYWG80UERUbngiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)
+# Planning Poker in Go 
 
 Powered by Interns
 
 ## PRODUCTION status
-![prod badge](https://codebuild.eu-west-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiSzdVTHEyenRwdkpOd1R5b3UycDlmSFpMZjNpVkdFU0U0eHVScGIvMnY1SnNCbzZqa2dDZDl2dHlGNTcxMXMySTFlakpJSjFTcVppZ2cxVGdOZGJYMjdZPSIsIml2UGFyYW1ldGVyU3BlYyI6IkNqTldvdnduQ0RFSE9ZY1oiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)
 
 ## Instructions
 

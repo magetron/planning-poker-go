@@ -130,7 +130,7 @@ func (c *Client) writePump() {
 						}
 					}
 					if !setSuccess {
-						us.AllUsers[c.Hub.Id].Users = nil
+						delete(us.AllUsers, c.Hub.Id)
 					} else {
 						delete(us.AllUsers[c.Hub.Id].Users, c.Id)
 					}
