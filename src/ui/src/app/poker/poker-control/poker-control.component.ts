@@ -36,7 +36,7 @@ export class PokerControlComponent implements OnInit {
   };
   rounds: Round[];
   stats: number[];
-  displayedColumns: string[] = ['RESULT', 'ROUNDS'];
+  displayedColumns: string[] = ['RESULT', 'ROUNDS', 'STARTED'];
   user: User;
   baseUrl: string;
   isVoteShown : boolean;
@@ -211,5 +211,10 @@ export class PokerControlComponent implements OnInit {
     } else {
       return title
     }
+  }
+
+  date_to_clock(epoch: number) {
+    let date: Date = new Date(epoch*1000)
+    return `${date.getHours().toString().padStart(2)}:${date.getMinutes().toString().padStart(2)}`
   }
 }
