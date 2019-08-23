@@ -29,10 +29,7 @@
           Timer:
         </mat-card-title>
         <mat-card-content fxLayoutAlign="center">
-          <h1 *ngIf="round.Archived; else notArchived">00:00</h1>
-          <ng-template #notArchived>
-              <h1 id = "roundTime">00:00</h1>
-          </ng-template>
+          <h1 id="roundTimer">{{roundTime}}</h1>
           <app-elapsed-timer></app-elapsed-timer>
           <br>
         </mat-card-content>
