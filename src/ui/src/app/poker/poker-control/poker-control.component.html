@@ -72,6 +72,10 @@
           <th mat-header-cell *matHeaderCellDef> Result </th>
           <td mat-cell *matCellDef="let rounds"> {{hideLastElementInList(rounds)}} </td>
         </ng-container>
+        <ng-container matColumnDef="STARTED">
+          <th mat-header-cell *matHeaderCellDef> Started </th>
+          <td mat-cell *matCellDef="let rounds"> {{date_to_clock(rounds.CreationTime)}} </td>
+        </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>
