@@ -58,6 +58,7 @@ export class PokerCardComponent extends Cardify implements OnInit {
 
         } else {
           console.log("Selection error");
+          this.myVote = -1
         }
     }))
   }
