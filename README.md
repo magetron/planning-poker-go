@@ -1,17 +1,20 @@
-# Planning Poker in Go ![badge](https://codebuild.eu-west-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoicDhZeURYRDRiMlVscExLZGliSitwMlhMRHZkZDVzd1lmb3NzU2hpS0R0Nk5MSmpDblY5RkNwOFdXZFdKOWZraXlVdGhvZVVNQ2RESDczK0RWRC8yMjJ3PSIsIml2UGFyYW1ldGVyU3BlYyI6InBFaElZK1BYWG80UERUbngiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)
+# Planning Poker in Go 
 
 Powered by Interns
 
 ## PRODUCTION status
-![prod badge](https://codebuild.eu-west-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiSzdVTHEyenRwdkpOd1R5b3UycDlmSFpMZjNpVkdFU0U0eHVScGIvMnY1SnNCbzZqa2dDZDl2dHlGNTcxMXMySTFlakpJSjFTcVppZ2cxVGdOZGJYMjdZPSIsIml2UGFyYW1ldGVyU3BlYyI6IkNqTldvdnduQ0RFSE9ZY1oiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)
 
 ## Instructions
 
 ### Deployment
 
-Now Deployment to RELEASE (INTEGRATION) EC2 environment shall be done automatically via CodePipeline.
-CodePipeline will fetch the source and deploy it to `http://planning-poker-nlb-ec2-e86c54390baa9c80.elb.eu-west-1.amazonaws.com:8080/#/new`
-Production environment CI is on it's way.
+Deployment to RELEASE (INTEGRATION) EC2 environment shall be done automatically via CodePipeline.
+
+[EC2 - NLB](http://planning-poker-nlb-ec2-e86c54390baa9c80.elb.eu-west-1.amazonaws.com:8080)
+
+Deployment to PRODUCTION ECS environment shall be done automatically via CodePipeline.
+
+[ECS - NLB](http://planning-poker-nlb-2f296abfc5666965.elb.eu-west-1.amazonaws.com:8080)
 
 ### Development
 

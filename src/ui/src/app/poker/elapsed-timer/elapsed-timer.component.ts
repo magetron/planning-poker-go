@@ -15,7 +15,7 @@ export class ElapsedTimerComponent implements OnInit {
 
   gettingRefTime: boolean = true
   timer: Timer = new Timer();
-  displayedTime = "0:00"
+  displayedTime = "00:00"
   subscriber: Subscription
 
   constructor(
@@ -48,9 +48,9 @@ export class ElapsedTimerComponent implements OnInit {
   timerToString(): string {
   let hh = this.timer.getTimeValues().hours
     if (hh) {
-      return `${hh}:${this.timer.getTimeValues().minutes.toString()}:${this.timer.getTimeValues().toString().slice(6)}`
+      return `${hh}:${this.timer.getTimeValues().toString().slice(3)}`
     } else {
-      return `${this.timer.getTimeValues().minutes.toString()}:${this.timer.getTimeValues().toString().slice(6)}`
+      return `${this.timer.getTimeValues().toString().slice(3)}`
     }
   }
 }

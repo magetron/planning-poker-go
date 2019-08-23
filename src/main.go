@@ -25,7 +25,7 @@ var rc = new(RoundsController)
 var us = new(UsersService)
 var hc = new(HubsController)
 
-func mapRoutes() {
+func mapRoutesV2() {
 
 	if DEV {
 		_, _ = goweb.MapBefore(func(c context.Context) error {
@@ -37,21 +37,23 @@ func mapRoutes() {
 		})
 	}
 
-	_, _ = goweb.Map("GET", "/", func(c context.Context) error {
-		return goweb.Respond.WithRedirect(c, "/index", "")
+	_, _ = goweb.Map("GET", "", func(c context.Context) error {
+		return goweb.Respond.WithRedirect(c, "index", "")
 	})
 
-	_ = goweb.MapController(sc)
-	_ = goweb.MapController("sprints/[sprintId]/rounds", rc)
-	_ = goweb.MapController("sprints/[sprintId]/users", us)
+	_ = goweb.MapController("v2/sprints", sc)
+	_ = goweb.MapController("v2/sprints/[sprintId]/rounds", rc)
+	_ = goweb.MapController("v2/sprints/[sprintId]/users", us)
 
-	_, _ = goweb.Map("info/[sprintId]", hc.handleHubs)
+	_, _ = goweb.Map("v2/info/[sprintId]/users/[userId]", hc.handleHubs)
 
-	_, _ = goweb.Map("POST", "gc", garbageCollector)
+	_, _ = goweb.Map("POST", "v2/gc", garbageCollector)
 
-	_, _ = goweb.Map("POST", "sprints/[sprintId]/users/[userId]/setadmin", us.SetAdmin)
+	_, _ = goweb.Map("POST", "v2/sprints/[sprintId]/users/[userId]/setadmin", us.SetAdmin)
 
-	_, _ = goweb.Map("POST", "sprints/[sprintId]/users/[userId]/showvote", us.ShowVote)
+	_, _ = goweb.Map("POST", "v2/sprints/[sprintId]/users/[userId]/showvote", us.ShowVote)
+
+	_, _ = goweb.Map("POST", "v2/sprints/[sprintId]/rounds/[roundId]/settitle", rc.SetTitle)
 
 	if !DEV {
 		root := "./static-ui"
@@ -73,7 +75,7 @@ func main() {
 
 	DEV, _ = strconv.ParseBool(os.Getenv("PP_DEV"))
 
-	mapRoutes()
+	mapRoutesV2()
 
 	log.Print("Staring server ...")
 
@@ -81,7 +83,7 @@ func main() {
 		log.Print("In DEV mode, all CORS access will be allowed (UNSAFE).")
 		log.Print("DO NOT use in production.")
 	} else {
-		log.Print("In PROD mode, all pages will be statically mapped. Run ./build-static-ui.sh to build static ui with Angular.")
+		log.Print("In PROD mode, all pages will be statically mapped. Run make build-prod to build static ui with Angular.")
 	}
 
 	server := &http.Server{
@@ -114,30 +116,4 @@ func main() {
 
 	log.Fatalf("Error in Server: %s", server.Serve(listener))
 
-}
-
-func garbageCollector(ctx context.Context) error {
-	log.Print("Collecting Garbage...")
-	for i, s := range sc.Sprints {
-		if time.Now().Sub(s.CreationTime).Hours() > 12 {
-			for irs, rs := range rc.AllRounds {
-				if rs.SprintId == s.Id {
-					rc.AllRounds[len(rc.AllRounds)-1], rc.AllRounds[irs] = rc.AllRounds[irs], rc.AllRounds[len(rc.AllRounds)-1]
-					rc.AllRounds = rc.AllRounds[:len(rc.AllRounds)-1]
-					break
-				}
-			}
-			for iu, u := range us.AllUsers {
-				if u.SprintId == s.Id {
-					us.AllUsers[len(us.AllUsers)-1], us.AllUsers[iu] = us.AllUsers[iu], us.AllUsers[len(us.AllUsers)-1]
-					us.AllUsers = us.AllUsers[:len(us.AllUsers)-1]
-					break
-				}
-			}
-			sc.Sprints[len(sc.Sprints)-1], sc.Sprints[i] = sc.Sprints[i], sc.Sprints[len(sc.Sprints)-1]
-			sc.Sprints = sc.Sprints[:len(sc.Sprints)-1]
-			break
-		}
-	}
-	return nil
 }

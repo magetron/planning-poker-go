@@ -58,7 +58,7 @@ describe('ElapsedTimerComponent', () => {
     tick(4000);
     expect(component.timer.getTimeValues().toString().slice(3)).toBe('00:04');
     expect(component.timer.getTimeValues().toString().slice(6)).toBe('04');
-    expect(component.timerToString()).toBe('0:04');
+    expect(component.timerToString()).toBe('00:04');
     component.timer.stop();
   }));
 
@@ -68,7 +68,7 @@ describe('ElapsedTimerComponent', () => {
     tick(4000);
     fixture.detectChanges()
     let time = fixture.debugElement.query(By.css("div#elapsedTime")).childNodes[0].nativeNode.data
-    expect(time).toBe(' 0:00\n');
+    expect(time).toBe(' 00:00\n');
     component.timer.stop();
   }));
 
@@ -87,7 +87,7 @@ describe('ElapsedTimerComponent', () => {
     tick(4000);
     fixture.detectChanges()
     let time = fixture.debugElement.query(By.css("div#elapsedTime")).childNodes[0].nativeNode.data
-    expect(time).toBe(' 0:04\n');
+    expect(time).toBe(' 00:04\n');
     component.timer.stop();
   }));
 

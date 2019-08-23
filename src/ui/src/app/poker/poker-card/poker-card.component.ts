@@ -20,10 +20,10 @@ export class PokerCardComponent extends Cardify implements OnInit {
   user: User;
   round: Round;
   enableCard: boolean = false;
+  myVote: number;
 
 
   constructor(
-    private router: Router,
     private route: ActivatedRoute,
     private internal: InternalService,
     private comms: CommsService,
@@ -36,11 +36,12 @@ export class PokerCardComponent extends Cardify implements OnInit {
       res => this.user = res
     )
 
-    if (!this.user || !this.user.Id) {
-      this.router.navigate(["join", this.sprint_id])
-    }
-
-    this.internal.rounds$.subscribe(msg => this.round = msg[-1] );
+    this.internal.rounds$.subscribe(msg => {
+      this.round = msg[msg.length-1]
+      if (this.round && this.round.Archived) {
+        this.myVote = -1;
+      }
+    });
   }
 
   socketBroadcast() {
@@ -48,19 +49,16 @@ export class PokerCardComponent extends Cardify implements OnInit {
   }
 
   vote(point: number) {
+    this.myVote = point;
     this.comms.selectCard(this.sprint_id, this.user.Id, point).subscribe((response => {
         if (response.status === 200) {
           this.socketBroadcast();
-          let old = document.getElementsByClassName("card-secondary")
-          if (old[0]) {
-            old[0].classList.remove("card-secondary");
-          }
-          document.getElementById(point.toString()).classList.add("card-secondary");
           this.user.Vote = point;
           this.internal.updateUser(this.user);
 
         } else {
           console.log("Selection error");
+          this.myVote = -1
         }
     }))
   }

@@ -19,13 +19,16 @@ import { WebsocketService } from 'src/app/services/websocket.service';
 
 export class MemberslistComponent extends Cardify implements OnInit {
 
-  users: User[];
+  tabledata: object[];
+  admin: string;
+  users: {[key: string]: User};
   user: User;
   round: Round;
   @Input() sprint_id: string;
 
   btn1text: string;
   displayedColumns: string[] = ['NAME', 'VOTE'];
+  showVote: boolean = false;
 
   constructor(
     private socket: WebsocketService,
@@ -43,17 +46,24 @@ export class MemberslistComponent extends Cardify implements OnInit {
       if (this.users) {
         let stats = this.analysisVote(this.users)
         this.internal.updateStats(stats)
-        this.internal.updateUser(this.updateMe())
+        this.tabledata = Object.values(this.users)
       }
     });
+    this.internal.admin$.subscribe(msg => this.admin = msg)
+    this.internal.rounds$.subscribe((msg: Round[]) => {
+        if (msg && msg[msg.length-1].Archived) {
+          this.showVote = false
+        }
+    })
   }
 
-  socketBroadcast() {
+  socketBroadcast(): void {
     this.socket.send("update");
   }
 
-  analysisVote(users: User[]): Array<number> {
-    let result = users.map((i: User) => i.Vote);
+  analysisVote(users: {[key: string]: User}): Array<number> {
+
+    let result = Object.values(users).map(user => user.Vote)
 
     //strip non-votes
     result = result.filter((i: number) => ![-1, -2, -3].includes(i));
@@ -82,7 +92,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
 
     let half = Math.floor(arr.length / 2);
 
-    if (arr.length % 2){
+    if (arr.length % 2) {
       return arr[half];
     } else {
       return (arr[half - 1] + arr[half]) / 2.0;
@@ -108,40 +118,26 @@ export class MemberslistComponent extends Cardify implements OnInit {
   }
 
   showVoteFunc(): void {
-
-    let btn = document.getElementById("btn1")
-    let state = btn.classList.toggle("showV")
-    btn.classList.toggle("hideV")
-
-    this.internal.showVote(state)
-    if (state) {
-      this.btn1text = "Hide Vote";
-    } else {
-      this.btn1text = "Show Vote";
+    if (this.user.Id == this.admin) {
+      this.showVote =! this.showVote;
+      this.internal.showVote(this.showVote) 
+      this.comms.showVote(this.sprint_id, this.user.Id, this.showVote).subscribe((response => {
+        if (response.status === 200) {
+          this.socketBroadcast();
+        } else {
+          console.log("Set Vote to be shown failed");
+        }
+      }))
     }
-
-    for (let user of this.users){
-      if (user.Admin == true) {
-        this.comms.showVote(this.sprint_id, this.user.Id, state ).subscribe((response => {
-          if (response.status === 200) {
-            this.socketBroadcast();
-          } else {
-            console.log("Set Vote to be shown failed");
-          }
-        }))
-      }
-    }
-
   }
 
-  setNextAdmin(successor : User) : void{
-    if (this.user.Admin){
+  setNextAdmin(successor : User) : void {    
+    if (this.user.Id == this.admin && successor.Id != this.user.Id) {
       this.comms.appointSuccessor(this.sprint_id, this.user.Id, successor.Id).subscribe(response => {
         console.info(response);
         if (response && response.status === 200) {
           console.log("Set successor");
-          this.user.Admin = false;
-          this.internal.updateUser(this.user);
+          this.internal.updateAdmin(successor.Id);
           this.socketBroadcast();
         } else {
           console.log("Set successor failed");
@@ -150,16 +146,7 @@ export class MemberslistComponent extends Cardify implements OnInit {
     }
   }
 
-  updateMe(): User {
-    if (this.users.length >1 &&
-     this.users[0].Id == this.user.Id &&
-     this.users[0].Admin) {
-      return (this.users[0])
-    }
-    return this.user;    
-  }
-
   crowned (user: User): string {
-    return(user.Admin ? user.Name +" \uD83D\uDC51" : user.Name)
+    return(user.Id == this.admin ? user.Name +" 👑" : user.Name)
   }
 }
