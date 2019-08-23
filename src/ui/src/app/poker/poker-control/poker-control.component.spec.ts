@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, tick, fakeAsync, discardPeriodicTasks } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 import { MatCardModule, MatFormFieldModule, MatIconModule, MatListModule, MatTableModule, MatButtonModule, MatInputModule,  MatToolbarModule } from '@angular/material';
@@ -24,6 +24,7 @@ describe('PokerControlComponent', () => {
   let component: PokerControlComponent;
   let fixture: ComponentFixture<PokerControlComponent>;
   let router: Router;
+  let internal: InternalService;
 
   beforeEach(async(() => {
     /*const internalSpy = jasmine.createSpyObj('InternalService', {
@@ -90,7 +91,8 @@ describe('PokerControlComponent', () => {
        ],
     })
     .compileComponents().then(
-      router = TestBed.get(Router)
+      router = TestBed.get(Router),
+      internal = TestBed.get(InternalService)
     );
   }));
 
@@ -98,8 +100,13 @@ describe('PokerControlComponent', () => {
     fixture = TestBed.createComponent(PokerControlComponent);
     spyOn(router, "navigateByUrl")
     component = fixture.componentInstance
+    jasmine.clock().install()
     fixture.detectChanges();
   });
+
+  afterEach(() => {
+    jasmine.clock().uninstall()
+  })
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -107,12 +114,24 @@ describe('PokerControlComponent', () => {
   });
 
   it('should display time', fakeAsync(() => {
-    component.timePassed = 0
-    component.startTimer();
+    internal.updateRounds([{
+      "Id": 1, 
+      "Name": "Task 1",
+      "Med": 0, 
+      "Avg": 0, 
+      "Final": 0, 
+      "Archived": false, 
+      "CreationTime": 1564664527 
+    }])
+    jasmine.clock().mockDate(new Date(1564664527 * 1000))
     tick(4000);
     expect(component.timer.getTimeValues().toString().slice(3)).toBe('00:04');
+    fixture.detectChanges()
+    let roundTimer = fixture.nativeElement.querySelector("h1#roundTimer") as HTMLElement
+    expect(roundTimer.innerText).toBe("00:04")
     component.timer.stop();
     expect(router.navigateByUrl).toHaveBeenCalledTimes(0);
+    discardPeriodicTasks()
   }));
 
 });
