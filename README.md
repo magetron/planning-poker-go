@@ -1,5 +1,7 @@
 # Planning Poker in Go 
 
+A planning poker project built by 3 interns who adventured into a B Bank in the middle of nowhere
+
 Powered by Interns
 
 ### Deployment
