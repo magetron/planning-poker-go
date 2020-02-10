@@ -2,19 +2,11 @@
 
 Powered by Interns
 
-## PRODUCTION status
-
-## Instructions
-
 ### Deployment
 
 Deployment to RELEASE (INTEGRATION) EC2 environment shall be done automatically via CodePipeline.
 
-[EC2 - NLB](http://planning-poker-nlb-ec2-e86c54390baa9c80.elb.eu-west-1.amazonaws.com:8080)
-
 Deployment to PRODUCTION ECS environment shall be done automatically via CodePipeline.
-
-[ECS - NLB](http://planning-poker-nlb-2f296abfc5666965.elb.eu-west-1.amazonaws.com:8080)
 
 ### Development
 
