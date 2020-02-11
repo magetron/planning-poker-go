@@ -1,0 +1,27 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '10.x'
+    - uses: actions/setup-go@v1
+      with:
+        go-version: 1.12.x
+    - uses: actions/checkout@v2
+      with: 
+        fetch-depth: 1
+    - name: Test Angular
+      if: success()
+      run: |
+        export PATH=${PATH}:`go env GOPATH`/bin
+        export GOPATH=`go env GOPATH`
+        cd src/ui
+        npm install
+        CHROMIUM_BIN=google-chrome-stable npx ng test --code-coverage --karma-config ./karma-headless.conf.js --progress false
