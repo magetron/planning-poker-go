@@ -17,14 +17,10 @@ jobs:
     - uses: actions/setup-go@v1
       with:
         go-version: 1.x
-    - name: setup env
-      run: |
-        export PATH=${PATH}:`go env GOPATH`/bin
-        env
-
     - name: Go Makefile, go!
       if: success()
       run: |
+        export PATH=${PATH}:`go env GOPATH`/bin
         cd src
         env
         go install    
