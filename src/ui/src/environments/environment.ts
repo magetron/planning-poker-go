@@ -8,8 +8,8 @@ export const environment = {
   // equivalent to location.origin + userHash
   baseUrl: "http://localhost:4200" + '/#',
 
-  apiUrl: "http://localhost:8080",
-  infoSocket: "ws://localhost:8080/info/",
+  apiUrl: "http://localhost:8080/v2",
+  infoSocket: "ws://localhost:8080/v2/info/",
 };
 
 /*

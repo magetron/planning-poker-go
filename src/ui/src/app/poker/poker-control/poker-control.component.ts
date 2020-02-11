@@ -24,11 +24,9 @@ import { WebsocketService } from 'src/app/services/websocket.service';
 
 export class PokerControlComponent implements OnInit {
 
-  shouldRun = [/(^|\.)plnkr\.co$/, /(^|\.)stackblitz\.io$/].some(h => h.test(window.location.host));
-
   @Input() sprint_id: string;
   round: Round = {
-    "Name": "none",
+    "Name": "",
     "Id" : 0,
     "Avg" : 0,
     "Med" : 0,
@@ -36,7 +34,6 @@ export class PokerControlComponent implements OnInit {
     "Archived" : false,
     "CreationTime" : 0,
   };
-  nextStory: string = "";
   rounds: Round[];
   stats: number[];
   timePassed = 0;
@@ -45,8 +42,8 @@ export class PokerControlComponent implements OnInit {
   baseUrl: string;
   isVoteShown : boolean;
   subscriber: Subscription;
-  referenceTime: number;
   timer: Timer = new Timer();
+  admin: string = ""
 
   constructor(
     private router: Router,
@@ -79,7 +76,6 @@ export class PokerControlComponent implements OnInit {
       return throwError(err);
     })
 
-    this.subscriber = this.webSocket.connect(this.sprint_id).subscribe();
     
     this.internal.rounds$.subscribe(msg => {
       this.rounds = msg
@@ -89,8 +85,19 @@ export class PokerControlComponent implements OnInit {
     this.internal.stats$.subscribe(msg => {
       this.stats = msg
     });
-    this.internal.user$.subscribe(msg => this.user = msg);
+    this.internal.user$.subscribe(msg => {
+      this.user = msg
+    });
+    this.internal.user$.pipe(first()).subscribe(msg => {
+      if (msg && msg.Id) {
+        this.subscriber = this.webSocket.connect(this.sprint_id, msg.Id).subscribe();
+        if (msg.Admin){
+          this.addStory ("")
+        }
+	  }
+    });
     this.internal.isVoteShown$.subscribe(msg => this.isVoteShown = msg);
+    this.internal.admin$.subscribe(msg => this.admin = msg);
   }
 
   socketBroadcast() {
@@ -105,7 +112,6 @@ export class PokerControlComponent implements OnInit {
       ).subscribe(response => {
       if (response[0] && response[0].status === 200) {
         this.round.Name = story;
-        this.nextStory = "";
       } else {
         console.log("Server communication error");
       }
@@ -119,13 +125,12 @@ export class PokerControlComponent implements OnInit {
   }
 
   getRefTime(){
-    if (this.rounds && this.rounds[this.rounds.length - 1].CreationTime) {
-      this.referenceTime = this.rounds[this.rounds.length - 1].CreationTime
-      console.log("this.referenceTime", this.referenceTime )
+    if (this.round && this.round.CreationTime != 0) {
+      console.log("this.referenceTime", this.round.CreationTime )
     } else {
-      this.referenceTime = new Date().getTime()/1000
+      this.round.CreationTime = new Date().getTime()/1000
     }
-    this.timePassed = (new Date().getTime()/1000 - this.referenceTime)/1000
+    this.timePassed = (new Date().getTime()/1000 - this.round.CreationTime)/1000
     this.startTimer();
   }
 
@@ -140,7 +145,8 @@ export class PokerControlComponent implements OnInit {
     });
   }
 
-  archiveRound(): void {
+  archiveRound(title: string): void {
+    this.setRoundTitle(title)
     this.timer.stop();
     this.comms.archiveRound(this.sprint_id, this.round.Id, this.stats[2],
        this.stats[1], this.stats[3]).subscribe(response => {
@@ -149,6 +155,7 @@ export class PokerControlComponent implements OnInit {
         this.internal.updateRounds(this.rounds);
         this.socketBroadcast()
         console.log("Round archived: ", this.round.Id);
+        this.addStory ("")
       } else {
         console.log("Server communication error");
       }
@@ -191,6 +198,28 @@ export class PokerControlComponent implements OnInit {
     selBox.select();
     document.execCommand('copy');
     document.body.removeChild(selBox);
+  }
+
+  setRoundTitle(title: string) {
+    this.comms.setRoundTitle(this.sprint_id, this.round.Id, title).subscribe(response => {
+      if (response && response.status === 200) {
+        this.round.Name = title
+        this.rounds[this.rounds.length - 1].Name = title;
+        this.internal.updateRounds(this.rounds);
+        this.socketBroadcast()
+        console.log("Updated round", this.round.Id, "title: ", title);
+      } else {
+        console.log("Server communication error");
+      }
+    });
+  }
+
+  title_ify (title: string) {
+    if (title == ""){
+      return "👑 " + "is typing ..."
+    } else {
+      return title
+    }
   }
 
 }

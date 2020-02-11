@@ -25,7 +25,7 @@ var rc = new(RoundsController)
 var us = new(UsersService)
 var hc = new(HubsController)
 
-func mapRoutes() {
+func mapRoutesV2() {
 
 	if DEV {
 		_, _ = goweb.MapBefore(func(c context.Context) error {
@@ -37,21 +37,67 @@ func mapRoutes() {
 		})
 	}
 
-	_, _ = goweb.Map("GET", "/", func(c context.Context) error {
-		return goweb.Respond.WithRedirect(c, "/index", "")
+	_, _ = goweb.Map("GET", "", func(c context.Context) error {
+		return goweb.Respond.WithRedirect(c, "v2/index", "")
 	})
 
-	_ = goweb.MapController(sc)
-	_ = goweb.MapController("sprints/[sprintId]/rounds", rc)
-	_ = goweb.MapController("sprints/[sprintId]/users", us)
+	_ = goweb.MapController("v2/sprints", sc)
+	_ = goweb.MapController("v2/sprints/[sprintId]/rounds", rc)
+	_ = goweb.MapController("v2/sprints/[sprintId]/users", us)
 
-	_, _ = goweb.Map("info/[sprintId]", hc.handleHubs)
+	_, _ = goweb.Map("v2/info/[sprintId]/users/[userId]", hc.handleHubs)
 
-	_, _ = goweb.Map("POST", "gc", garbageCollector)
+	_, _ = goweb.Map("POST", "v2/gc", garbageCollector)
 
-	_, _ = goweb.Map("POST", "sprints/[sprintId]/users/[userId]/setadmin", us.SetAdmin)
+	_, _ = goweb.Map("POST", "v2/sprints/[sprintId]/users/[userId]/setadmin", us.SetAdmin)
 
-	_, _ = goweb.Map("POST", "sprints/[sprintId]/users/[userId]/showvote", us.ShowVote)
+	_, _ = goweb.Map("POST", "v2/sprints/[sprintId]/users/[userId]/showvote", us.ShowVote)
+
+	_, _ = goweb.Map("POST", "v2/sprints/[sprintId]/rounds/[roundId]/settitle", rc.SetTitle)
+
+	if !DEV {
+		root := "./static-ui"
+		fileErr := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+			if path != "./static-ui" {
+				_, _ = goweb.MapStaticFile(path[10:], path)
+			}
+			return nil
+		})
+
+		if fileErr != nil {
+			log.Fatalf("Could not scan static files %s", fileErr)
+		}
+
+	}
+}
+
+func mapRoutesV1() {
+
+	if DEV {
+		_, _ = goweb.MapBefore(func(c context.Context) error {
+			c.HttpResponseWriter().Header().Set("Access-Control-Allow-Origin", "*")
+			c.HttpResponseWriter().Header().Set("Access-Control-Allow-Credentials", "true")
+			c.HttpResponseWriter().Header().Set("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,DELETE")
+			c.HttpResponseWriter().Header().Set("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers")
+			return nil
+		})
+	}
+
+	_, _ = goweb.Map("GET", "v1", func(c context.Context) error {
+		return goweb.Respond.WithRedirect(c, "v1/index", "")
+	})
+
+	_ = goweb.MapController("v1/sprints/", sc)
+	_ = goweb.MapController("v1/sprints/[sprintId]/rounds", rc)
+	_ = goweb.MapController("v1/sprints/[sprintId]/users", us)
+
+	_, _ = goweb.Map("v1/info/[sprintId]", hc.handleHubs)
+
+	_, _ = goweb.Map("POST", "v1/gc", garbageCollector)
+
+	_, _ = goweb.Map("POST", "v1/sprints/[sprintId]/users/[userId]/setadmin", us.SetAdmin)
+
+	_, _ = goweb.Map("POST", "v1/sprints/[sprintId]/users/[userId]/showvote", us.ShowVote)
 
 	if !DEV {
 		root := "./static-ui"
@@ -73,7 +119,8 @@ func main() {
 
 	DEV, _ = strconv.ParseBool(os.Getenv("PP_DEV"))
 
-	mapRoutes()
+	mapRoutesV2()
+	mapRoutesV1()
 
 	log.Print("Staring server ...")
 
@@ -114,30 +161,4 @@ func main() {
 
 	log.Fatalf("Error in Server: %s", server.Serve(listener))
 
-}
-
-func garbageCollector(ctx context.Context) error {
-	log.Print("Collecting Garbage...")
-	for i, s := range sc.Sprints {
-		if time.Now().Sub(s.CreationTime).Hours() > 12 {
-			for irs, rs := range rc.AllRounds {
-				if rs.SprintId == s.Id {
-					rc.AllRounds[len(rc.AllRounds)-1], rc.AllRounds[irs] = rc.AllRounds[irs], rc.AllRounds[len(rc.AllRounds)-1]
-					rc.AllRounds = rc.AllRounds[:len(rc.AllRounds)-1]
-					break
-				}
-			}
-			for iu, u := range us.AllUsers {
-				if u.SprintId == s.Id {
-					us.AllUsers[len(us.AllUsers)-1], us.AllUsers[iu] = us.AllUsers[iu], us.AllUsers[len(us.AllUsers)-1]
-					us.AllUsers = us.AllUsers[:len(us.AllUsers)-1]
-					break
-				}
-			}
-			sc.Sprints[len(sc.Sprints)-1], sc.Sprints[i] = sc.Sprints[i], sc.Sprints[len(sc.Sprints)-1]
-			sc.Sprints = sc.Sprints[:len(sc.Sprints)-1]
-			break
-		}
-	}
-	return nil
 }

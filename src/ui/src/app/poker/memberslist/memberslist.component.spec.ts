@@ -78,22 +78,22 @@ describe('MemberslistComponent', () => {
   });
 
   it('should calculate null statistics when votes are invisible', () => {
-    let votes = [{"Id":"6cdc22b1-db9b-4094-bb1f-e9485c023ea8","Name":"me","Vote":-3,"Admin":true},{"Id":"41c52577-3dff-4927-a67b-6e1bec5863fb","Name":"#$%^&(>","Vote":-2,"Admin":false},{"Id":"112b9d33-9e48-4dcf-9960-23ac36498afb","Name":"!@#$%^&*(","Vote":-1,"Admin":false}]
+    let votes = {"3a80c841-a17d-41e6-bad9-c391d5842b22":{"Id":"3a80c841-a17d-41e6-bad9-c391d5842b22","Name":"User 1","Vote":-3,"Admin":true},"5c741402-5089-4e43-a2e9-372fbc1a682c":{"Id":"5c741402-5089-4e43-a2e9-372fbc1a682c","Name":"User 2","Vote":-2,"Admin":false}}
     expect(component.analysisVote(votes)).toEqual([0, 0, 0, 0])
   })
 
   it('should calculate correct statistics when one user voted', () => {
-    let votes = [{"Id": "6cdc22b1-db9b-4094-bb1f-e9485c023ea8","Name": "me","Vote": -3,"Admin": true},{"Id": "41c52577-3dff-4927-a67b-6e1bec5863fb","Name": "#$%^&(>","Vote": 5,"Admin": false}]
+    let votes = {"3a80c841-a17d-41e6-bad9-c391d5842b22":{"Id":"3a80c841-a17d-41e6-bad9-c391d5842b22","Name":"User 1","Vote":-3,"Admin":true},"5c741402-5089-4e43-a2e9-372fbc1a682c":{"Id":"5c741402-5089-4e43-a2e9-372fbc1a682c","Name":"User 2","Vote":5,"Admin":false}}
     expect(component.analysisVote(votes)).toEqual([5, 5, 5, 5])
   })
 
   it('should calculate correct statistics when three users voted', () => {
-    let votes = [{"Id":"6cdc22b1-db9b-4094-bb1f-e9485c023ea8","Name":"me","Vote":3,"Admin":true},{"Id":"41c52577-3dff-4927-a67b-6e1bec5863fb","Name":"#$%^&(>","Vote":5,"Admin":false},{"Id":"112b9d33-9e48-4dcf-9960-23ac36498afb","Name":"!@#$%^&*(","Vote":0.5,"Admin":false}]
+    let votes = {"3a80c841-a17d-41e6-bad9-c391d5842b22":{"Id":"3a80c841-a17d-41e6-bad9-c391d5842b22","Name":"User 1","Vote":3,"Admin":true},"5c741402-5089-4e43-a2e9-372fbc1a682c":{"Id":"5c741402-5089-4e43-a2e9-372fbc1a682c","Name":"User 2","Vote":5,"Admin":false},"112b9d33-9e48-4dcf-9960-23ac36498afb":{"Id":"112b9d33-9e48-4dcf-9960-23ac36498afb","Name":"!@#$%^&*(","Vote":0.5,"Admin":false}}    
     expect(component.analysisVote(votes)).toEqual([5, 3, (3+5+0.5)/3, 3])
   })
 
   it('should calculate correct mean for an even number of users voting', () => {
-    let votes = [{"Id":"6cdc22b1-db9b-4094-bb1f-e9485c023ea8","Name":"me","Vote":3,"Admin":true},{"Id":"41c52577-3dff-4927-a67b-6e1bec5863fb","Name":"#$%^&(>","Vote":5,"Admin":false},{"Id":"112b9d33-9e48-4dcf-9960-23ac36498afb","Name":"!@#$%^&*(","Vote":0.5,"Admin":false},{"Id":"7df868eb-da95-4ad7-9f64-e2ce0d5719d2","Name":"happy tester","Vote":0.5,"Admin":false}]
+    let votes = {"3a80c841-a17d-41e6-bad9-c391d5842b22":{"Id":"3a80c841-a17d-41e6-bad9-c391d5842b22","Name":"User 1","Vote":3,"Admin":true},"5c741402-5089-4e43-a2e9-372fbc1a682c":{"Id":"5c741402-5089-4e43-a2e9-372fbc1a682c","Name":"User 2","Vote":5,"Admin":false},"112b9d33-9e48-4dcf-9960-23ac36498afb":{"Id":"112b9d33-9e48-4dcf-9960-23ac36498afb","Name":"!@#$%^&*(","Vote":0.5,"Admin":false},"7df868eb-da95-4ad7-9f64-e2ce0d5719d2":{"Id":"7df868eb-da95-4ad7-9f64-e2ce0d5719d2","Name":"happy tester","Vote":0.5,"Admin":false}}    
     expect(component.analysisVote(votes)).toEqual([0.5, (0.5+3)/2, (3+5+0.5+0.5)/4, 2])
   })
 
@@ -108,37 +108,41 @@ describe('MemberslistComponent', () => {
         "Vote": -3,
         "Admin": true
       }
-      let users: User[] = [{
+      let users = {
+        "userId1": {
             "Id": "userId1",
             "Name": "User 1",
             "Vote": -3,
             "Admin": true
         },
-        {
+        "userId2": {
             "Id": "userId2",
             "Name": "User 2",
             "Vote": -1,
             "Admin": false
-        }]
+        }}
+      let adminId = "userId1"  
       internal.updateUser(user)
       internal.updateUsers(users)
+      internal.updateAdmin(adminId)
     })
 
     it('should show showVote button to admins only', () => {
     
       //Beginning - no user, no button
-      let show_btn: HTMLButtonElement = fixture.debugElement.nativeElement.querySelector("button#btn1")
-      expect(show_btn).toBeNull()
+      //let show_btn: HTMLButtonElement = fixture.debugElement.nativeElement.querySelector("button#btn1")
+      //expect(show_btn).toBeNull()
       
-      let user: User = component.user
       fixture.detectChanges()
   
       //User admin - show button
-      show_btn = fixture.debugElement.nativeElement.querySelector("button#btn1")
+      let show_btn = fixture.debugElement.nativeElement.querySelector("button#btn1")
       expect(show_btn).toBeDefined()
       expect(show_btn.innerHTML).toBe("Show Votes")
   
-      user.Admin=false
+      internal.updateAdmin("userId2")
+      let user = component.user
+      user.Admin = false
       internal.updateUser(user)
       fixture.detectChanges()
       
@@ -160,7 +164,7 @@ describe('MemberslistComponent', () => {
       show_btn.click()
   
       let users = component.users
-      for (let i of users) {
+      for (let i of Object.values(users)) {
         i.Vote = 3
       }
       internal.updateUsers(users)
@@ -174,7 +178,7 @@ describe('MemberslistComponent', () => {
       expect(table_row_1.cells[1].innerHTML).toBe(" 3 ")
   
       show_btn.click()
-      for (let i of users) {
+      for (let i of Object.values(users)) {
         i.Vote = -1
       }
       internal.updateUsers(users)
