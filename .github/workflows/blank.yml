@@ -17,11 +17,12 @@ jobs:
     - uses: actions/checkout@v2
       with: 
         fetch-depth: 1
-        path: $GOPATH/src/github.com/magetron/planning-poker-go/
+        path: /home/runner/go/src/github.com/magetron/planning-poker-go/
     - name: Go Makefile, go!
       if: success()
       run: |
         export PATH=${PATH}:`go env GOPATH`/bin
+        cd $GOPATH/src/github.com/magetron/planning-poker-go/src
         go install
         go build
         make test
