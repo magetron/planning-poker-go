@@ -1,5 +1,7 @@
 # Planning Poker in Go 
 
+![CI](https://github.com/magetron/planning-poker-go/workflows/CI/badge.svg)
+
 A planning poker project built by 3 interns who adventured into a B Bank in the middle of nowhere
 
 Powered by Interns
