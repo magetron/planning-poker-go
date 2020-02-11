@@ -21,6 +21,7 @@ jobs:
       if: success()
       run: |
         export PATH=${PATH}:`go env GOPATH`/bin
+        export GOPATH=`go env GOPATH`
         mkdir -p $GOPATH/src/github.com/magetron/planning-poker-go/
         mv /home/runner/work/planning-poker-go/planning-poker-go/src $GOPATH/src/github.com/magetron/planning-poker-go/
         cd $GOPATH/src/github.com/magetron/planning-poker-go
