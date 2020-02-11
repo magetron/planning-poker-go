@@ -1,0 +1,28 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '10.x'
+    - name: Test Golang
+      run: |
+        cd src
+        go test
+    - name: Setup Angular
+      run: |
+        cd src/ui
+        npm ci
+    - name: Test Angular
+      run: |
+        cd src/ui
+        npm audit
+        npm test
+    
