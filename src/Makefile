@@ -62,10 +62,10 @@ build-front-far:
 test: test-front
 	$(GOTEST) --cover -v ./...
 	$(GOBUILD) -o $(BINARY_NAME) -v ./...
-	./$(BINARY_NAME) & PID=$$! && cd ui; $(NGE2E) && kill $$PID
 
 test-front:
 	cd ui; $(NGTEST)
+	cd ui; ./$(BINARY_NAME) & PID=$$! && cd ui; $(NGE2E) && kill $$PID
 
 clean:
 	$(GOCLEAN)
