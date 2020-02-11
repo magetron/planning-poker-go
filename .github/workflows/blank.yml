@@ -20,7 +20,7 @@ jobs:
     - name: Go Makefile, go!
       if: success()
       run: |
-        export GOPATH=PWD
+        export GOPATH=`pwd`
         mkdir bin
         export PATH=${PATH}:`go env GOPATH`/bin
         cd src
