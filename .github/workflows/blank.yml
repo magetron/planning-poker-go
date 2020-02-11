@@ -22,5 +22,6 @@ jobs:
       run: |
         export PATH=${PATH}:`go env GOPATH`/bin
         export GOPATH=`go env GOPATH`
+        cd src/ui
         npm install
-	npx ng test --code-coverage --karma-config ./karma-headless.conf.js --progress false
+        npx ng test --code-coverage --karma-config ./karma-headless.conf.js --progress false
