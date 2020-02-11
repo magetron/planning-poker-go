@@ -24,4 +24,5 @@ jobs:
         export GOPATH=`go env GOPATH`
         cd src/ui
         npm install
-        CHROMIUM_BIN=google-chrome-stable npx ng test --code-coverage --karma-config ./karma-headless.conf.js --progress false
+        cd ..
+        CHROMIUM_BIN=google-chrome-stable make test-front

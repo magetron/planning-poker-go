@@ -16,23 +16,19 @@ UIPATH=../static-ui
 
 
 .PHONY: dev prod deploy integration build-dev build-prod build-linux \
- build-back-linux build-back-int build-back-far test clean run-dev run
+ build-back-linux build-back-int build-back-far test test-front clean run-dev run
 
-dev: 
-	$(MAKE) test 
+dev: test
 	$(MAKE) build
 
-prod:
-	$(MAKE) test 
+prod: test
 	$(MAKE) build-prod
 
-deploy:
-	$(MAKE) test
+deploy: test
 	$(MAKE) build-back-linux
 	$(MAKE) build-front-far
 
-integration:
-	$(MAKE) test
+integration: test
 	$(MAKE) build-back-linux
 	$(MAKE) build-front-int
 
@@ -63,13 +59,13 @@ build-front-int:
 build-front-far:
 	cd ui; $(NGBUILD) --configuration=fargate $(UINAME) --outputPath=$(UIPATH)
 
-test:
-	cd ui; $(NGTEST)
+test: test-front
 	$(GOTEST) --cover -v ./...
 	$(GOBUILD) -o $(BINARY_NAME) -v ./...
-	$(GOTEST) --cover -v ./...
-	cd ui; $(NGTEST)
 	./$(BINARY_NAME) & PID=$$! && cd ui; $(NGE2E) && kill $$PID
+
+test-front:
+	cd ui; $(NGTEST)
 
 clean:
 	$(GOCLEAN)
