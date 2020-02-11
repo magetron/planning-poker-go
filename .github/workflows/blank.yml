@@ -9,11 +9,22 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with: 
+        fetch-depth: 1
     - uses: actions/setup-node@v1
       with:
         node-version: '10.x'
+    - name: setup env
+      run: |
+        echo "::set-env name=GOPATH::$(go env GOPATH)"
+        echo "::add-path::$(go env GOPATH)/bin"
+      shell: bash
+    - uses: actions/setup-go@v1
+      with:
+        go-version: 1.x
 
     - name: Go Makefile, go!
+      if: success()
       run: |
         cd src
         go install    
