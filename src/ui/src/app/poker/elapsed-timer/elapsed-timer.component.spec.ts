@@ -1,4 +1,4 @@
-import { MatCardModule } from '@angular/material';
+import { MatCardModule } from '@angular/material/card';
 import { of } from 'rxjs';
 
 import { async, ComponentFixture, TestBed, tick, fakeAsync  } from '@angular/core/testing';

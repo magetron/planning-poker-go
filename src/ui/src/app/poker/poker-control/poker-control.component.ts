@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Inject} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import { MatListModule } from '@angular/material';
+import { MatListModule } from '@angular/material/list';
 import { throwError, forkJoin, Subscription, timer } from 'rxjs';
 import { catchError, first } from 'rxjs/operators';
 import { AssertionError } from 'assert';
