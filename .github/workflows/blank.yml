@@ -25,6 +25,5 @@ jobs:
         export PATH=${PATH}:`go env GOPATH`/bin
         cd src
         env
-        go install    
-        go build
-        make test
+        ls
+        go install
