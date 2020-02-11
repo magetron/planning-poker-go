@@ -10,7 +10,14 @@ import { NewSprintComponent } from './new-sprint/new-sprint.component';
 import { CommsService } from './services/comms.service';
 import { JoinComponent } from './join/join.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatGridListModule, MatMenuModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatCardModule, MatToolbarModule, MatIconModule } from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { TopBarComponent } from './top-bar/top-bar.component';
 import { FlexLayoutModule } from '@angular/flex-layout'
 import { AuthGuard } from './_guards/auth.guard';
