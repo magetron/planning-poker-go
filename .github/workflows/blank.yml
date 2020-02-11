@@ -13,18 +13,14 @@ jobs:
         node-version: '10.x'
     - uses: actions/setup-go@v1
       with:
-        go-version: 1.x
+        go-version: 1.12.x
     - uses: actions/checkout@v2
       with: 
         fetch-depth: 1
-    - name: Go Makefile, go!
+    - name: Test Angular
       if: success()
       run: |
         export PATH=${PATH}:`go env GOPATH`/bin
         export GOPATH=`go env GOPATH`
-        mkdir -p $GOPATH/src/github.com/magetron/planning-poker-go/
-        mv /home/runner/work/planning-poker-go/planning-poker-go/src/ $GOPATH/src/github.com/magetron/planning-poker-go/
-        cd $GOPATH/src/github.com/magetron/planning-poker-go
-        go install
-        go build
-        make test
+        npm install
+	npx ng test --code-coverage --karma-config ./karma-headless.conf.js --progress false
