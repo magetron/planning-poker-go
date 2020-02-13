@@ -3,26 +3,47 @@ name: CI
 on: [push]
 
 jobs:
-  build:
-
+  angular-test:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/setup-node@v1
       with:
         node-version: '10.x'
-    - uses: actions/setup-go@v1
-      with:
-        go-version: 1.12.x
     - uses: actions/checkout@v2
       with: 
         fetch-depth: 1
     - name: Test Angular
       if: success()
       run: |
-        export PATH=${PATH}:`go env GOPATH`/bin
-        export GOPATH=`go env GOPATH`
         cd src/ui
         npm ci
         cd ..
         CHROMIUM_BIN=google-chrome-stable make test-front
+        
+  go-test: #based on https://github.com/actions/setup-go/issues/14#issuecomment-585886453 
+    strategy:
+      matrix:
+        go-version: [1.12.x] #Most tested. Might want to lift to 1.x if we find no breaking changes
+        platform: [ubuntu-latest] #, macos-latest, windows-latest]
+    runs-on: ${{ matrix.platform }}
+    steps:
+    - name: setup env
+      shell: bash
+      run: |
+        echo "::set-env name=GOPATH::${{ github.workspace }}/go"
+        echo "::add-path::${{ github.workspace }}/go/bin"
+    - name: Install Go
+      if: success()
+      uses: actions/setup-go@v1
+      with:
+        go-version: ${{ matrix.go-version }}
+    - name: checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 1
+        path: go/src/github.com/${{ github.repository }}
+    - name: Run tests
+      shell: bash
+      run: |
+        cd $GOPATH/src/github.com/${{ github.repository }}/src
+        go test --cover -v ./... 
