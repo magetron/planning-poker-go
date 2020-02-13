@@ -46,5 +46,5 @@ jobs:
       shell: bash
       run: |
         cd $GOPATH/src/github.com/${{ github.repository }}/src
-        go install
+        go get -t
         go test --cover -v ./... 
